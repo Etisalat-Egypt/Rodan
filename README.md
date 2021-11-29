@@ -1,5 +1,5 @@
 
-# Rodan Exploitation Framework
+# Rodan Telecom Exploitation Framework
 
 <!---
 <img src="res/banner.png" align="right" width="200" height="212">
@@ -18,6 +18,8 @@ modules that enable users to exploit vulnerabilities in the signaling protocols
 used by mobile operators. 
 Rodan currently supports SS7 and Diameter protocols with plans to support GTP and SIP.
 
+## Authors
+* [Ayman ElSherif][ayman]
 
 ## Features
 
@@ -108,3 +110,4 @@ $ ./start-standalone.sh
 [maven]: https://maven.apache.org/download.cgi
 [master]: https://github.com/AymanElSherif/rodan-legacy/archive/refs/heads/master.zip
 [docker]: https://docs.docker.com/engine/install/
+[ayman]: https://github.com/AymanElSherif
