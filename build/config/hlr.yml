@@ -1,0 +1,35 @@
+function: Lab
+sctpMode: CLIENT
+ss7Association:
+  routingContext: 100
+  networkIndicator: 2
+  localNode:
+    nodeName: hlr
+    address: hlr
+    port: 1000
+    pointCode: 11002
+    globalTitle: 8833010000020
+    supportedMapSsnList: [6]
+    supportedCapSsnList: []
+  peerNode:
+    nodeName: stp
+    address: stp
+    port: 1000
+    pointCode: 11009
+targetNetwork:
+  hlrGt: 8833010000020
+  vlrGt: 8833010000030
+  mscGt: 8833010000030
+  sgsnGt: 8833010000040
+  smscGt: 8833010000050
+  gsmScfGt: 8833010000060
+  cc: 883
+  ndc: 30
+  mcc: 901
+  mnc: 90
+targetSubscriberInfo:
+  msisdn: 8833021212121
+  imsi: 901901111111111
+  imei: 861060760175556
+  tmsi: 62fd024f
+  msrn: 8833021212121

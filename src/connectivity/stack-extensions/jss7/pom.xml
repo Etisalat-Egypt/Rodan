@@ -1,0 +1,24 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>org.mobicents</groupId>
+		<artifactId>mobicents-parent</artifactId>
+		<version>3.0.26</version>
+	</parent>
+
+	<artifactId>ss7-parent</artifactId>
+	<groupId>org.mobicents.protocols.ss7</groupId>
+	<version>8.0.112</version>
+
+	<packaging>pom</packaging>
+
+	<name>Mobicents SS7 :: ss7-parent</name>
+
+	<modules>
+		<module>sccp-extension-impl</module>
+		<module>asn-extension</module>
+		<module>tcap-extension-impl</module>
+		<module>map-extension-impl</module>
+	</modules>
+</project>

@@ -1,0 +1,64 @@
+function: Intruder
+sctpMode: CLIENT
+ss7Association:
+  routingContext: 100
+  networkIndicator: 2
+  localNode:
+    nodeName: intruder
+    address: intruder
+    port: 1000
+    pointCode: 11001
+    globalTitle: 8833010000010
+    supportedMapSsnList: [6, 7, 8, 145, 147, 150]
+    supportedCapSsnList: [146]
+  peerNode:
+    nodeName: stp
+    address: stp
+    port: 1000
+    pointCode: 11009
+diameterAssociationInfo:
+  localNode:
+    nodeName: intruder
+    address: 127.0.0.20
+    port: 13768
+    hostname: intruder
+    realm: localdomain
+    appInfo:
+      vendorId: 0
+      authAppId: 16777251
+      accAppId: 0
+  peerNode:
+    nodeName: dsc
+    address: 127.0.0.8
+    port: 3868
+    localPortRange: 13868-13868
+    attemptConnect: true
+    realms:
+      - epc.mnc090.mcc901.3gppnetwork.org
+      - epc.mnc091.mcc901.3gppnetwork.org
+    appInfo:
+      vendorId: 10415
+      authAppId: 16777251
+      accAppId: 0
+targetNetwork:
+  hlrGt:
+  vlrGt:
+  mscGt:
+  sgsnGt:
+  smscGt:
+  gsmScfGt:
+  realm: localdomain
+  mmeHostname: mme01
+  cc: 883
+  ndc: 30
+  mcc: 901
+  mnc: 90
+targetSubscriberInfo:
+  msisdn: 8833021212121
+  imsi: 901901111111111
+  imei: 861060760175556
+  tmsi: 62fd024f
+  msrn: 8833021212121
+fakeSubscriberInfo:
+  msisdn: 8833921212121
+  imsi: 901991111111111

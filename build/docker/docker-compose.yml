@@ -1,0 +1,71 @@
+version: "3.7"
+services:
+# HLR Node *****************************************
+  hlr:
+    image: hlr:latest
+    container_name: hlr
+    stdin_open: true  # = docker run -i
+    tty: true # = docker run -t
+    expose:
+        - 1000/sctp
+    # ports:  # Don't uncomment, publishing ports will prevent internal container communications
+    #     - "3000:3000/sctp" # TODO: comment to prevent access from host
+    networks:
+      - rodan-network
+    restart: "no"
+    # privileged: true
+
+  # MSC/VLR Node *****************************************
+  msc:
+    image: msc:latest
+    container_name: msc
+    stdin_open: true  # = docker run -i
+    tty: true # = docker run -t
+    expose:
+        - 1000/sctp
+    # ports:  # Don't uncomment, publishing ports will prevent internal container communications
+    #     - "3000:3000/sctp" # TODO: comment to prevent access from host
+    networks:
+      - rodan-network
+    restart: "no"
+    # privileged: true
+
+  # STP Node *****************************************
+  stp:
+    image: stp:latest
+    container_name: stp
+    stdin_open: true  # = docker run -i
+    tty: true # = docker run -t
+    expose:
+        - 1000/sctp
+    # ports:  # Don't uncomment, publishing ports will prevent internal container communications
+    #     - "3000:3000/sctp" # TODO: comment to prevent access from host
+    networks:
+      - rodan-network
+    restart: "no"
+    # privileged: true
+
+# Intruder Node *****************************************
+  intruder:
+    build: ./
+    image: intruder:latest
+    container_name: intruder
+    stdin_open: true  # = docker run -i
+    tty: true # = docker run -t
+    expose:
+      - 1000/sctp
+    # ports:  # Don't uncomment, publishing ports will prevent internal container communications
+    #   - "2000:2000/sctp"
+    networks:
+        - rodan-network
+    restart: "no"
+    # privileged: true
+    depends_on:
+      - hlr
+      - msc
+      - stp
+
+# Networks *****************************************
+networks: 
+    rodan-network: 
+      driver: bridge

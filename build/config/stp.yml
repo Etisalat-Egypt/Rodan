@@ -1,0 +1,43 @@
+function: STP
+sctpMode: SERVER
+ss7Association:
+  routingContext: 100
+  networkIndicator: 2
+  localNode:
+    nodeName: stp
+    address: stp
+    port: 1000
+    pointCode: 11009
+  peerNodes:
+    - nodeName: intruder
+      address: intruder
+      port: 1000
+      pointCode: 11001
+      globalTitle: 8833010000010
+      supportedMapSsnList: [6, 7, 8, 145, 147, 150]
+      supportedCapSsnList: [146]
+    - nodeName: hlr
+      address: hlr
+      port: 1000
+      pointCode: 11002
+      globalTitle: 8833010000020
+      supportedMapSsnList: [6,]
+      supportedCapSsnList: []
+    - nodeName: msc
+      address: msc
+      port: 1000
+      pointCode: 11003
+      globalTitle: 8833010000030
+      supportedMapSsnList: [7, 8]
+      supportedCapSsnList: [146]
+targetNetwork:
+  hlrGt: 8833010000020
+  vlrGt: 8833010000030
+  mscGt: 8833010000030
+  sgsnGt: 8833010000040
+  smscGt: 8833010000050
+  gsmScfGt: 8833010000060
+  cc: 883
+  ndc: 30
+  mcc: 901
+  mnc: 90

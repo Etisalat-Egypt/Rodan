@@ -1,0 +1,91 @@
+<?xml version="1.0"?>
+<!--
+  ~ Etisalat Egypt, Open Source
+  ~ Copyright 2021, Etisalat Egypt and individual contributors
+  ~ by the @authors tag.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation; either version 3 of
+  ~ the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>
+  -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.rodan.connectivity</groupId>
+    <artifactId>connectivity</artifactId>
+    <version>1.2.0-SNAPSHOT</version>
+  </parent>
+  <artifactId>diameter</artifactId>
+  <name>Diameter Connectivity Module</name>
+  <url>http://maven.apache.org</url>
+  
+  <dependencies>
+    <dependency>
+      <groupId>org.mobicents.diameter</groupId>
+      <artifactId>jdiameter-api</artifactId>
+      <version>${mobicents.diameter.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.mobicents.diameter</groupId>
+      <artifactId>jdiameter-extension-impl</artifactId>
+      <version>${mobicents.diameter.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>log4j</groupId>
+          <artifactId>log4j</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.mobicents.diameter</groupId>
+      <artifactId>restcomm-diameter-mux-jar</artifactId>
+      <version>${mobicents.diameter.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.mobicents.diameter</groupId>
+          <artifactId>jdiameter-impl</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>log4j</groupId>
+          <artifactId>log4j</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.picocontainer</groupId>
+      <artifactId>picocontainer</artifactId>
+      <version>2.15</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.mobicents.resources</groupId>
+      <artifactId>mobicents-slee-ra-diameter-s6a-ra</artifactId>
+      <version>2.8.18</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.mobicents.diameter</groupId>
+          <artifactId>jdiameter-impl</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>log4j</groupId>
+          <artifactId>log4j</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.mobicents.resources</groupId>
+      <artifactId>mobicents-slee-ra-diameter-sh-client-ra</artifactId>
+      <version>2.8.18</version>
+    </dependency>
+  </dependencies>
+</project>

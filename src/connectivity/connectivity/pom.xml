@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+  ~ Etisalat Egypt, Open Source
+  ~ Copyright 2021, Etisalat Egypt and individual contributors
+  ~ by the @authors tag.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation; either version 3 of
+  ~ the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>
+  -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>com.rodan.connectivity</groupId>
+	<artifactId>connectivity</artifactId>
+	<packaging>pom</packaging>
+	<version>1.2.0-SNAPSHOT</version>
+    <name>Rodan Connectivity Modules</name>
+	<url>http://maven.apache.org</url>
+
+	<properties>
+		<!-- necessary for intellij to function -->
+		<maven.compiler.source>17</maven.compiler.source>
+      	<maven.compiler.target>17</maven.compiler.target>
+
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<lombok.version>1.18.20</lombok.version>
+		<log4j.version>2.14.1</log4j.version>
+		<junit.version>4.13</junit.version>
+		<restcomm.version>8.0.0-179</restcomm.version>
+		<mobicents.version>2.0.18</mobicents.version>
+		<mobicents.ss7.version>8.0.112</mobicents.ss7.version>
+		<mobicents.diameter.version>1.7.1-123</mobicents.diameter.version>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>${lombok.version}</version>
+		</dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>${log4j.version}</version>
+        </dependency>
+		<dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-1.2-api</artifactId>
+            <version>${log4j.version}</version>
+        </dependency>
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit.version}</version>
+			<scope>test</scope>
+		</dependency>
+
+
+		<dependency>
+			<groupId>com.rodan.library</groupId>
+			<artifactId>model</artifactId>
+			<version>1.2.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>com.rodan.library</groupId>
+			<artifactId>util</artifactId>
+			<version>1.2.0-SNAPSHOT</version>
+		</dependency>
+	</dependencies>
+
+	<modules>
+		<module>diameter</module>
+		<module>ss7</module>
+	</modules>
+</project>

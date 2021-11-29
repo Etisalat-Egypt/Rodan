@@ -1,0 +1,178 @@
+<?xml version="1.0"?>
+<!--
+  ~ Etisalat Egypt, Open Source
+  ~ Copyright 2021, Etisalat Egypt and individual contributors
+  ~ by the @authors tag.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation; either version 3 of
+  ~ the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>
+  -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.rodan.connectivity</groupId>
+    <artifactId>connectivity</artifactId>
+    <version>1.2.0-SNAPSHOT</version>
+  </parent>
+  <artifactId>ss7</artifactId>
+  <name>SS7 Connectivity Module</name>
+  <url>http://maven.apache.org</url>
+  
+  <dependencies>
+    <dependency>
+      <groupId>org.mobicents.protocols.sctp</groupId>
+      <artifactId>sctp-api</artifactId>
+      <version>${mobicents.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>log4j</groupId>
+          <artifactId>log4j</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.mobicents.protocols.sctp</groupId>
+      <artifactId>sctp-impl</artifactId>
+      <version>${mobicents.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.yaml</groupId>
+          <artifactId>snakeyaml</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>log4j</groupId>
+          <artifactId>log4j</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+
+    <dependency>
+      <groupId>org.mobicents.protocols.ss7.m3ua</groupId>
+      <artifactId>m3ua-api</artifactId>
+      <version>${mobicents.ss7.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>log4j</groupId>
+          <artifactId>log4j</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.mobicents.protocols.ss7.m3ua</groupId>
+      <artifactId>m3ua-impl</artifactId>
+      <version>${mobicents.ss7.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>log4j</groupId>
+          <artifactId>log4j</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+
+    <dependency>
+      <groupId>org.mobicents.protocols.ss7.sccp</groupId>
+      <artifactId>sccp-api</artifactId>
+      <version>${mobicents.ss7.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.mobicents.protocols.ss7.sccp</groupId>
+      <artifactId>sccp-extension-impl</artifactId>
+      <version>${mobicents.ss7.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.mobicents.protocols.ss7.tcap</groupId>
+      <artifactId>tcap-api</artifactId>
+      <version>${mobicents.ss7.version}</version>
+      <exclusions>
+          <exclusion>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+          </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.mobicents.protocols.ss7.tcap</groupId>
+      <artifactId>tcap-extension-impl</artifactId>
+      <version>${mobicents.ss7.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>log4j</groupId>
+          <artifactId>log4j</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+
+    <dependency>
+      <groupId>org.mobicents.protocols.ss7.map</groupId>
+      <artifactId>map-api</artifactId>
+      <version>${mobicents.ss7.version}</version>
+      <exclusions>
+          <exclusion>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+          </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.mobicents.protocols.ss7.map</groupId>
+      <artifactId>map-extension-impl</artifactId>
+      <version>${mobicents.ss7.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>log4j</groupId>
+          <artifactId>log4j</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.mobicents.protocols.ss7.cap</groupId>
+      <artifactId>cap-api</artifactId>
+      <version>${mobicents.ss7.version}</version>
+      <exclusions>
+          <exclusion>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+          </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.mobicents.protocols.ss7.cap</groupId>
+      <artifactId>cap-impl</artifactId>
+      <version>${mobicents.ss7.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.mobicents.protocols.ss7.map</groupId>
+          <artifactId>map-impl</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.mobicents.protocols.ss7.tcap</groupId>
+          <artifactId>tcap-impl</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.mobicents.protocols.ss7.sccp</groupId>
+          <artifactId>sccp-impl</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.mobicents.protocols.asn</groupId>
+          <artifactId>asn</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>log4j</groupId>
+          <artifactId>log4j</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+  </dependencies>
+</project>
