@@ -60,10 +60,12 @@ repository: `git clone https://github.com/Etisalat-Egypt/Rodan.git`
 ## 2. Build
 
 ### Build using Docker
-The easiest way to build Rodan is using provided Docker build container.
+The easiest way to build Rodan is using provided Docker build container, and use it with the included simulation network.
 
 #### Prerequisites
-* [Docker runtime][docker]
+* [Docker Runtime][docker]
+* [Docker Compose][docker-compose]
+* [Manage Docker as a non-root User][docker-non-root]
 
 ```bash
 $ cd build/scripts
@@ -82,6 +84,18 @@ To create the latest development build from this source repository:
 $ sudo apt install lksctp-tools
 ```
 
+#### Disable Maven's default http removing or commenting out maven-default-http-blocker element in settings.xml.
+```xml
+  <mirror>
+      <id>maven-default-http-blocker</id>
+      <mirrorOf>external:http:*</mirrorOf>
+      <name>Pseudo repository to mirror external repositories initially using HTTP.</name>
+      <url>http://0.0.0.0/</url>
+      <blocked>true</blocked>
+    </mirror>
+  </mirrors>
+```
+
 #### Build framework and stack extentions: 
 ```bash
 $ cd build/scripts
@@ -92,13 +106,16 @@ $ ./build-standalone.sh
 
 ### Run using Docker
 
+#### Edit yaml configuration files in build/config folder
+#### Run:
 ```bash
 $ cd build/scripts
 $ ./start-docker.sh
 ```
 
 ### Run as a standalone
-# Run
+#### Edit yaml configuration files in build/config folder
+#### Run:
 ```bash
 $ cd build/scripts
 $ ./start-standalone.sh
@@ -110,4 +127,6 @@ $ ./start-standalone.sh
 [maven]: https://maven.apache.org/download.cgi
 [master]: https://codeload.github.com/Etisalat-Egypt/Rodan/zip/refs/heads/main
 [docker]: https://docs.docker.com/engine/install/
+[docker-compose]: https://docs.docker.com/compose/install/
+[docker-non-root]: https://docs.docker.com/engine/install/linux-postinstall/#manage-docker-as-a-non-root-user
 [ayman]: https://github.com/AymanElSherif

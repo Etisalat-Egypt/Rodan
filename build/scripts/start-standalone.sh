@@ -22,6 +22,9 @@
 
 RODAN_HOME=$(cd "$pwd../.."; pwd)
 RODAN_BUILD_HOME=$RODAN_HOME/build
-DOCKER_HOME="${RODAN_BUILD_HOME}"/docker
-cd "${DOCKER_HOME}"
-docker-compose up
+RODAN_CFG_HOME=$RODAN_BUILD_HOME/config
+INTRUDER_BUILD_HOME=$RODAN_HOME/src/intruder/main/cli/target
+
+cd "${INTRUDER_BUILD_HOME}"
+cp ${RODAN_CFG_HOME}/intruder.yml ./app.yml
+java -jar intruder.jar
