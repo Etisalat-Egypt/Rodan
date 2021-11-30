@@ -55,7 +55,7 @@ $ unzip rodan-master
 $ cd rodan-master
 ```
 **NOTE:** Instead of downloading the compressed source, you may instead want to clone the GitHub 
-repository: `git clone https://github.com/AymanElSherif/rodan-legacy.git`
+repository: `git clone https://github.com/Etisalat-Egypt/Rodan.git`
 
 ## 2. Build
 
@@ -108,6 +108,6 @@ $ ./start-standalone.sh
 [et]: https://www.etisalat.eg
 [jdk17]: https://openjdk.java.net/projects/jdk7/
 [maven]: https://maven.apache.org/download.cgi
-[master]: https://github.com/AymanElSherif/rodan-legacy/archive/refs/heads/master.zip
+[master]: https://codeload.github.com/Etisalat-Egypt/Rodan/zip/refs/heads/main
 [docker]: https://docs.docker.com/engine/install/
 [ayman]: https://github.com/AymanElSherif
