@@ -69,6 +69,7 @@ The easiest way to build Rodan is using provided Docker build container, and use
 
 ```bash
 $ cd build/scripts
+$ chmod +x build-docker.sh
 $ ./build-docker.sh
 ```
 
@@ -99,6 +100,7 @@ $ sudo apt install lksctp-tools
 #### Build framework and stack extentions: 
 ```bash
 $ cd build/scripts
+$ chmod +x build-standalone.sh
 $ ./build-standalone.sh
 ```
 
@@ -107,17 +109,25 @@ $ ./build-standalone.sh
 ### Run using Docker
 
 #### Edit yaml configuration files in build/config folder
-#### Run:
+#### Run startup script:
 ```bash
 $ cd build/scripts
+$ chmod +x start-docker.sh
 $ ./start-docker.sh
 ```
+
+#### Open a new terminal and attach to Intruder container
+```bash
+$ docker attach intruder
+```
+
 
 ### Run as a standalone
 #### Edit yaml configuration files in build/config folder
 #### Run:
 ```bash
 $ cd build/scripts
+$ chmod +x start-standalone.sh
 $ ./start-standalone.sh
 ```
 
