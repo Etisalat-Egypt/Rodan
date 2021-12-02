@@ -23,6 +23,7 @@ import com.rodan.intruder.kernel.usecases.SignalingModule;
 import com.rodan.intruder.main.cli.executor.AsyncModuleExecutor;
 import com.rodan.intruder.ss7.gateway.Ss7GatewayFactoryImpl;
 import com.rodan.intruder.ss7.usecases.port.Ss7GatewayFactory;
+import com.rodan.lab.ss7.hlr.usecases.simulation.infogathering.NewAuthVectorSimulator;
 import com.rodan.lab.ss7.hlr.usecases.simulation.infogathering.SmsRoutingInfoSimulator;
 import com.rodan.lab.ss7.hlr.usecases.simulation.location.LocationAtiSimulator;
 import com.rodan.lab.ss7.kernel.usecases.Ss7SimulatorConstants;
@@ -99,6 +100,10 @@ public class Main {
                         .gateway(ss7Gateway)
                         .build();
                 case Ss7SimulatorConstants.SMS_ROUTING_INFO_SIM_NAME -> SmsRoutingInfoSimulator.builder()
+                        .moduleOptions(moduleOps)
+                        .gateway(ss7Gateway)
+                        .build();
+                case Ss7SimulatorConstants.NEW_AUTH_VECTOR_SIM_NAME -> NewAuthVectorSimulator.builder()
                         .moduleOptions(moduleOps)
                         .gateway(ss7Gateway)
                         .build();

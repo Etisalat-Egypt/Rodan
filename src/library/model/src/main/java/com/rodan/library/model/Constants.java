@@ -102,6 +102,7 @@ public interface Constants {
 	//  SS7 Payloads
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////
 	String SAI_PAYLOAD_NAME = "sai";
+	String SAI_RESPONSE_PAYLOAD_NAME = "sai_res";
 	String SEND_IDENTIFICATION_PAYLOAD_NAME = "sid";
 	String UL_PAYLOAD_NAME = "ul";
 	String SIMSI_PAYLOAD_NAME = "simsi";

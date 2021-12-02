@@ -17,40 +17,33 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-/**
- * @author Ayman ElSherif
- */
+package com.rodan.lab.ss7.hlr.usecases.model.infogathering;
 
-package com.rodan.intruder.ss7.entities.payload.sms;
-
-import com.rodan.intruder.ss7.entities.payload.Ss7Payload;
-import com.rodan.library.model.Constants;
+import com.rodan.lab.ss7.kernel.usecases.Ss7SimulatorOptions;
+import com.rodan.library.model.Validator;
+import com.rodan.library.model.annotation.Option;
+import com.rodan.library.model.config.node.config.LabNodeConfig;
+import com.rodan.library.model.error.ValidationException;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 
-@Getter @ToString(callSuper = true)
-public class MtFsmResponsePayload extends Ss7Payload {
-    private Long invokeId;
+/**
+ * @author Ayman ElSherif
+ */
+@Getter @ToString
+public class NewAuthVectorSimOptions extends Ss7SimulatorOptions<LabNodeConfig> {
+    @Option(name = "imsi", description = "Target IMSI number", mandatory = true)
+    private String imsi;
 
     @Builder
-    public MtFsmResponsePayload(String localGt, Long invokeId) {
-        super(localGt, Constants.SCCP_MSC_SSN, Constants.SCCP_MSC_SSN);
-        this.invokeId = invokeId;
+    public NewAuthVectorSimOptions(LabNodeConfig nodeConfig, String imsi) {
+        super(nodeConfig);
+        this.imsi = imsi;
     }
 
     @Override
-    public boolean isAbuseOpcodeTagForBypass() {
-        return false;
-    }
-
-    @Override
-    public boolean isMalformedAcnForBypass() {
-        return false;
-    }
-
-    @Override
-    public String getPayloadName() {
-        return Constants.MT_FSM_RESPONSE_PAYLOAD_NAME;
+    public void validate() throws ValidationException {
+        Validator.validateImsi(imsi);
     }
 }

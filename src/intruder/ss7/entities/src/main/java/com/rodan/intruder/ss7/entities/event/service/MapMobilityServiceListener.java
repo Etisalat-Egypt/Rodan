@@ -61,6 +61,11 @@ public interface MapMobilityServiceListener extends MapServiceListener {
         logger.debug(response);
     }
 
+    default void onSendAuthenticationInfoRequest(com.rodan.intruder.ss7.entities.event.model.mobility.SaiRequest request) {
+        logger.debug("[[[[[[[[[[    onSendAuthenticationInfoRequest      ]]]]]]]]]]");
+        logger.debug(request);
+    }
+
     default void onSendAuthenticationInfoResponse(com.rodan.intruder.ss7.entities.event.model.mobility.SaiResponse response) {
         logger.debug("[[[[[[[[[[    onSendAuthenticationInfoResponse      ]]]]]]]]]]");
         logger.debug(response);

@@ -17,30 +17,42 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-/**
- * @author Ayman ElSherif
- */
-
 package com.rodan.intruder.ss7.entities.payload.mobility;
 
 import com.rodan.intruder.ss7.entities.payload.Ss7Payload;
 import com.rodan.library.model.Constants;
-import com.rodan.library.model.SupportedCamelPhases;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
+/**
+ * @author Ayman ElSherif
+ */
 @Getter @ToString(callSuper = true)
-public class IsdResponsePayload extends Ss7Payload {
-    private Long invokeId;
-    private SupportedCamelPhases supportedCamelPhases;
-
+public class SaiResponsePayload extends Ss7Payload {
+    @Setter private long invokeId;
+    private String imsi;
+    @Setter private String requestingNodeType;
+    private String rand;
+    private String sres;
+    private String kc;
+    private String xres;
+    private String authPs;
+    private String kasme;
 
     @Builder
-    public IsdResponsePayload(String localGt, Long invokeId, SupportedCamelPhases supportedCamelPhases) {
+    public SaiResponsePayload(String localGt, long invokeId, String imsi, String requestingNodeType, String rand, String sres, String kc, String xres, String authPs, String kasme) {
         super(localGt, Constants.SCCP_HLR_SSN, Constants.SCCP_VLR_SSN);
         this.invokeId = invokeId;
-        this.supportedCamelPhases = supportedCamelPhases;
+        this.imsi = imsi;
+        this.requestingNodeType = requestingNodeType;
+        this.rand = rand;
+        this.sres = sres;
+        this.kc = kc;
+        this.xres = xres;
+        this.authPs = authPs;
+        this.kasme = kasme;
     }
 
     @Override
@@ -55,6 +67,6 @@ public class IsdResponsePayload extends Ss7Payload {
 
     @Override
     public String getPayloadName() {
-        return Constants.ISD_RESPONSE_PAYLOAD_NAME;
+        return Constants.SAI_RESPONSE_PAYLOAD_NAME;
     }
 }

@@ -17,44 +17,38 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-/**
- * @author Ayman ElSherif
- */
+package com.rodan.intruder.ss7.gateway.handler.model.mobility;
 
-package com.rodan.intruder.ss7.entities.payload.mobility;
-
-import com.rodan.intruder.ss7.entities.payload.Ss7Payload;
-import com.rodan.library.model.Constants;
-import com.rodan.library.model.SupportedCamelPhases;
+import com.rodan.intruder.ss7.entities.dialog.Ss7MapDialog;
+import com.rodan.intruder.ss7.entities.event.model.mobility.SaiRequest;
+import com.rodan.intruder.ss7.gateway.dialog.Ss7MapDialogImpl;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
+import org.mobicents.protocols.ss7.map.api.MAPDialog;
 
+/**
+ * @author Ayman ElSherif
+ */
 @Getter @ToString(callSuper = true)
-public class IsdResponsePayload extends Ss7Payload {
-    private Long invokeId;
-    private SupportedCamelPhases supportedCamelPhases;
-
+public class SaiRequestImpl extends SaiRequest {
+    private Ss7MapDialogImpl ss7Dialog;
+    private long invokeId;
 
     @Builder
-    public IsdResponsePayload(String localGt, Long invokeId, SupportedCamelPhases supportedCamelPhases) {
-        super(localGt, Constants.SCCP_HLR_SSN, Constants.SCCP_VLR_SSN);
+    public SaiRequestImpl(String imsi, String vlrGt, String requestingNodeType, MAPDialog mapDialog, long invokeId) {
+        super(imsi, vlrGt, requestingNodeType);
+        this.ss7Dialog = Ss7MapDialogImpl.builder().jss7Dialog(mapDialog).build();
         this.invokeId = invokeId;
-        this.supportedCamelPhases = supportedCamelPhases;
     }
 
     @Override
-    public boolean isAbuseOpcodeTagForBypass() {
-        return false;
+    public Ss7MapDialog getDialog() {
+        return ss7Dialog;
     }
 
     @Override
-    public boolean isMalformedAcnForBypass() {
-        return false;
-    }
-
-    @Override
-    public String getPayloadName() {
-        return Constants.ISD_RESPONSE_PAYLOAD_NAME;
+    public long getInvokeId() {
+        return invokeId;
     }
 }

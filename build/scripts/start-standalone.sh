@@ -27,4 +27,4 @@ INTRUDER_BUILD_HOME=$RODAN_HOME/src/intruder/main/cli/target
 
 cd "${INTRUDER_BUILD_HOME}"
 cp ${RODAN_CFG_HOME}/intruder.yml ./app.yml
-java -jar intruder.jar
+java -jar intruder.jar app.yml

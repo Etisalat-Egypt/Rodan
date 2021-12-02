@@ -90,9 +90,9 @@ public class PayloadMapper {
             var mainService = mapAdapter.getCallHandlingService();
             jSs7Payload = SriResponsePayloadWrapper.builder()
                     .mapAdapter(mapAdapter).sccpAdapter(sccpAdapter).nodeConfig(nodeConfig)
+                    .dialogGenerator(mainService::generateDialog)
                     .localGt(pl.getLocalGt()).localSsn(pl.getLocalSsn()).remoteSsn(pl.getRemoteSsn())
                     .invokeId(pl.getInvokeId()).imsi(pl.getImsi()).msrn(pl.getMsrn()).vmscGt(pl.getVmscGt())
-                    .dialogGenerator(mainService::generateDialog)
                     .build();
 
         } else if (payload.getClass() == PslPayload.class) {
@@ -220,10 +220,9 @@ public class PayloadMapper {
                     .mapAdapter(mapAdapter).sccpAdapter(sccpAdapter).nodeConfig(nodeConfig)
                     .dialogGenerator(mainService::generateDialog)
                     .localGt(pl.getLocalGt()).localSsn(pl.getLocalSsn()).remoteSsn(pl.getRemoteSsn())
-                    .invokeId(pl.getInvokeId())
-                    .imei(pl.getSubscriberInfo().getImei()).subscriberState(pl.getSubscriberInfo().getState())
-                    .vlrGt(pl.getVlrGt()).vmscGt(pl.getVmscGt()).mcc(locationInfo.getMcc())
-                    .mnc(locationInfo.getMnc()).lac(locationInfo.getLac()).cellId(locationInfo.getCellId())
+                    .invokeId(pl.getInvokeId()).imei(pl.getSubscriberInfo().getImei())
+                    .subscriberState(pl.getSubscriberInfo().getState()).vlrGt(pl.getVlrGt()).vmscGt(pl.getVmscGt())
+                    .mcc(locationInfo.getMcc()).mnc(locationInfo.getMnc()).lac(locationInfo.getLac()).cellId(locationInfo.getCellId())
                     .ageOfLocation(locationInfo.getAgeOfLocation())
                     .build();
 
@@ -258,6 +257,17 @@ public class PayloadMapper {
                     .localGt(pl.getLocalGt()).localSsn(pl.getLocalSsn()).remoteSsn(pl.getRemoteSsn())
                     .imsi(pl.getImsi()).msisdn(pl.getMsisdn()).targetHlrGt(pl.getTargetHlrGt())
                     .avNumber(pl.getAvNumber()).mapVersion(pl.getMapVersion())
+                    .build();
+
+        } else if (payload.getClass() == SaiResponsePayload.class) {
+            var pl = (SaiResponsePayload) payload;
+            var mainService = mapAdapter.getMobilityService();
+            jSs7Payload = SaiResponsePayloadWrapper.builder()
+                    .mapAdapter(mapAdapter).sccpAdapter(sccpAdapter).nodeConfig(nodeConfig)
+                    .dialogGenerator(mainService::generateDialog)
+                    .localGt(pl.getLocalGt()).localSsn(pl.getLocalSsn()).remoteSsn(pl.getRemoteSsn())
+                    .invokeId(pl.getInvokeId()).imsi(pl.getImsi()).requestingNodeType(pl.getRequestingNodeType())
+                    .rand(pl.getRand()).sres(pl.getSres()).kc(pl.getKc()).xres(pl.getXres()).authPs(pl.getAuthPs()).kasme(pl.getKasme())
                     .build();
 
         } else if (payload.getClass() == SendIdentificationPayload.class) {
@@ -379,8 +389,8 @@ public class PayloadMapper {
             jSs7Payload = SriSmResponsePayloadWrapper.builder()
                     .mapAdapter(mapAdapter).sccpAdapter(sccpAdapter).nodeConfig(nodeConfig)
                     .localGt(pl.getLocalGt()).localSsn(pl.getLocalSsn()).remoteSsn(pl.getRemoteSsn())
-                    .invokeId(pl.getInvokeId()).imsi(pl.getImsi()).vmscGt(pl.getVmscGt())
-                    .dialogGenerator(mainService::generateDialog)
+                    .dialogGenerator(mainService::generateDialog).invokeId(pl.getInvokeId())
+                    .imsi(pl.getImsi()).vmscGt(pl.getVmscGt())
                     .build();
 
         } else {

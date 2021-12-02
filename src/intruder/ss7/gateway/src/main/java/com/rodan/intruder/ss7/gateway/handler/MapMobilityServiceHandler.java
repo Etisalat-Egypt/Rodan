@@ -114,7 +114,7 @@ public class MapMobilityServiceHandler extends MapServiceHandler implements MAPS
                 listener.onUpdateLocationResponse(content);
             }
         } catch (Exception e) {
-            var msg = "Failed to parse MAP response: " + e.getMessage();
+            var msg = "Failed to parse MAP message: " + e.getMessage();
             logger.error(msg, e);
             var error = ErrorEvent.builder().invokeId(response.getInvokeId()).message(msg).build();
             for (var listener : listeners) {
@@ -146,7 +146,7 @@ public class MapMobilityServiceHandler extends MapServiceHandler implements MAPS
                 listener.onCancelLocationResponse(content);
             }
         } catch (Exception e) {
-            var msg = "Failed to parse MAP response: " + e.getMessage();
+            var msg = "Failed to parse MAP message: " + e.getMessage();
             logger.error(msg, e);
             var error = ErrorEvent.builder().invokeId(response.getInvokeId()).message(msg).build();
             for (var listener : listeners) {
@@ -171,7 +171,7 @@ public class MapMobilityServiceHandler extends MapServiceHandler implements MAPS
                 listener.onSendIdentificationResponse(content);
             }
         } catch (Exception e) {
-            var msg = "Failed to parse MAP response: " + e.getMessage();
+            var msg = "Failed to parse MAP message: " + e.getMessage();
             logger.error(msg, e);
             var error = ErrorEvent.builder().invokeId(response.getInvokeId()).message(msg).build();
             for (var listener : listeners) {
@@ -208,8 +208,9 @@ public class MapMobilityServiceHandler extends MapServiceHandler implements MAPS
             for (var listener : listeners) {
                 listener.onPurgeMSResponse(content);
             }
+
         } catch (Exception e) {
-            var msg = "Failed to parse MAP response: " + e.getMessage();
+            var msg = "Failed to parse MAP message: " + e.getMessage();
             logger.error(msg, e);
             var error = ErrorEvent.builder().invokeId(response.getInvokeId()).message(msg).build();
             for (var listener : listeners) {
@@ -220,8 +221,28 @@ public class MapMobilityServiceHandler extends MapServiceHandler implements MAPS
 
     @Override
     public void onSendAuthenticationInfoRequest(SendAuthenticationInfoRequest request) {
-        logger.debug("[[[[[[[[[[    onSendAuthenticationInfoRequest      ]]]]]]]]]]");
-        logger.debug(request);
+        try {
+            logger.debug("[[[[[[[[[[    onSendAuthenticationInfoRequest      ]]]]]]]]]]");
+            logger.debug(request);
+            var requestingNodeType = request.getRequestingNodeType().equals(RequestingNodeType.vlr) ?
+                    "vlr" : "sgsn"; // TODO support remaining node types
+            var content = SaiRequestImpl.builder()
+                    .invokeId(request.getInvokeId()).mapDialog(request.getMAPDialog())
+                    .imsi(request.getImsi().getData()).vlrGt(request.getMAPDialog().getRemoteAddress().getGlobalTitle().getDigits())
+                    .requestingNodeType(requestingNodeType)
+                    .build();
+            for (var listener : listeners) {
+                listener.onSendAuthenticationInfoRequest(content);
+            }
+
+        } catch (Exception e) {
+            var msg = "Failed to parse MAP message: " + e.getMessage();
+            logger.error(msg, e);
+            var error = ErrorEvent.builder().invokeId(request.getInvokeId()).message(msg).build();
+            for (var listener : listeners) {
+                listener.onMapMessageHandlingError(error);
+            }
+        }
     }
 
     @Override
@@ -234,7 +255,7 @@ public class MapMobilityServiceHandler extends MapServiceHandler implements MAPS
                 listener.onSendAuthenticationInfoResponse(content);
             }
         } catch (Exception e) {
-            var msg = "Failed to parse MAP response: " + e.getMessage();
+            var msg = "Failed to parse MAP message: " + e.getMessage();
             logger.error(msg, e);
             var error = ErrorEvent.builder().invokeId(response.getInvokeId()).message(msg).build();
             for (var listener : listeners) {
@@ -296,7 +317,7 @@ public class MapMobilityServiceHandler extends MapServiceHandler implements MAPS
             }
 
         } catch (Exception e) {
-            var msg = "Failed to parse MAP response: " + e.getMessage();
+            var msg = "Failed to parse MAP message: " + e.getMessage();
             logger.error(msg, e);
             var error = ErrorEvent.builder().invokeId(request.getInvokeId()).message(msg).build();
             for (var listener : listeners) {
@@ -332,7 +353,7 @@ public class MapMobilityServiceHandler extends MapServiceHandler implements MAPS
                 listener.onAnyTimeInterrogationResponse(content);
             }
         } catch (Exception e) {
-            var msg = "Failed to parse MAP response: " + e.getMessage();
+            var msg = "Failed to parse MAP message: " + e.getMessage();
             logger.error(msg, e);
             var error = ErrorEvent.builder().invokeId(response.getInvokeId()).message(msg).build();
             for (var listener : listeners) {
@@ -368,7 +389,7 @@ public class MapMobilityServiceHandler extends MapServiceHandler implements MAPS
             }
 
         } catch (Exception e) {
-            var msg = "Failed to parse MAP response: " + e.getMessage();
+            var msg = "Failed to parse MAP message: " + e.getMessage();
             logger.error(msg, e);
             var error = ErrorEvent.builder().invokeId(request.getInvokeId()).message(msg).build();
             for (var listener : listeners) {
@@ -403,7 +424,7 @@ public class MapMobilityServiceHandler extends MapServiceHandler implements MAPS
             }
 
         } catch (Exception e) {
-            var msg = "Failed to parse MAP response: " + e.getMessage();
+            var msg = "Failed to parse MAP message: " + e.getMessage();
             logger.error(msg, e);
             var error = ErrorEvent.builder().invokeId(response.getInvokeId()).message(msg).build();
             for (var listener : listeners) {
@@ -441,7 +462,7 @@ public class MapMobilityServiceHandler extends MapServiceHandler implements MAPS
                 listener.onInsertSubscriberDataRequest(content);
             }
         } catch (Exception e) {
-            var msg = "Failed to parse MAP response: " + e.getMessage();
+            var msg = "Failed to parse MAP message: " + e.getMessage();
             logger.error(msg, e);
             var error = ErrorEvent.builder().invokeId(request.getInvokeId()).message(msg).build();
             for (var listener : listeners) {
@@ -461,7 +482,7 @@ public class MapMobilityServiceHandler extends MapServiceHandler implements MAPS
                 listener.onInsertSubscriberDataResponse(content);
             }
         } catch (Exception e) {
-            var msg = "Failed to parse MAP response: " + e.getMessage();
+            var msg = "Failed to parse MAP message: " + e.getMessage();
             logger.error(msg, e);
             var error = ErrorEvent.builder().invokeId(response.getInvokeId()).message(msg).build();
             for (var listener : listeners) {
@@ -487,7 +508,7 @@ public class MapMobilityServiceHandler extends MapServiceHandler implements MAPS
                 listener.onDeleteSubscriberDataResponse(content);
             }
         } catch (Exception e) {
-            var msg = "Failed to parse MAP response: " + e.getMessage();
+            var msg = "Failed to parse MAP message: " + e.getMessage();
             logger.error(msg, e);
             var error = ErrorEvent.builder().invokeId(response.getInvokeId()).message(msg).build();
             for (var listener : listeners) {
