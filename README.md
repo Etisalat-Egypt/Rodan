@@ -1,14 +1,10 @@
 
 # Rodan Telecom Exploitation Framework
 
-<!---
-<img src="res/banner.png" align="right" width="200" height="212">
--->
-
 ### Disclaimer
 Rodan framework is provided so that you can test your systems against threats, understand the nature of these threats, and protect your own systems from similar attacks. Do not attempt to violate the law using Rodan. If this is your intention, then LEAVE NOW!
 
-Any actions and/or activities related to the the uses of Rodan is solely your responsibility. The misuse of Rodan can result in criminal charges brought against the persons in question. The authors and Etisalat Egypt will not be held responsible in the event any criminal charges be brought against any individuals misusing the information in this website to break the law.
+Any actions and/or activities related to the uses of Rodan is solely your responsibility. The misuse of Rodan can result in criminal charges brought against the persons in question. The authors and Etisalat Egypt will not be held responsible in the event any criminal charges be brought against any individuals misusing Rodan to break the law.
 
 ## Introduction
 
@@ -23,23 +19,23 @@ Rodan currently supports SS7 and Diameter protocols with plans to support GTP an
 
 ## Features
 
-* Network and Subscriber Information Diclosure.
+* Network and Subscriber Information Disclosure.
 * Location Tracking.
 * SMS Interception.
 * Call Redirection.
 * Fraud.
 * GT/Host Brute Forcing.
 * Advanced Filtering Bypass:
-  * E.214 Numbering Plan
-  * Malfrmed ACN.
+  * Malformed ACN.
   * Substitution of Operation Code Tag.
-  * Double MAP.
+  * Double MAP Component.
+  * E.214 Numbering Plan
   * Calling Party/Origin Host Spoofing.
 * SS7 Simulation Network.
 
 Rodan has a look and feel similar to the Metasploit Framework, reducing the learning curve for leveraging the framework.
 
-**NOTE:** Knowlege of SS7 and Diameter signaling protocols is required to use Rodan framework
+**NOTE:** Knowledge of SS7 and Diameter signaling protocols is required to use Rodan framework
 
 # Installation instructions
 
@@ -59,7 +55,7 @@ repository: `git clone https://github.com/Etisalat-Egypt/Rodan.git`
 
 ## 2. Build
 
-### Build using Docker
+### 2.1. Build using Docker
 The easiest way to build Rodan is using provided Docker build container, and use it with the included simulation network.
 
 #### Prerequisites
@@ -67,13 +63,15 @@ The easiest way to build Rodan is using provided Docker build container, and use
 * [Docker Compose][docker-compose]
 * [Manage Docker as a non-root User][docker-non-root]
 
+#### Edit SS7/Diameter association details, and IP addresses in YAML configuration files included in build/config folder (default configuration files are ok for running inside simulation network).
+
 ```bash
 $ cd build/scripts
 $ chmod +x build-docker.sh
 $ ./build-docker.sh
 ```
 
-### Standalone build
+### 2.2. Standalone build
 To create the latest development build from this source repository:
 
 #### Install build tools:
@@ -85,7 +83,7 @@ To create the latest development build from this source repository:
 $ sudo apt install lksctp-tools
 ```
 
-#### Disable Maven's default http removing or commenting out maven-default-http-blocker element in settings.xml.
+#### Disable Maven's default http blocker by removing or commenting out below element in settings.xml.
 ```xml
   <mirror>
       <id>maven-default-http-blocker</id>
@@ -106,9 +104,8 @@ $ ./build-standalone.sh
 
 ## 3. Run
 
-### Run using Docker
+### 3.1. Run using Docker
 
-#### Edit yaml configuration files in build/config folder
 #### Run startup script:
 ```bash
 $ cd build/scripts
@@ -116,14 +113,14 @@ $ chmod +x start-docker.sh
 $ ./start-docker.sh
 ```
 
-#### Open a new terminal and attach to Intruder container
+#### Open a new terminal and attach to the Intruder container
 ```bash
 $ docker attach intruder
 ```
 
 
-### Run as a standalone
-#### Edit yaml configuration files in build/config folder
+### 3.2. Run as a standalone
+#### #### Edit SS7/Diameter association details, and IP addresses in YAML configuration files included in build/config folder.
 #### Run:
 ```bash
 $ cd build/scripts
