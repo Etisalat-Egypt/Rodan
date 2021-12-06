@@ -96,10 +96,10 @@ run_command "cp ${LAB_MODULE_PATH}/ss7/hlr/main/cli/target/hlr.jar ./"
 run_command "cp ${LAB_MODULE_PATH}/ss7/msc/main/cli/target/msc.jar ./"
 
 #Build images
-run_command "docker build --tag intruder:latest -f Dockerfile ."
-run_command "docker build --tag stp:latest -f Dockerfile-STP ."
-run_command "docker build --tag hlr:latest -f Dockerfile-HLR ."
-run_command "docker build --tag msc:latest -f Dockerfile-MSC ."
+run_command "docker build --tag rodanframework/intruder:latest -f Dockerfile ."
+run_command "docker build --tag rodanframework/stp:latest -f Dockerfile-STP ."
+run_command "docker build --tag rodanframework/hlr:latest -f Dockerfile-HLR ."
+run_command "docker build --tag rodanframework/msc:latest -f Dockerfile-MSC ."
 
 # Remove temp config files
 run_command "rm ${DOCKER_HOME}/intruder.yml"

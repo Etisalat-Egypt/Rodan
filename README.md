@@ -120,7 +120,7 @@ $ docker attach intruder
 
 
 ### 3.2. Run as a standalone
-#### #### Edit SS7/Diameter association details, and IP addresses in YAML configuration files included in build/config folder.
+#### Edit SS7/Diameter association details, and IP addresses in YAML configuration files included in build/config folder.
 #### Run:
 ```bash
 $ cd build/scripts
