@@ -2,7 +2,7 @@ version: "3.7"
 services:
 # HLR Node *****************************************
   hlr:
-    image: rodanframework/hlr:latest
+    image: rodanframework/hlr:1.2.1
     container_name: hlr
     stdin_open: true  # = docker run -i
     tty: true # = docker run -t
@@ -17,7 +17,7 @@ services:
 
   # MSC/VLR Node *****************************************
   msc:
-    image: rodanframework/msc:latest
+    image: rodanframework/msc:1.2.1
     container_name: msc
     stdin_open: true  # = docker run -i
     tty: true # = docker run -t
@@ -32,7 +32,7 @@ services:
 
   # STP Node *****************************************
   stp:
-    image: rodanframework/stp:latest
+    image: rodanframework/stp:1.2.1
     container_name: stp
     stdin_open: true  # = docker run -i
     tty: true # = docker run -t
@@ -47,7 +47,7 @@ services:
 
 # Intruder Node *****************************************
   intruder:
-    image: rodanframework/intruder:latest
+    image: rodanframework/intruder:1.2.1
     container_name: intruder
     stdin_open: true  # = docker run -i
     tty: true # = docker run -t
