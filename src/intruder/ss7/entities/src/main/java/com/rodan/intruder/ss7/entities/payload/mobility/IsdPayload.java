@@ -27,6 +27,7 @@ import com.rodan.intruder.ss7.entities.payload.Ss7Payload;
 import com.rodan.library.model.Constants;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
 @Getter @ToString(callSuper = true)
@@ -60,10 +61,10 @@ public class IsdPayload extends Ss7Payload {
         }
     }
 
+    @Setter private Long invokeId; // TODO: Move to parent class and handle customInvokeId for all payloads
     private Usage usage;
     private String imsi;
     private String msisdn;
-    private String forwardMsisdn;
     private String gsmScf;
     private String targetVlrGt;
     private String barred;
@@ -72,14 +73,14 @@ public class IsdPayload extends Ss7Payload {
     private String mapVersion;
 
     @Builder
-    public IsdPayload(String localGt, Usage usage, String imsi, String msisdn,
-                      String forwardMsisdn, String gsmScf, String targetVlrGt, String barred, String spoofHlr,
+    public IsdPayload(String localGt, Long invokeId, Usage usage, String imsi, String msisdn,
+                      String gsmScf, String targetVlrGt, String barred, String spoofHlr,
                       String targetHlrGt, String mapVersion) {
         super(localGt, Constants.SCCP_HLR_SSN, Constants.SCCP_VLR_SSN);
+        this.invokeId = invokeId;
         this.usage = usage;
         this.imsi = imsi;
         this.msisdn = msisdn;
-        this.forwardMsisdn = forwardMsisdn;
         this.gsmScf = gsmScf;
         this.targetVlrGt = targetVlrGt;
         this.barred = barred;

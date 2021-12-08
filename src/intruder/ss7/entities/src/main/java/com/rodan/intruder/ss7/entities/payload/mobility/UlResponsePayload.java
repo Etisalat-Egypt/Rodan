@@ -17,22 +17,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
+package com.rodan.intruder.ss7.entities.payload.mobility;
+
+import com.rodan.intruder.ss7.entities.payload.Ss7Payload;
+import com.rodan.library.model.Constants;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
 /**
  * @author Ayman ElSherif
  */
-
-package com.rodan.intruder.ss7.entities.payload.mobility;
-
-import com.rodan.library.model.Constants;
-import lombok.Getter;
-import lombok.ToString;
-
 @Getter @ToString(callSuper = true)
-public abstract class IsdForwarderPayload extends IsdPayload {
-    public IsdForwarderPayload(String localGt, Usage usage, String imsi, String msisdn,
-                               String gsmScf, String targetVlrGt, String barred, String spoofHlr, String targetHlrGt,
-                               String mapVersion) {
-        super(localGt, null, usage, imsi, msisdn, gsmScf, targetVlrGt, barred, spoofHlr, targetHlrGt, mapVersion);
+public class UlResponsePayload extends Ss7Payload {
+    @Setter private long invokeId;
+    private String hlrGt;
+
+    @Builder
+    public UlResponsePayload(String localGt, long invokeId, String hlrGt) {
+        super(localGt, Constants.SCCP_HLR_SSN, Constants.SCCP_MSC_SSN);
+        this.invokeId = invokeId;
+        this.hlrGt = hlrGt;
     }
 
     @Override
@@ -47,6 +53,6 @@ public abstract class IsdForwarderPayload extends IsdPayload {
 
     @Override
     public String getPayloadName() {
-        return Constants.ISD_FORWARDER_PAYLOAD_NAME;
+        return Constants.UL_RESPONSE_PAYLOAD_NAME;
     }
 }

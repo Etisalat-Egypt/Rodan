@@ -105,6 +105,7 @@ public interface Constants {
 	String SAI_RESPONSE_PAYLOAD_NAME = "sai_res";
 	String SEND_IDENTIFICATION_PAYLOAD_NAME = "sid";
 	String UL_PAYLOAD_NAME = "ul";
+	String UL_RESPONSE_PAYLOAD_NAME = "ul_resp";
 	String SIMSI_PAYLOAD_NAME = "simsi";
 	String SRI_GPRS_PAYLOAD_NAME = "sri_gprs";
 	String SRI_LCS_PAYLOAD_NAME = "sri_lcs";

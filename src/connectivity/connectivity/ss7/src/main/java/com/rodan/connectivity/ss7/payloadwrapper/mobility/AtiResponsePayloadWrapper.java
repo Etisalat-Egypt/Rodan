@@ -79,18 +79,6 @@ public class AtiResponsePayloadWrapper extends JSs7PayloadWrapper<MapCallHandlin
         this.ageOfLocation = ageOfLocation;
     }
 
-    @Builder
-    public AtiResponsePayloadWrapper(String localGt, int localSsn, int remoteSsn, NodeConfig nodeConfig,
-                                     SccpAdapter sccpAdapter, MapAdapter mapAdapter,
-                                     MapDialogGenerator<MAPDialogMobility> dialogGenerator,
-                                     long invokeId, String imei, String vmscGt, String vlrGt) {
-        super(localGt, localSsn, remoteSsn, nodeConfig, sccpAdapter, mapAdapter, dialogGenerator);
-        this.invokeId = invokeId;
-        this.imei = imei;
-        this.vmscGt = vmscGt;
-        this.vlrGt = vlrGt;
-    }
-
     @Override
     public MAPDialogMobility generateCarrier() throws SystemException {
         var msg = "ResponsePayload shall NOT generate new dialogs";
@@ -135,7 +123,7 @@ public class AtiResponsePayloadWrapper extends JSs7PayloadWrapper<MapCallHandlin
             dialog.addAnyTimeInterrogationResponse(invokeId, subscriberInfo, null);
 
         } catch (MAPException e) {
-            var msg = "Failed to add PSI to dialog";
+            var msg = "Failed to add ATI response to dialog";
             logger.error(msg, e);
             throw SystemException.builder().code(ErrorCode.MAP_INITIALIZATION).message(msg).parent(e).build();
         }

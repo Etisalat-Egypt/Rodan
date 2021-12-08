@@ -74,7 +74,6 @@ public class MoCallInterceptionModule extends Ss7WithCapModuleTemplate implement
                 .usage(IsdPayload.Usage.REDIRECT_CAMEL)
                 .localGt(options.getNodeConfig().getSs7Association().getLocalNode().getGlobalTitle())
                 .imsi(options.getImsi())
-                .forwardMsisdn(options.getForwardMsisdn())
                 .gsmScf(options.getGsmScf())
                 .targetVlrGt(options.getTargetVlrGt())
                 .targetHlrGt(options.getTargetHlrGt())

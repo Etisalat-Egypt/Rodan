@@ -83,10 +83,10 @@ import java.util.ArrayList;
         }
     }
 
+    @Getter(AccessLevel.PRIVATE) private Long invokeId;
     @Getter(AccessLevel.PRIVATE) private Usage usage;
     @Getter(AccessLevel.PRIVATE) private String imsi;
     @Getter(AccessLevel.PRIVATE) private String msisdn;
-    @Getter(AccessLevel.PRIVATE) private String forwardMsisdn;
     @Getter(AccessLevel.PRIVATE) private String gsmScf;
     @Getter(AccessLevel.PRIVATE) private String targetVlrGt;
     @Getter(AccessLevel.PRIVATE) private String barred;
@@ -96,14 +96,14 @@ import java.util.ArrayList;
 
     @Builder
     public IsdPayloadWrapper(String localGt, int localSsn, int remoteSsn, NodeConfig nodeConfig, SccpAdapter sccpAdapter,
-                             MapAdapter mapAdapter, MapDialogGenerator<MAPDialogMobility> dialogGenerator, Usage usage,
-                             String imsi, String msisdn, String forwardMsisdn, String gsmScf, String targetVlrGt,
+                             MapAdapter mapAdapter, MapDialogGenerator<MAPDialogMobility> dialogGenerator, Long invokeId,
+                             Usage usage, String imsi, String msisdn, String gsmScf, String targetVlrGt,
                              String barred, String spoofHlr, String targetHlrGt, String mapVersion) {
         super(localGt, localSsn, remoteSsn, nodeConfig, sccpAdapter, mapAdapter, dialogGenerator);
+        this.invokeId = invokeId;
         this.usage = usage;
         this.imsi = imsi;
         this.msisdn = msisdn;
-        this.forwardMsisdn = forwardMsisdn;
         this.gsmScf = gsmScf;
         this.targetVlrGt = targetVlrGt;
         this.barred = barred;
@@ -219,7 +219,8 @@ import java.util.ArrayList;
                 }
             }
 
-            dialog.addInsertSubscriberDataRequest(imsi, msisdn, null, subscriberStatus, null,
+            var customInvokeId = (getInvokeId() != null && getInvokeId() > 0) ? getInvokeId() : -1L;
+            dialog.addInsertSubscriberDataRequest(customInvokeId, imsi, msisdn, null, subscriberStatus, null,
                     null, provisionedSsList, odbData, false,
                     null, null, null, vlrCamelSubscriptionInfo,
                     null, null, null, false,

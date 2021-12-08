@@ -17,36 +17,39 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
+package com.rodan.intruder.ss7.gateway.handler.model.mobility;
+
+import com.rodan.intruder.ss7.entities.dialog.Ss7MapDialog;
+import com.rodan.intruder.ss7.entities.event.model.mobility.UlRequest;
+import com.rodan.intruder.ss7.gateway.dialog.Ss7MapDialogImpl;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.ToString;
+import org.mobicents.protocols.ss7.map.api.MAPDialog;
+
 /**
  * @author Ayman ElSherif
  */
 
-package com.rodan.intruder.ss7.entities.payload.mobility;
-
-import com.rodan.library.model.Constants;
-import lombok.Getter;
-import lombok.ToString;
-
 @Getter @ToString(callSuper = true)
-public abstract class IsdForwarderPayload extends IsdPayload {
-    public IsdForwarderPayload(String localGt, Usage usage, String imsi, String msisdn,
-                               String gsmScf, String targetVlrGt, String barred, String spoofHlr, String targetHlrGt,
-                               String mapVersion) {
-        super(localGt, null, usage, imsi, msisdn, gsmScf, targetVlrGt, barred, spoofHlr, targetHlrGt, mapVersion);
+public class UlRequestImpl extends UlRequest {
+    private Ss7MapDialogImpl ss7Dialog;
+    private long invokeId;
+
+    @Builder
+    public UlRequestImpl(String imsi, String mscGt, String vlrGt, MAPDialog mapDialog, long invokeId) {
+        super(imsi, mscGt, vlrGt);
+        this.ss7Dialog = Ss7MapDialogImpl.builder().jss7Dialog(mapDialog).build();
+        this.invokeId = invokeId;
     }
 
     @Override
-    public boolean isAbuseOpcodeTagForBypass() {
-        return false;
+    public Ss7MapDialog getDialog() {
+        return ss7Dialog;
     }
 
     @Override
-    public boolean isMalformedAcnForBypass() {
-        return false;
-    }
-
-    @Override
-    public String getPayloadName() {
-        return Constants.ISD_FORWARDER_PAYLOAD_NAME;
+    public long getInvokeId() {
+        return invokeId;
     }
 }

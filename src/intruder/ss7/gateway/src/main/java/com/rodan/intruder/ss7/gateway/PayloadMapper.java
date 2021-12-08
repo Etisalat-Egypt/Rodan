@@ -185,10 +185,10 @@ public class PayloadMapper {
                     .mapAdapter(mapAdapter).sccpAdapter(sccpAdapter).nodeConfig(nodeConfig)
                     .dialogGenerator(mainService::generateDialog)
                     .localGt(pl.getLocalGt()).localSsn(pl.getLocalSsn()).remoteSsn(pl.getRemoteSsn())
-                    .usage(IsdPayloadWrapper.Usage.getInstance(pl.getUsage().getCode()))
-                    .imsi(pl.getImsi()).msisdn(pl.getMsisdn()).forwardMsisdn(pl.getForwardMsisdn())
-                    .gsmScf(pl.getGsmScf()).targetVlrGt(pl.getTargetVlrGt()).barred(pl.getBarred())
-                    .spoofHlr(pl.getSpoofHlr()).targetHlrGt(pl.getTargetHlrGt()).mapVersion(pl.getMapVersion())
+                    .invokeId(pl.getInvokeId()).usage(IsdPayloadWrapper.Usage.getInstance(pl.getUsage().getCode()))
+                    .imsi(pl.getImsi()).msisdn(pl.getMsisdn()).gsmScf(pl.getGsmScf()).targetVlrGt(pl.getTargetVlrGt())
+                    .barred(pl.getBarred()).spoofHlr(pl.getSpoofHlr()).targetHlrGt(pl.getTargetHlrGt())
+                    .mapVersion(pl.getMapVersion())
                     .build();
 
         } else if (payload.getClass() == IsdResponsePayload.class) {
@@ -292,6 +292,17 @@ public class PayloadMapper {
                     .newMscGt(pl.getNewMscGt()).newVlrGt(pl.getNewVlrGt()).msrn(pl.getMsrn())
                     .forwardSmsToVictim(pl.getForwardSmsToVictim()).hlrGt(pl.getHlrGt()).mapVersion(pl.getMapVersion())
                     .cc(pl.getCc()).ndc(pl.getNdc()).mcc(pl.getMcc()).mnc(pl.getMnc())
+                    .build();
+
+        } else if (payload.getClass() == UlResponsePayload.class) {
+            var pl = (UlResponsePayload) payload;
+            var mainService = mapAdapter.getMobilityService();
+            jSs7Payload = UlResponsePayloadWrapper.builder()
+                    .mapAdapter(mapAdapter).sccpAdapter(sccpAdapter).nodeConfig(nodeConfig)
+                    .dialogGenerator(mainService::generateDialog)
+                    .localGt(pl.getLocalGt()).localSsn(pl.getLocalSsn()).remoteSsn(pl.getRemoteSsn())
+                    .invokeId(pl.getInvokeId())
+                    .hlrGt(pl.getHlrGt())
                     .build();
 
         } else if (payload.getClass() == SendImsiPayload.class) {

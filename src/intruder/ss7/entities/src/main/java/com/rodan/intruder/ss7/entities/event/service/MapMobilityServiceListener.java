@@ -71,6 +71,11 @@ public interface MapMobilityServiceListener extends MapServiceListener {
         logger.debug(response);
     }
 
+    default void onUpdateLocationRequest(com.rodan.intruder.ss7.entities.event.model.mobility.UlRequest request) throws SystemException {
+        logger.debug("[[[[[[[[[[    onUpdateLocationRequest      ]]]]]]]]]]");
+        logger.debug(request);
+    }
+
     default void onUpdateLocationResponse(com.rodan.intruder.ss7.entities.event.model.mobility.UlResponse response) throws SystemException {
         logger.debug("[[[[[[[[[[    onUpdateLocationResponse      ]]]]]]]]]]");
         logger.debug(response);

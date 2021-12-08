@@ -35,7 +35,7 @@ public class IsdForwarderPayloadImpl extends IsdForwarderPayload {
     @Builder(builderMethodName = "forwarderBuilder")
     public IsdForwarderPayloadImpl(IsdForwarderPayload payload, InsertSubscriberDataRequest request) {
         super(payload.getLocalGt(), payload.getUsage(), payload.getImsi(),
-                payload.getMsisdn(), payload.getForwardMsisdn(), payload.getGsmScf(), payload.getTargetVlrGt(),
+                payload.getMsisdn(), payload.getGsmScf(), payload.getTargetVlrGt(),
                 payload.getBarred(), payload.getSpoofHlr(), payload.getTargetHlrGt(), payload.getMapVersion());
         this.request = request;
     }

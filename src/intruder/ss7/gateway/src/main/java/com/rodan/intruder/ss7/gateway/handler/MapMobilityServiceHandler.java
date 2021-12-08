@@ -98,8 +98,28 @@ public class MapMobilityServiceHandler extends MapServiceHandler implements MAPS
 
     @Override
     public void onUpdateLocationRequest(UpdateLocationRequest request) {
-        logger.debug("[[[[[[[[[[    onUpdateLocationRequest      ]]]]]]]]]]");
-        logger.debug(request);
+        try {
+            logger.debug("[[[[[[[[[[    onUpdateLocationRequest      ]]]]]]]]]]");
+            logger.debug(request);
+            var imsi = Util.getValueOrElse(request.getImsi(), IMSI::getData, "");
+            var vlrGt = Util.getValueOrElse(request.getMscNumber(), AddressString::getAddress, "");
+            var mscGt = Util.getValueOrElse(request.getVlrNumber(), AddressString::getAddress, "");
+            var content = UlRequestImpl.builder()
+                    .invokeId(request.getInvokeId()).mapDialog(request.getMAPDialog())
+                    .imsi(imsi).mscGt(mscGt).vlrGt(vlrGt)
+                    .build();
+            for (var listener : listeners) {
+                listener.onUpdateLocationRequest(content);
+            }
+
+        } catch (Exception e) {
+            var msg = "Failed to parse MAP message: " + e.getMessage();
+            logger.error(msg, e);
+            var error = ErrorEvent.builder().invokeId(request.getInvokeId()).message(msg).build();
+            for (var listener : listeners) {
+                listener.onMapMessageHandlingError(error);
+            }
+        }
     }
 
     @Override
@@ -113,6 +133,7 @@ public class MapMobilityServiceHandler extends MapServiceHandler implements MAPS
             for (var listener : listeners) {
                 listener.onUpdateLocationResponse(content);
             }
+
         } catch (Exception e) {
             var msg = "Failed to parse MAP message: " + e.getMessage();
             logger.error(msg, e);

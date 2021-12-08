@@ -106,6 +106,7 @@ public class CamelInfoModule extends Ss7ModuleTemplate implements SignalingModul
             var gsmScf = request.getGsmScf();
             if (StringUtils.isNotBlank(gsmScf)) {
                 // Avoid sending response after getting CAMEL info to fail the UL procedure
+                // TODO better to send abort
                 getGateway().sendRejectComponent(dialog, invokeId, ReturnErrorProblemType.UnexpectedError);
                 moduleResponse = CamelInfoModuleResponse.builder().gsmScf(request.getGsmScf()).build();
                 setResultReceived(true);

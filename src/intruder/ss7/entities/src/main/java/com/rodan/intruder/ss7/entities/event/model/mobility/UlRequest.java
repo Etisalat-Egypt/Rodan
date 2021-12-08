@@ -17,12 +17,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-package com.rodan.lab.ss7.hlr.usecases.simulation.infogathering;
+package com.rodan.intruder.ss7.entities.event.model.mobility;
+
+import com.rodan.intruder.ss7.entities.event.model.MapMessage;
+import lombok.Getter;
+import lombok.ToString;
 
 /**
  * @author Ayman ElSherif
  */
-public class CamelInfoSimulator {
-    // TODO: Remove this simulator after responding to UL from any other simulator (ex: SmsInterCeption)
-//    here
+@Getter @ToString
+public abstract class UlRequest implements MapMessage {
+    private String imsi;
+    private String mscGt;
+    private String vlrGt;
+
+    public UlRequest(String imsi, String mscGt, String vlrGt) {
+        this.imsi = imsi;
+        this.mscGt = mscGt;
+        this.vlrGt = vlrGt;
+    }
 }

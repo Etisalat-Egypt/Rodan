@@ -23,6 +23,7 @@ import com.rodan.intruder.ss7.usecases.model.Ss7ModuleOptions;
 import com.rodan.intruder.ss7.usecases.model.Ss7ModuleOptionsFactory;
 import com.rodan.lab.ss7.hlr.usecases.model.infogathering.NewAuthVectorSimOptions;
 import com.rodan.lab.ss7.hlr.usecases.model.infogathering.SmsRoutingInfoSimOptions;
+import com.rodan.lab.ss7.hlr.usecases.model.infogathering.UlResponderSimOptions;
 import com.rodan.lab.ss7.hlr.usecases.model.location.LocationAtiSimOptions;
 import com.rodan.lab.ss7.kernel.usecases.Ss7SimulatorConstants;
 import com.rodan.lab.ss7.hlr.usecases.model.infogathering.RoutingInfoSimOptions;
@@ -62,6 +63,10 @@ public class Ss7SimulatorOptionsFactory implements Ss7ModuleOptionsFactory<LabNo
             case Ss7SimulatorConstants.LOCATION_ATI_SIM_NAME -> LocationAtiSimOptions.builder()
                     .nodeConfig(nodeConfig)
                     .imei(targetSubscriberInfo.getImei()).vlrGt(targetNetworkInfo.getVlrGt()).vmscGt(targetNetworkInfo.getMscGt())
+                    .build();
+            case Ss7SimulatorConstants.UL_RESPONDER_NAME -> UlResponderSimOptions.builder()
+                    .nodeConfig(nodeConfig)
+                    .hlrGt(targetNetworkInfo.getHlrGt()).gsmScfGt(targetNetworkInfo.getGsmScfGt())
                     .build();
 
             default -> {
