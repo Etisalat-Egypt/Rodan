@@ -129,7 +129,7 @@ public class FsmPayloadWrapper extends JSs7PayloadWrapper<MapSmsService, MAPDial
 
             var smClass = switch (getMessageType()) {
                 case "flash" -> 0b00010000; // Class 0
-                default -> 0b00010001; // Normal/Class 1
+                default -> 0b00000000; // Normal/Class 1
             };
             var coding = smsParamFactory.createDataCodingScheme(smClass);
             var contentStr = getContent().replace("_", " ");
