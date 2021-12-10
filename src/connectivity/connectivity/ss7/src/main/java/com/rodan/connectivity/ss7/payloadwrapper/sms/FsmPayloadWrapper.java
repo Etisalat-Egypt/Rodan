@@ -115,9 +115,11 @@ public class FsmPayloadWrapper extends JSs7PayloadWrapper<MapSmsService, MAPDial
             var sender = smsParamFactory.createAddressField(TypeOfNumber.Alphanumeric,
                     NumberingPlanIdentification.Unknown, senderStr);
 
-            // Type 0:  0b01000000
-            // Normal: 0b00000000
-            int pid = "silent".equalsIgnoreCase(getMessageType()) ? 0b01000000 : 0b00000000;
+            var pid = switch (getMessageType()) {
+                case "silent" -> 0b01000000; // Silent/Type 0
+                case "replace" -> 0b01000001; // Replace Type 1
+                default -> 0b00000000; // Normal
+            };
             var protocolId = smsParamFactory.createProtocolIdentifier(pid); // TP-Protocol-Identifier
             var currentTime = LocalDateTime.now();
             int cairoTimeZone = 2; // TODO make it a configuration
@@ -125,9 +127,10 @@ public class FsmPayloadWrapper extends JSs7PayloadWrapper<MapSmsService, MAPDial
                     currentTime.getDayOfMonth(), currentTime.getHour(), currentTime.getMinute(), currentTime.getSecond(),
                     cairoTimeZone);
 
-            // Class 0: 0b00010000
-            // Class 1: 0b00010001
-            int smClass = "flash".equalsIgnoreCase(getMessageType()) ? 0b00010000 : 0b00010001;
+            var smClass = switch (getMessageType()) {
+                case "flash" -> 0b00010000; // Class 0
+                default -> 0b00010001; // Normal/Class 1
+            };
             var coding = smsParamFactory.createDataCodingScheme(smClass);
             var contentStr = getContent().replace("_", " ");
             var userData = smsParamFactory.createUserData(contentStr, coding, null, null);

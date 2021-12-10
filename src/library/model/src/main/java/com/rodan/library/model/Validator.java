@@ -62,7 +62,7 @@ public class Validator {
     public static final Pattern DIAMETER_HOST_PATTERN = HOSTNAME_PATTERN;
     public static final Pattern DIAMETER_BASIC_HOST_RANGE_PATTERN = Pattern.compile("^[a-zA-Z0-9., ]*$");
     public static final Pattern FILE_NAME_PATTERN = Pattern.compile("^[a-zA-Z0-9\\-]+[.]?[a-zA-Z]{1,3}$");
-    public static final Pattern SM_TYPE_PATTERN = Pattern.compile("^(normal|flash|silent)$");
+    public static final Pattern SM_TYPE_PATTERN = Pattern.compile("^(normal|replace|flash|silent)$");
 
     public static void validateMsisdn(String msisdn) throws ValidationException {
         validateMsisdn(msisdn, "MSISDN");

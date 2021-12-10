@@ -45,7 +45,7 @@ public class SmsFraudOptions extends Ss7ModuleOptions<IntruderNodeConfig> {
     @Option(name = "content", description = "SMS content", mandatory = true)
     String content;
 
-    @Option(name = "type", description = "Message type (normal, flash, silent)", mandatory = true)
+    @Option(name = "type", description = "Message type (normal, replace, flash, silent)", mandatory = true)
     String messageType;
 
     @Option(name = "msc", description = "Target MSC GT", mandatory = true)
