@@ -46,7 +46,7 @@ public class SmsFraudOptions extends Ss7ModuleOptions<IntruderNodeConfig> {
     String content;
 
     @Option(name = "type", description = "Message type (normal, replace, flash, silent)", mandatory = true)
-    String messageType;
+    String messageType; // TODO self delete SMS
 
     @Option(name = "msc", description = "Target MSC GT", mandatory = true)
     String targetMscGt;

@@ -50,7 +50,7 @@ public class VlrBruteforceOptions extends Ss7ModuleOptions<IntruderNodeConfig> {
     @Option(name = "delay", description = "Delay in milli seconds", mandatory = true)
     private String delayMillis;
 
-    @Option(name = "bypass_oct", description = "Bypass SMS Home Routing using operational code tag abuse (yes/no)", mandatory = true)
+    @Option(name = "bypass_oct", description = "Bypass filtering using operational code tag abuse (yes/no)", mandatory = true)
     private String abuseOpcodeTag;
 
     @Option(name = "acv", description = "MAP app context version (3)", mandatory = true)

@@ -42,10 +42,10 @@ public class SendImsiOptions extends Ss7ModuleOptions<IntruderNodeConfig> {
     @Option(name = "hlr", description = "Target HLR global title")
     private String targetHlrGt;
 
-    @Option(name = "bypass_oct", description = "Bypass SMS Home Routing using operational code tag abuse (yes/no)", mandatory = true)
+    @Option(name = "bypass_oct", description = "Bypass filtering using operational code tag abuse (yes/no)", mandatory = true)
     private String abuseOpcodeTag;
 
-    @Option(name = "bypass_acn", description = "Bypass SMS Home Routing using malformed ACN (yes/no)", mandatory = true)
+    @Option(name = "bypass_acn", description = "Bypass filtering using malformed ACN (yes/no)", mandatory = true)
     private String malformedAcn;
 
     @Option(name = "acv", description = "MAP app context version (2)", mandatory = true)

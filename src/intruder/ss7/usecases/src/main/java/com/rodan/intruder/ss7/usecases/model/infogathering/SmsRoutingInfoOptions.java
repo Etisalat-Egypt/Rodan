@@ -51,16 +51,16 @@ public class SmsRoutingInfoOptions extends Ss7ModuleOptions<IntruderNodeConfig> 
     @Option(name = "detect_hr", description = "Detect SMS Home Routing (yes/no)", mandatory = true)
     private String detectSmsHomeRouting;
 
-    @Option(name = "bypass_nr", description = "Bypass SMS Home Routing using E.214 numbering plan (yes/no)", mandatory = true)
+    @Option(name = "bypass_nr", description = "Bypass filtering using E.214 numbering plan (yes/no)", mandatory = true)
     private String bypassSmsHomeRouting;
 
-    @Option(name = "bypass_oct", description = "Bypass SMS Home Routing using operational code tag abuse (yes/no)", mandatory = true)
+    @Option(name = "bypass_oct", description = "Bypass filtering using operational code tag abuse (yes/no)", mandatory = true)
     private String abuseOpcodeTag;
 
-    @Option(name = "bypass_acn", description = "Bypass SMS Home Routing using malformed ACN (yes/no)", mandatory = true)
+    @Option(name = "bypass_acn", description = "Bypass filtering using malformed ACN (yes/no)", mandatory = true)
     private String malformedAcn;
 
-    @Option(name = "bypass_dm", description = "Bypass SMS Home Routing using double MAP component (yes/no)", mandatory = true)
+    @Option(name = "bypass_dm", description = "Bypass filtering using double MAP component (yes/no)", mandatory = true)
     private String doubleMap;
 
     @Option(name = "acv", description = "MAP app context version (1, 2, 3)", mandatory = true)
