@@ -50,6 +50,7 @@ public interface ErrorCode {
 	int INVALID_SSN = 40023;
 	int INVALID_GT_RANGE = 40024;
 	int INVALID_WORDLIST_FILE_PATH = 40025;
+	int INVALID_SM_TYPE = 40026;
 
 
 	int GENERAL_ERROR = 50000;

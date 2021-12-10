@@ -56,6 +56,7 @@ public class FsmPayloadWrapper extends JSs7PayloadWrapper<MapSmsService, MAPDial
     @Getter(AccessLevel.PRIVATE) private String sender;
     @Getter(AccessLevel.PRIVATE) private String targetMscGt;
     @Getter(AccessLevel.PRIVATE) private String content;
+    @Getter(AccessLevel.PRIVATE) private String messageType;
     @Getter(AccessLevel.PRIVATE) private String spoofSmsc;
     @Getter(AccessLevel.PRIVATE) private String smscGt;
     @Getter(AccessLevel.PRIVATE) private String mapVersion;
@@ -63,13 +64,14 @@ public class FsmPayloadWrapper extends JSs7PayloadWrapper<MapSmsService, MAPDial
     @Builder
     public FsmPayloadWrapper(String localGt, int localSsn, int remoteSsn, NodeConfig nodeConfig, SccpAdapter sccpAdapter, 
                              MapAdapter mapAdapter, MapDialogGenerator<MAPDialogSms> dialogGenerator, String imsi, 
-                             String sender, String targetMscGt, String content, String spoofSmsc, String smscGt, 
-                             String mapVersion) {
+                             String sender, String targetMscGt, String content, String messageType, String spoofSmsc,
+                             String smscGt, String mapVersion) {
         super(localGt, localSsn, remoteSsn, nodeConfig, sccpAdapter, mapAdapter, dialogGenerator);
         this.imsi = imsi;
         this.sender = sender;
         this.targetMscGt = targetMscGt;
         this.content = content;
+        this.messageType = messageType;
         this.spoofSmsc = spoofSmsc;
         this.smscGt = smscGt;
         this.mapVersion = mapVersion;
@@ -106,19 +108,27 @@ public class FsmPayloadWrapper extends JSs7PayloadWrapper<MapSmsService, MAPDial
 
             var imsi = paramFactory.createIMSI(getImsi());
             var da = paramFactory.createSM_RP_DA(imsi);
-            var smscSrt = StringUtils.isBlank(getSmscGt()) ? getLocalGt() : getSmscGt();
-            var smsc = paramFactory.createAddressString(AddressNature.international_number, NumberingPlan.ISDN, smscSrt);
+            var smscStr = StringUtils.isBlank(getSmscGt()) ? getLocalGt() : getSmscGt();
+            var smsc = paramFactory.createAddressString(AddressNature.international_number, NumberingPlan.ISDN, smscStr);
             var oa = paramFactory.createSM_RP_OA_ServiceCentreAddressOA(smsc);
             var senderStr = getSender().replace("_", " ");
             var sender = smsParamFactory.createAddressField(TypeOfNumber.Alphanumeric,
                     NumberingPlanIdentification.Unknown, senderStr);
-            var protocolId = smsParamFactory.createProtocolIdentifier(0); // TP-Protocol-Identifier
+
+            // Type 0:  0b01000000
+            // Normal: 0b00000000
+            int pid = "silent".equalsIgnoreCase(getMessageType()) ? 0b01000000 : 0b00000000;
+            var protocolId = smsParamFactory.createProtocolIdentifier(pid); // TP-Protocol-Identifier
             var currentTime = LocalDateTime.now();
             int cairoTimeZone = 2; // TODO make it a configuration
             var timestamp = smsParamFactory.createAbsoluteTimeStamp(currentTime.getYear(), currentTime.getMonthValue(),
                     currentTime.getDayOfMonth(), currentTime.getHour(), currentTime.getMinute(), currentTime.getSecond(),
                     cairoTimeZone);
-            var coding = smsParamFactory.createDataCodingScheme(0); // TODO IMP TRX: check value
+
+            // Class 0: 0b00010000
+            // Class 1: 0b00010001
+            int smClass = "flash".equalsIgnoreCase(getMessageType()) ? 0b00010000 : 0b00010001;
+            var coding = smsParamFactory.createDataCodingScheme(smClass);
             var contentStr = getContent().replace("_", " ");
             var userData = smsParamFactory.createUserData(contentStr, coding, null, null);
             var smst = smsParamFactory.createSmsDeliverTpdu(false, false, false,

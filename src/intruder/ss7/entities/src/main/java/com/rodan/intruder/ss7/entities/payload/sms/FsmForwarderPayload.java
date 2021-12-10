@@ -29,8 +29,8 @@ import lombok.ToString;
 @ToString(callSuper = true)
 public abstract class FsmForwarderPayload extends FsmPayload {
     public FsmForwarderPayload(String localGt, String imsi, String sender, String targetMscGt, String content,
-                               String spoofSmsc, String smscGt, String mapVersion) {
-        super(localGt, imsi, sender, targetMscGt, content, spoofSmsc, smscGt, mapVersion);
+                               String messageType, String spoofSmsc, String smscGt, String mapVersion) {
+        super(localGt, imsi, sender, targetMscGt, content, messageType, spoofSmsc, smscGt, mapVersion);
     }
 
     @Override

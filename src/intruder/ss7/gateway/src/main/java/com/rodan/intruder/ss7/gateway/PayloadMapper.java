@@ -345,8 +345,8 @@ public class PayloadMapper {
                     .dialogGenerator(mainService::generateDialog)
                     .localGt(pl.getLocalGt()).localSsn(pl.getLocalSsn()).remoteSsn(pl.getRemoteSsn())
                     .imsi(pl.getImsi()).sender(pl.getSender()).targetMscGt(pl.getTargetMscGt())
-                    .content(pl.getContent()).spoofSmsc(pl.getSpoofSmsc()).smscGt(pl.getSmscGt())
-                    .mapVersion(pl.getMapVersion())
+                    .content(pl.getContent()).messageType(pl.getMessageType()).spoofSmsc(pl.getSpoofSmsc())
+                    .smscGt(pl.getSmscGt()).mapVersion(pl.getMapVersion())
                     .build();
 
         } else if (payload.getClass() == FsmResponsePayload.class) {

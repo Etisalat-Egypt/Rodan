@@ -37,8 +37,9 @@ public class FsmForwarderPayloadImpl extends FsmForwarderPayload {
     public FsmForwarderPayloadImpl(FsmForwarderPayload payload, ForwardShortMessageRequest request,
                                    MtForwardShortMessageRequest mtRequest) {
         super(payload.getLocalGt(), payload.getImsi(), payload.getSender(),
-                payload.getTargetMscGt(), payload.getContent(), payload.getSpoofSmsc(), payload.getSmscGt(),
+                payload.getTargetMscGt(), payload.getContent(), "normal", payload.getSpoofSmsc(), payload.getSmscGt(),
                 payload.getMapVersion());
+        // TODO: don't hardcode messageType
         this.request = request;
         this.mtRequest = mtRequest;
     }

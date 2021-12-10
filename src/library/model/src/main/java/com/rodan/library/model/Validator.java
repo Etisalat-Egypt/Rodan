@@ -62,6 +62,7 @@ public class Validator {
     public static final Pattern DIAMETER_HOST_PATTERN = HOSTNAME_PATTERN;
     public static final Pattern DIAMETER_BASIC_HOST_RANGE_PATTERN = Pattern.compile("^[a-zA-Z0-9., ]*$");
     public static final Pattern FILE_NAME_PATTERN = Pattern.compile("^[a-zA-Z0-9\\-]+[.]?[a-zA-Z]{1,3}$");
+    public static final Pattern SM_TYPE_PATTERN = Pattern.compile("^(normal|flash|silent)$");
 
     public static void validateMsisdn(String msisdn) throws ValidationException {
         validateMsisdn(msisdn, "MSISDN");
@@ -419,6 +420,14 @@ public class Validator {
             var msg = "Failed load file: " + fileName;
             logger.error(msg, e);
             throw ValidationException.builder().code(ErrorCode.IO_ERROR).message(msg).build(); // TODO: Should be SystemException
+        }
+    }
+
+    public static void validateSmType(String type) throws ValidationException {
+        if (StringUtils.isBlank(type) || !SM_TYPE_PATTERN.matcher(type.trim()).matches()) {
+            var msg = "Invalid type: " + type;
+            logger.error(msg);
+            throw ValidationException.builder().code(ErrorCode.INVALID_SM_TYPE).message(msg).build();
         }
     }
 

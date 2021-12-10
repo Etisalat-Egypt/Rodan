@@ -59,8 +59,8 @@ public class SmsFraudModule extends Ss7ModuleTemplate implements SignalingModule
         var options = (SmsFraudOptions) moduleOptions;
         var payload = FsmPayload.builder()
                 .localGt(options.getNodeConfig().getSs7Association().getLocalNode().getGlobalTitle())
-                .imsi(options.getImsi()).sender(options.getSender())
-                .content(options.getContent()).targetMscGt(options.getTargetMscGt())
+                .imsi(options.getImsi()).sender(options.getSender()).content(options.getContent())
+                .messageType(options.getMessageType()).targetMscGt(options.getTargetMscGt())
                 .smscGt(options.getSmscGt()).spoofSmsc(options.getSpoofSmsc())
                 .mapVersion(options.getMapVersion())
                 .build();

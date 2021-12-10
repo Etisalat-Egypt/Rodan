@@ -35,17 +35,19 @@ public class FsmPayload extends Ss7Payload {
     private String sender;
     private String targetMscGt;
     private String content;
+    private String messageType;
     private String spoofSmsc;
     private String smscGt;
     private String mapVersion;
 
     @Builder
-    public FsmPayload(String localGt, String imsi, String sender, String targetMscGt, String content, String spoofSmsc,
-                      String smscGt, String mapVersion) {
+    public FsmPayload(String localGt, String imsi, String sender, String targetMscGt, String content, String messageType,
+                      String spoofSmsc, String smscGt, String mapVersion) {
         super(localGt, Constants.SCCP_MSC_SSN, Constants.SCCP_MSC_SSN);
         this.imsi = imsi;
         this.sender = sender;
         this.targetMscGt = targetMscGt;
+        this.messageType = messageType;
         this.content = content;
         this.spoofSmsc = spoofSmsc;
         this.smscGt = smscGt;

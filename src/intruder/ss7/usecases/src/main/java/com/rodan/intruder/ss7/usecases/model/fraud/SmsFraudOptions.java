@@ -45,6 +45,9 @@ public class SmsFraudOptions extends Ss7ModuleOptions<IntruderNodeConfig> {
     @Option(name = "content", description = "SMS content", mandatory = true)
     String content;
 
+    @Option(name = "type", description = "Message type (normal, flash, silent)", mandatory = true)
+    String messageType;
+
     @Option(name = "msc", description = "Target MSC GT", mandatory = true)
     String targetMscGt;
 
@@ -58,12 +61,13 @@ public class SmsFraudOptions extends Ss7ModuleOptions<IntruderNodeConfig> {
     private String mapVersion;
 
     @Builder
-    public SmsFraudOptions(IntruderNodeConfig nodeConfig, String sender, String content, String smscGt,
-                           String imsi, String targetMscGt, String spoofSmsc, String mapVersion) {
+    public SmsFraudOptions(IntruderNodeConfig nodeConfig, String sender, String content, String messageType,
+                           String smscGt, String imsi, String targetMscGt, String spoofSmsc, String mapVersion) {
         super(nodeConfig);
         this.imsi = Objects.requireNonNullElse(imsi, "");
         this.sender = Objects.requireNonNullElse(sender, "");
         this.content = Objects.requireNonNullElse(content, "");
+        this.messageType = Objects.requireNonNullElse(messageType, "normal");
         this.targetMscGt = Objects.requireNonNullElse(targetMscGt, "");
         this.smscGt = Objects.requireNonNullElse(smscGt, "");
         this.spoofSmsc = Objects.requireNonNullElse(spoofSmsc, "No");
@@ -80,6 +84,7 @@ public class SmsFraudOptions extends Ss7ModuleOptions<IntruderNodeConfig> {
         Validator.validateImsi(imsi);
         Validator.validateSmSender(sender);
         Validator.validateSmContent(content);
+        Validator.validateSmType(messageType);
         Validator.validateMsc(targetMscGt);
         Validator.validateToggleOption(spoofSmsc, "spoofSmsc");
         Validator.validateMapVersion(mapVersion);
