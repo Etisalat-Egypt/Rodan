@@ -141,8 +141,8 @@ public interface Ss7ModuleConstants {
     // Fraud
     String SMS_FRAUD_NAME = FRAUD_CATEGORY + "/ss7/sms";
     String SMS_FRAUD_DISPLAY_NAME = "Forward-Short-Message (FSM) message";
-    String SMS_FRAUD_BRIEF = "Send spam SMS to subscriber";
-    String SMS_FRAUD_DESCRIPTION = "Send fraud SMS message to subscriber, spoofing any sender ID with any message body.";
+    String SMS_FRAUD_BRIEF = "Send spam SMS bypassing SMS firewalls";
+    String SMS_FRAUD_DESCRIPTION = "Send spam SMS directly to subscriber bypassing SMS firewall and spoofing any sender ID.";
     String SMS_FRAUD_RANK = "good";
 
 

@@ -29,6 +29,7 @@ import com.rodan.connectivity.ss7.payloadwrapper.JSs7PayloadWrapper;
 import com.rodan.connectivity.ss7.service.MapDialogGenerator;
 import com.rodan.connectivity.ss7.service.MapSmsService;
 import com.rodan.library.model.Constants;
+import com.rodan.library.model.Validator;
 import com.rodan.library.model.annotation.Payload;
 import com.rodan.library.model.config.node.config.IntruderNodeConfig;
 import com.rodan.library.model.config.node.config.NodeConfig;
@@ -112,8 +113,11 @@ public class FsmPayloadWrapper extends JSs7PayloadWrapper<MapSmsService, MAPDial
             var smsc = paramFactory.createAddressString(AddressNature.international_number, NumberingPlan.ISDN, smscStr);
             var oa = paramFactory.createSM_RP_OA_ServiceCentreAddressOA(smsc);
             var senderStr = getSender().replace("_", " ");
-            var sender = smsParamFactory.createAddressField(TypeOfNumber.Alphanumeric,
-                    NumberingPlanIdentification.Unknown, senderStr);
+            var typeOfNumber = Validator.isValidMsisdn(senderStr) ? TypeOfNumber.InternationalNumber :
+                    TypeOfNumber.Alphanumeric;
+            var numberingPlanId = Validator.isValidMsisdn(senderStr) ?
+                    NumberingPlanIdentification.ISDNTelephoneNumberingPlan : NumberingPlanIdentification.Unknown;
+            var sender = smsParamFactory.createAddressField(typeOfNumber, numberingPlanId, senderStr);
 
             var pid = switch (getMessageType()) {
                 case "silent" -> 0b01000000; // Silent/Type 0
@@ -122,16 +126,19 @@ public class FsmPayloadWrapper extends JSs7PayloadWrapper<MapSmsService, MAPDial
             };
             var protocolId = smsParamFactory.createProtocolIdentifier(pid); // TP-Protocol-Identifier
             var currentTime = LocalDateTime.now();
-            int cairoTimeZone = 2; // TODO make it a configuration
-            var timestamp = smsParamFactory.createAbsoluteTimeStamp(currentTime.getYear(), currentTime.getMonthValue(),
+            var timeZoneHours = 2; // Cairo time zone. TODO: make it a configuration
+            var timeZone = timeZoneHours * 4; // 1 = 15 minutes
+            var year = currentTime.minusYears(2000).getYear(); // Only 1st 2 digits are used
+            var timestamp = smsParamFactory.createAbsoluteTimeStamp(year, currentTime.getMonthValue(),
                     currentTime.getDayOfMonth(), currentTime.getHour(), currentTime.getMinute(), currentTime.getSecond(),
-                    cairoTimeZone);
+                    timeZone);
 
-            var smClass = switch (getMessageType()) {
+            var dcs = switch (getMessageType()) {
                 case "flash" -> 0b00010000; // Class 0
-                default -> 0b00000000; // Normal/Class 1
+                case "autodelete" -> 0b01000000; // Marked for Automatic Deletion
+                default -> 0b00000000; // Normal
             };
-            var coding = smsParamFactory.createDataCodingScheme(smClass);
+            var coding = smsParamFactory.createDataCodingScheme(dcs);
             var contentStr = getContent().replace("_", " ");
             var userData = smsParamFactory.createUserData(contentStr, coding, null, null);
             var smst = smsParamFactory.createSmsDeliverTpdu(false, false, false,

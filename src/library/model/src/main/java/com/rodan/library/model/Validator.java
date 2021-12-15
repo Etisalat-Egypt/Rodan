@@ -62,7 +62,7 @@ public class Validator {
     public static final Pattern DIAMETER_HOST_PATTERN = HOSTNAME_PATTERN;
     public static final Pattern DIAMETER_BASIC_HOST_RANGE_PATTERN = Pattern.compile("^[a-zA-Z0-9., ]*$");
     public static final Pattern FILE_NAME_PATTERN = Pattern.compile("^[a-zA-Z0-9\\-]+[.]?[a-zA-Z]{1,3}$");
-    public static final Pattern SM_TYPE_PATTERN = Pattern.compile("^(normal|replace|flash|silent)$");
+    public static final Pattern SM_TYPE_PATTERN = Pattern.compile("^(normal|replace|autodelete|flash|silent)$");
 
     public static void validateMsisdn(String msisdn) throws ValidationException {
         validateMsisdn(msisdn, "MSISDN");
@@ -227,11 +227,19 @@ public class Validator {
     }
 
     private static void validateE146(String address, String paramName) throws ValidationException {
-        if (StringUtils.isBlank(address) || !E146_PATTERN.matcher(address).matches()) {
+        if (!Validator.isValidE146(address)) {
             var msg = "Invalid " + paramName + ": " + address;
             logger.error(msg);
             throw ValidationException.builder().code(ErrorCode.INVALID_MSISDN).message(msg).build();
         }
+    }
+
+    public static boolean isValidMsisdn(String msisdn) {
+        return isValidE146(msisdn);
+    }
+
+    public static boolean isValidE146(String address) {
+        return StringUtils.isNotBlank(address) && E146_PATTERN.matcher(address).matches();
     }
 
     public static void validateToggleOption(String value, String paramName) throws ValidationException {
