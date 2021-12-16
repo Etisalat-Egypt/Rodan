@@ -23,7 +23,6 @@ import com.rodan.intruder.ss7.entities.payload.Ss7Payload;
 import com.rodan.library.model.Constants;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.ToString;
 
 /**
@@ -31,7 +30,7 @@ import lombok.ToString;
  */
 @Getter @ToString(callSuper = true)
 public class UlResponsePayload extends Ss7Payload {
-    @Setter private long invokeId;
+    private long invokeId;
     private String hlrGt;
 
     @Builder
@@ -54,5 +53,9 @@ public class UlResponsePayload extends Ss7Payload {
     @Override
     public String getPayloadName() {
         return Constants.UL_RESPONSE_PAYLOAD_NAME;
+    }
+
+    public UlResponsePayload withInvokeId(long invokeId) {
+        return this.invokeId == invokeId ? this : new UlResponsePayload(getLocalGt(), invokeId, hlrGt);
     }
 }

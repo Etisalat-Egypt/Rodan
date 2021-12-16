@@ -94,9 +94,7 @@ public class NewAuthVectorSimulator extends Ss7SimulatorTemplate implements Sign
             var invokeId = request.getInvokeId();
             dialog.setUserObject(invokeId);
             var payload = (SaiResponsePayload) getMainPayload();
-            payload.setInvokeId(invokeId);
-            payload.setInvokeId(invokeId);
-            payload.setRequestingNodeType(request.getRequestingNodeType());
+            payload = payload.withInvokeIdAndRequestingNodeType(invokeId, request.getRequestingNodeType());
             getGateway().addToDialog(payload, dialog);
             getGateway().send(dialog);
 

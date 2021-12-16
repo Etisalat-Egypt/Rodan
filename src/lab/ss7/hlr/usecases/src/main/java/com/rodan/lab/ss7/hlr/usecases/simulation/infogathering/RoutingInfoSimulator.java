@@ -69,7 +69,7 @@ public class RoutingInfoSimulator extends Ss7SimulatorTemplate implements Signal
             var invokeId = request.getInvokeId();
             dialog.setUserObject(invokeId);
             var payload = (SriResponsePayload) getMainPayload();
-            payload.setInvokeId(invokeId);
+            payload = payload.withInvokeId(invokeId);
             getGateway().addToDialog(payload, dialog);
             getGateway().send(dialog);
 

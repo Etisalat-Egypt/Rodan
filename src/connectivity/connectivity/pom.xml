@@ -35,7 +35,7 @@
 
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<lombok.version>1.18.20</lombok.version>
-		<log4j.version>2.15.0</log4j.version>
+		<log4j.version>2.16.0</log4j.version>
 		<junit.version>4.13</junit.version>
 		<restcomm.version>8.0.0-179</restcomm.version>
 		<mobicents.version>2.0.18</mobicents.version>

@@ -95,7 +95,7 @@ public class SmsRoutingInfoSimulator extends Ss7SimulatorTemplate implements Sig
             var newPayload = request.getE214NumberingPlanDetected() ?
                     generateRealPayload() : generatePseudoPayload();
             var payload = (SriSmResponsePayload) newPayload;
-            payload.setInvokeId(invokeId);
+            payload = payload.withInvokeId(invokeId);
 
             getGateway().addToDialog(payload, dialog);
             getGateway().send(dialog);

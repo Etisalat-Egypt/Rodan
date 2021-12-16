@@ -23,10 +23,8 @@ import com.rodan.intruder.ss7.entities.event.model.LocationInfo;
 import com.rodan.intruder.ss7.entities.event.model.SubscriberInfo;
 import com.rodan.intruder.ss7.entities.payload.Ss7Payload;
 import com.rodan.library.model.Constants;
-import com.rodan.library.model.annotation.Option;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.ToString;
 
 /**
@@ -34,7 +32,7 @@ import lombok.ToString;
  */
 @Getter @ToString(callSuper = true)
 public class PsiResponsePayload extends Ss7Payload {
-    @Setter private long invokeId;
+    private long invokeId;
     private SubscriberInfo subscriberInfo;
     private LocationInfo locationInfo;
     private String vlrGt;
@@ -64,5 +62,10 @@ public class PsiResponsePayload extends Ss7Payload {
     @Override
     public String getPayloadName() {
         return Constants.PSI_RESPONSE_PAYLOAD_NAME;
+    }
+
+    public PsiResponsePayload withInvokeId(long invokeId) {
+        return this.invokeId == invokeId ? this :
+                new PsiResponsePayload(getLocalGt(), invokeId, subscriberInfo, locationInfo, vlrGt, vmscGt);
     }
 }

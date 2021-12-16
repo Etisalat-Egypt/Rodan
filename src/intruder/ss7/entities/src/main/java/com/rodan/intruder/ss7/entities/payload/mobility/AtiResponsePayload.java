@@ -23,7 +23,6 @@ import com.rodan.intruder.ss7.entities.event.model.LocationInfo;
 import com.rodan.intruder.ss7.entities.event.model.SubscriberInfo;
 import com.rodan.intruder.ss7.entities.payload.Ss7Payload;
 import com.rodan.library.model.Constants;
-import com.rodan.library.model.annotation.Option;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -34,7 +33,7 @@ import lombok.ToString;
  */
 @Getter @ToString(callSuper = true)
 public class AtiResponsePayload extends Ss7Payload {
-    @Setter private long invokeId;
+    private long invokeId;
     private SubscriberInfo subscriberInfo;
     private LocationInfo locationInfo;
     private String vmscGt;
@@ -64,5 +63,10 @@ public class AtiResponsePayload extends Ss7Payload {
     @Override
     public String getPayloadName() {
         return Constants.ATI_RESPONSE_PAYLOAD_NAME;
+    }
+
+    public AtiResponsePayload withInvokeId(long invokeId) {
+        return this.invokeId == invokeId ? this :
+                new AtiResponsePayload(getLocalGt(), invokeId, subscriberInfo, locationInfo, vmscGt, vlrGt);
     }
 }

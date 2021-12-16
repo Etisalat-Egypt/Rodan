@@ -128,7 +128,7 @@ public class UlResponderSimulator extends Ss7SimulatorTemplate implements Signal
             var invokeId = response.getInvokeId();
             dialog.setUserObject(invokeId);
             var payload = (UlResponsePayload) getMainPayload();
-            payload.setInvokeId(invokeId);
+            payload = payload.withInvokeId(invokeId);
             getGateway().addToDialog(payload, dialog);
             getGateway().send(dialog);
 

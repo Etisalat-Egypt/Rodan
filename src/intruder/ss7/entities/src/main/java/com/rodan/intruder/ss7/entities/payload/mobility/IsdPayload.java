@@ -27,7 +27,6 @@ import com.rodan.intruder.ss7.entities.payload.Ss7Payload;
 import com.rodan.library.model.Constants;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.ToString;
 
 @Getter @ToString(callSuper = true)
@@ -61,7 +60,7 @@ public class IsdPayload extends Ss7Payload {
         }
     }
 
-    @Setter private Long invokeId; // TODO: Move to parent class and handle customInvokeId for all payloads
+    private Long invokeId; // TODO: Move to parent class and handle customInvokeId for all payloads
     private Usage usage;
     private String imsi;
     private String msisdn;
@@ -102,5 +101,11 @@ public class IsdPayload extends Ss7Payload {
     @Override
     public String getPayloadName() {
         return Constants.ISD_PAYLOAD_NAME;
+    }
+
+    public IsdPayload withInvokeId(long invokeId) {
+        return this.invokeId == invokeId ? this :
+                new IsdPayload(getLocalGt(), invokeId, usage, imsi, msisdn, gsmScf, targetVlrGt, barred, spoofHlr,
+                        targetHlrGt, mapVersion);
     }
 }

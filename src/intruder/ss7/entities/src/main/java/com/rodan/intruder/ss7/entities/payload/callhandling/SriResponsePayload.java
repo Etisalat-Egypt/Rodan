@@ -23,7 +23,6 @@ import com.rodan.intruder.ss7.entities.payload.Ss7Payload;
 import com.rodan.library.model.Constants;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.ToString;
 
 /**
@@ -31,7 +30,7 @@ import lombok.ToString;
  */
 @Getter @ToString(callSuper = true)
 public class SriResponsePayload extends Ss7Payload {
-    @Setter private long invokeId;
+    private long invokeId;
     private String imsi;
     private String vmscGt;
     private String msrn;
@@ -58,5 +57,9 @@ public class SriResponsePayload extends Ss7Payload {
     @Override
     public String getPayloadName() {
         return Constants.SRI_RESPONSE_PAYLOAD_NAME;
+    }
+
+    public SriResponsePayload withInvokeId(long invokeId) {
+        return this.invokeId == invokeId ? this : new SriResponsePayload(getLocalGt(), invokeId, imsi, vmscGt, msrn);
     }
 }

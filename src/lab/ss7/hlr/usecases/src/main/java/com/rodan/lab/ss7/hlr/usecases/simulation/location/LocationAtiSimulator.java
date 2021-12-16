@@ -107,7 +107,7 @@ public class LocationAtiSimulator extends Ss7SimulatorTemplate implements Signal
             var homeGsmScfGt = moduleOptions.getNodeConfig().getTargetNetwork().getGsmScfGt();
             if (homeGsmScfGt.equals(requestingGsmScf)) {
                 var payload = (AtiResponsePayload) getMainPayload();
-                payload.setInvokeId(invokeId);
+                payload = payload.withInvokeId(invokeId);
                 getGateway().addToDialog(payload, dialog);
                 getGateway().send(dialog);
 
