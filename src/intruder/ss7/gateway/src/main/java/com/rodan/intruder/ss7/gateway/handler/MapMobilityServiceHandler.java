@@ -357,7 +357,7 @@ public class MapMobilityServiceHandler extends MapServiceHandler implements MAPS
             var vlrGt = Util.getValueOrElse(response.getSubscriberInfo().getLocationInformation().getVlrNumber(), AddressString::getAddress, "");
             var vmscGt = Util.getValueOrElseNull(response.getSubscriberInfo().getLocationInformation().getMscNumber(), AddressString::getAddress);
             var cellInfo = Util.getValueOrElseNull(response.getSubscriberInfo().getLocationInformation().getCellGlobalIdOrServiceAreaIdOrLAI(), CellGlobalIdOrServiceAreaIdOrLAI::getCellGlobalIdOrServiceAreaIdFixedLength);
-            int mcc = 0, mnc = 0, lac = 0, cellId = 0;
+            Integer mcc = null, mnc = null, lac = null, cellId = null;
             if (cellInfo != null) {
                 mcc = cellInfo.getMCC();
                 mnc = cellInfo.getMNC();
@@ -677,25 +677,24 @@ public class MapMobilityServiceHandler extends MapServiceHandler implements MAPS
         var cellInfo = Util.getValueOrElseNull(gciOrLai, CellGlobalIdOrServiceAreaIdOrLAI::getCellGlobalIdOrServiceAreaIdFixedLength);
 
         var geoInfo = Util.getValueOrElseNull(subscriberInfo.getLocationInformation(), LocationInformation::getGeographicalInformation);
-        var longitude = Util.getValueOrElse(geoInfo, GeographicalInformation::getLongitude, 0.0);
-        var latitude = Util.getValueOrElse(geoInfo, GeographicalInformation::getLatitude, 0.0);
-        var uncertainty = Util.getValueOrElse(geoInfo, GeographicalInformation::getUncertainty, 0.0);
+        var longitude = Util.getValueOrElseNull(geoInfo, GeographicalInformation::getLongitude);
+        var latitude = Util.getValueOrElseNull(geoInfo, GeographicalInformation::getLatitude);
+        var uncertainty = Util.getValueOrElseNull(geoInfo, GeographicalInformation::getUncertainty);
         var ageOfLocation = Util.getValueOrElseNull(subscriberInfo.getLocationInformation(), LocationInformation::getAgeOfLocationInformation);
-        var locationAge = Util.getValueOrElse(ageOfLocation, Integer::intValue, 0);
 
         var info = com.rodan.intruder.ss7.entities.event.model.SubscriberInfo.builder()
-                .imei(imei).state(state).longitude(longitude).latitude(latitude).uncertainty(uncertainty).ageOfLocation(locationAge)
+                .imei(imei).state(state).longitude(longitude).latitude(latitude).uncertainty(uncertainty).ageOfLocation(ageOfLocation)
                 .build();
         return info;
     }
 
     private LocationInfo parseLocationInfo(LocationInformation locationInfo, LocationInformationGPRS locationInfoGprs) throws MAPException {
-        var longitude = Util.getValueOrElse(locationInfo.getGeographicalInformation(), GeographicalInformation::getLongitude, 0.0);
-        var latitude = Util.getValueOrElse(locationInfo.getGeographicalInformation(), GeographicalInformation::getLatitude, 0.0);
-        var uncertainty = Util.getValueOrElse(locationInfo.getGeographicalInformation(), GeographicalInformation::getUncertainty, 0.0);
-        var locationAge = Util.getValueOrElse(locationInfo.getAgeOfLocationInformation(), Integer::intValue, 0);
+        var longitude = Util.getValueOrElseNull(locationInfo.getGeographicalInformation(), GeographicalInformation::getLongitude);
+        var latitude = Util.getValueOrElseNull(locationInfo.getGeographicalInformation(), GeographicalInformation::getLatitude);
+        var uncertainty = Util.getValueOrElseNull(locationInfo.getGeographicalInformation(), GeographicalInformation::getUncertainty);
+        var locationAge = Util.getValueOrElseNull(locationInfo.getAgeOfLocationInformation(), Integer::intValue);
         var cellInfo = Util.getValueOrElseNull(locationInfo.getCellGlobalIdOrServiceAreaIdOrLAI(), CellGlobalIdOrServiceAreaIdOrLAI::getCellGlobalIdOrServiceAreaIdFixedLength);
-        int mcc = 0, mnc = 0, lac = 0, cellId = 0;
+        Integer mcc = null, mnc = null, lac = null, cellId = null;
         if (cellInfo != null && cellInfo.getData() != null) {
             mcc = cellInfo.getMCC();
             mnc = cellInfo.getMNC();
@@ -711,11 +710,11 @@ public class MapMobilityServiceHandler extends MapServiceHandler implements MAPS
             }
         }
 
-        var longitudePs = Util.getValueOrElse(locationInfoGprs.getGeographicalInformation(), GeographicalInformation::getLongitude, 0.0);
-        var latitudePs = Util.getValueOrElse(locationInfoGprs.getGeographicalInformation(), GeographicalInformation::getLatitude, 0.0);
-        var uncertaintyPs = Util.getValueOrElse(locationInfoGprs.getGeographicalInformation(), GeographicalInformation::getUncertainty, 0.0);
+        var longitudePs = Util.getValueOrElseNull(locationInfoGprs.getGeographicalInformation(), GeographicalInformation::getLongitude);
+        var latitudePs = Util.getValueOrElseNull(locationInfoGprs.getGeographicalInformation(), GeographicalInformation::getLatitude);
+        var uncertaintyPs = Util.getValueOrElseNull(locationInfoGprs.getGeographicalInformation(), GeographicalInformation::getUncertainty);
 
-        var locationAgePs = Util.getValueOrElse(locationInfoGprs.getAgeOfLocationInformation(), Integer::intValue, 0);
+        var locationAgePs = Util.getValueOrElseNull(locationInfoGprs.getAgeOfLocationInformation(), Integer::intValue);
 
         var location = LocationInfo.builder()
                 .mcc(mcc).mnc(mnc).lac(lac).cellId(cellId)

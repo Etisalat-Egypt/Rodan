@@ -29,24 +29,24 @@ import lombok.ToString;
 
 @Getter @Builder @ToString
 public class LocationInfo {
-    private int mcc;
-    private int mnc;
-    private int lac;
-    private int cellId;
+    private Integer mcc;
+    private Integer mnc;
+    private Integer lac;
+    private Integer cellId;
 
-    private double longitude;
-    private double latitude;
-    private double uncertainty;
-    private int ageOfLocation;
+    private Double longitude;
+    private Double latitude;
+    private Double uncertainty;
+    private Integer ageOfLocation;
 
-    private double longitudePs;
-    private double latitudePs;
-    private double uncertaintyPs;
-    private int ageOfLocationPs;
+    private Double longitudePs;
+    private Double latitudePs;
+    private Double uncertaintyPs;
+    private Integer ageOfLocationPs;
 
     @Builder
-    public LocationInfo(int mcc, int mnc, int lac, int cellId, double longitude, double latitude, double uncertainty,
-                        int ageOfLocation, double longitudePs, double latitudePs, double uncertaintyPs, int ageOfLocationPs) {
+    public LocationInfo(Integer mcc, Integer mnc, Integer lac, Integer cellId, Double longitude, Double latitude, Double uncertainty,
+                        Integer ageOfLocation, Double longitudePs, Double latitudePs, Double uncertaintyPs, Integer ageOfLocationPs) {
         this.mcc = mcc;
         this.mnc = mnc;
         this.lac = lac;

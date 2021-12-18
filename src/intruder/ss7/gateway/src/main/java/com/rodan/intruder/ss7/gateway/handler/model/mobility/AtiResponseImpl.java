@@ -38,8 +38,8 @@ public class AtiResponseImpl extends AtiResponse {
     private long invokeId;
 
     @Builder
-    public AtiResponseImpl(SubscriberInfo subscriberInfo, String hlrGt, String vmscGt, String vlrGt, int mcc, int mnc,
-                           int lac, int cellId, MAPDialog mapDialog, long invokeId) {
+    public AtiResponseImpl(SubscriberInfo subscriberInfo, String hlrGt, String vmscGt, String vlrGt, Integer mcc, Integer mnc,
+                           Integer lac, Integer cellId, MAPDialog mapDialog, long invokeId) {
         super(subscriberInfo, hlrGt, vmscGt, vlrGt, mcc, mnc, lac, cellId);
         this.ss7Dialog = Ss7MapDialogImpl.builder().jss7Dialog(mapDialog).build();
         this.invokeId = invokeId;

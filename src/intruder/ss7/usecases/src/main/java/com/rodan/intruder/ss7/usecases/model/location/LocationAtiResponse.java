@@ -23,8 +23,8 @@
 
 package com.rodan.intruder.ss7.usecases.model.location;
 
-import com.rodan.intruder.ss7.entities.event.model.SubscriberInfo;
 import com.rodan.intruder.kernel.usecases.model.ModuleResponse;
+import com.rodan.intruder.ss7.entities.event.model.SubscriberInfo;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
@@ -36,13 +36,14 @@ public class LocationAtiResponse extends ModuleResponse {
     private String vmscGt;
     private String vlrGt;
 
-    private int mcc;
-    private int mnc;
-    private int lac;
-    private int cellId;
+    private Integer mcc;
+    private Integer mnc;
+    private Integer lac;
+    private Integer cellId;
 
     @Builder
-    public LocationAtiResponse(SubscriberInfo subscriberInfo, String hlrGt, String vmscGt, String vlrGt, int mcc, int mnc, int lac, int cellId) {
+    public LocationAtiResponse(SubscriberInfo subscriberInfo, String hlrGt, String vmscGt, String vlrGt, Integer mcc,
+                               Integer mnc, Integer lac, Integer cellId) {
         this.subscriberInfo = subscriberInfo;
         this.hlrGt = hlrGt;
         this.vmscGt = vmscGt;

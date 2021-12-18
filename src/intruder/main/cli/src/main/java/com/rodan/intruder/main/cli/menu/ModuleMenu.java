@@ -23,6 +23,7 @@
 
 package com.rodan.intruder.main.cli.menu;
 
+import com.google.gson.GsonBuilder;
 import com.rodan.intruder.diameter.usecases.attacks.dos.*;
 import com.rodan.intruder.diameter.usecases.attacks.fraud.FraudAccessRestrictionModule;
 import com.rodan.intruder.diameter.usecases.attacks.fraud.FraudOdbModule;
@@ -31,6 +32,9 @@ import com.rodan.intruder.diameter.usecases.attacks.location.LocationIdrModule;
 import com.rodan.intruder.diameter.usecases.model.DiameterModuleConstants;
 import com.rodan.intruder.diameter.usecases.model.DiameterModuleOptions;
 import com.rodan.intruder.diameter.usecases.port.DiameterGatewayFactory;
+import com.rodan.intruder.kernel.usecases.SignalingModule;
+import com.rodan.intruder.kernel.usecases.SignalingProtocol;
+import com.rodan.intruder.kernel.usecases.model.ModuleOptions;
 import com.rodan.intruder.main.cli.Cli;
 import com.rodan.intruder.main.cli.command.Command;
 import com.rodan.intruder.main.cli.command.processor.CliCommandProcessor;
@@ -48,12 +52,9 @@ import com.rodan.intruder.ss7.usecases.attacks.interception.SmsInterceptionModul
 import com.rodan.intruder.ss7.usecases.attacks.location.LocationAtiModule;
 import com.rodan.intruder.ss7.usecases.attacks.location.LocationPsiModule;
 import com.rodan.intruder.ss7.usecases.attacks.location.LocationPslModule;
-import com.rodan.intruder.ss7.usecases.model.Ss7ModuleOptionsFactoryImpl;
-import com.rodan.intruder.kernel.usecases.SignalingModule;
-import com.rodan.intruder.kernel.usecases.SignalingProtocol;
-import com.rodan.intruder.kernel.usecases.model.ModuleOptions;
 import com.rodan.intruder.ss7.usecases.model.Ss7ModuleConstants;
 import com.rodan.intruder.ss7.usecases.model.Ss7ModuleOptions;
+import com.rodan.intruder.ss7.usecases.model.Ss7ModuleOptionsFactoryImpl;
 import com.rodan.intruder.ss7.usecases.port.Ss7GatewayFactory;
 import com.rodan.library.model.Constants;
 import com.rodan.library.model.annotation.Module;
@@ -392,7 +393,9 @@ public class ModuleMenu extends MenuTemplate {
             var executor = new SyncModuleExecutor();
             var result = executor.execute(module);
             var response = result.get();
-            displaySuccess("Module output: " + response);
+            var gson = new GsonBuilder().create(); // use .setPrettyPrinting() to enable pretty print
+            var responseText = gson.toJson(response);
+            displaySuccess("Module output: " + responseText);
 
         } catch (Exception e) {
             var msg = e.getMessage();

@@ -36,13 +36,13 @@ public class SubscriberInfo {
 	private String msrn;
 
 	// TODO SS7: Use LocationInfo instead of below fields
-	private double longitude;
-	private double latitude;
-	private double uncertainty;
-	private int ageOfLocation;
+	private Double longitude;
+	private Double latitude;
+	private Double uncertainty;
+	private Integer ageOfLocation;
 
-	private double longitudePs;
-	private double latitudePs;
-	private double uncertaintyPs;
-	private int ageOfLocationPs;
+	private Double longitudePs;
+	private Double latitudePs;
+	private Double uncertaintyPs;
+	private Integer ageOfLocationPs;
 }

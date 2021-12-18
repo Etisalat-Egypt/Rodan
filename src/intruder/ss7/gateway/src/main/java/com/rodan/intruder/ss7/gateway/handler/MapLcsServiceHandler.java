@@ -158,9 +158,9 @@ public class MapLcsServiceHandler extends MapServiceHandler implements MAPServic
     }
 
     private LocationInfo parseLocation(ProvideSubscriberLocationResponse response) throws MAPException {
-        var longitude = Util.getValueOrElse(response.getLocationEstimate(), ExtGeographicalInformation::getLongitude, 0.0);
-        var latitude = Util.getValueOrElse(response.getLocationEstimate(), ExtGeographicalInformation::getLatitude, 0.0);
-        var uncertainty = Util.getValueOrElse(response.getLocationEstimate(), ExtGeographicalInformation::getUncertainty, 0.0);
+        var longitude = Util.getValueOrElseNull(response.getLocationEstimate(), ExtGeographicalInformation::getLongitude);
+        var latitude = Util.getValueOrElseNull(response.getLocationEstimate(), ExtGeographicalInformation::getLatitude);
+        var uncertainty = Util.getValueOrElseNull(response.getLocationEstimate(), ExtGeographicalInformation::getUncertainty);
         var locationAge = response.getAgeOfLocationEstimate();
 
         var cellInfo = response.getCellIdOrSai().getCellGlobalIdOrServiceAreaIdFixedLength();
