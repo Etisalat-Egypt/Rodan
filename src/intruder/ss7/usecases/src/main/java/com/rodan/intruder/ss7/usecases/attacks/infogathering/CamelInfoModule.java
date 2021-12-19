@@ -33,7 +33,7 @@ import com.rodan.intruder.ss7.entities.payload.mobility.UlPayload;
 import com.rodan.intruder.ss7.usecases.Ss7ModuleTemplate;
 import com.rodan.intruder.ss7.usecases.model.Ss7ModuleConstants;
 import com.rodan.intruder.ss7.usecases.model.Ss7ModuleOptions;
-import com.rodan.intruder.ss7.usecases.model.infogathering.CamelInfoModuleResponse;
+import com.rodan.intruder.ss7.usecases.model.infogathering.CamelInfoResponse;
 import com.rodan.intruder.ss7.usecases.model.infogathering.CamelInfoOptions;
 import com.rodan.intruder.ss7.usecases.port.Ss7Gateway;
 import com.rodan.library.model.Constants;
@@ -108,7 +108,7 @@ public class CamelInfoModule extends Ss7ModuleTemplate implements SignalingModul
                 // Avoid sending response after getting CAMEL info to fail the UL procedure
                 // TODO better to send abort
                 getGateway().sendRejectComponent(dialog, invokeId, ReturnErrorProblemType.UnexpectedError);
-                moduleResponse = CamelInfoModuleResponse.builder().gsmScf(request.getGsmScf()).build();
+                moduleResponse = CamelInfoResponse.builder().gsmScf(request.getGsmScf()).build();
                 setResultReceived(true);
 
             } else {

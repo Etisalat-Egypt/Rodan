@@ -29,11 +29,11 @@ import lombok.Getter;
 import lombok.ToString;
 
 @Getter @ToString
-public class CamelInfoModuleResponse extends ModuleResponse {
+public class CamelInfoResponse extends ModuleResponse {
     String gsmScf;
 
     @Builder
-    public CamelInfoModuleResponse(String gsmScf) {
+    public CamelInfoResponse(String gsmScf) {
         this.gsmScf = gsmScf;
     }
 }
