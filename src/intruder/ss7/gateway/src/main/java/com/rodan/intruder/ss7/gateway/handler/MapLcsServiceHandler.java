@@ -26,6 +26,7 @@ package com.rodan.intruder.ss7.gateway.handler;
 import com.rodan.intruder.ss7.entities.event.model.ErrorEvent;
 import com.rodan.intruder.ss7.entities.event.model.LocationInfo;
 import com.rodan.intruder.ss7.entities.event.service.MapLcsServiceListener;
+import com.rodan.intruder.ss7.gateway.handler.model.lcs.PslRequestImpl;
 import com.rodan.intruder.ss7.gateway.handler.model.lcs.PslResponseImpl;
 import com.rodan.intruder.ss7.gateway.handler.model.lcs.SriLcsResponseImpl;
 import com.rodan.library.util.Util;
@@ -33,9 +34,11 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.mobicents.protocols.ss7.map.api.MAPException;
 import org.mobicents.protocols.ss7.map.api.primitives.AddressString;
+import org.mobicents.protocols.ss7.map.api.primitives.CellGlobalIdOrServiceAreaIdOrLAI;
 import org.mobicents.protocols.ss7.map.api.primitives.GSNAddress;
 import org.mobicents.protocols.ss7.map.api.primitives.IMSI;
 import org.mobicents.protocols.ss7.map.api.service.lsm.*;
+import org.mobicents.protocols.ss7.map.primitives.CellGlobalIdOrServiceAreaIdFixedLengthImpl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,8 +76,28 @@ public class MapLcsServiceHandler extends MapServiceHandler implements MAPServic
 
     @Override
     public void onProvideSubscriberLocationRequest(ProvideSubscriberLocationRequest request) {
-        logger.debug("[[[[[[[[[[    onProvideSubscriberLocationRequest      ]]]]]]]]]]");
-        logger.debug(request);
+        try {
+            logger.debug("[[[[[[[[[[    ProvideSubscriberLocationRequest      ]]]]]]]]]]");
+            logger.debug(request);
+            var imsi = Util.getValueOrElse(request.getIMSI(), IMSI::getData, "");
+            var msisdn = Util.getValueOrElse(request.getMSISDN(), AddressString::getAddress, "");
+            var mlcGt = Util.getValueOrElse(request.getMlcNumber(), AddressString::getAddress, "");
+            var content = PslRequestImpl.builder()
+                    .invokeId(request.getInvokeId()).mapDialog(request.getMAPDialog())
+                    .imsi(imsi).msisdn(msisdn).mlcNumber(mlcGt)
+                    .build();
+            for (var listener : listeners) {
+                listener.onProvideSubscriberLocationRequest(content);
+            }
+
+        }  catch (Exception e) {
+            var msg = "Failed to parse MAP response: " + e.getMessage();
+            logger.error(msg, e);
+            var error = ErrorEvent.builder().invokeId(request.getInvokeId()).message(msg).build();
+            for (var listener : listeners) {
+                listener.onMapMessageHandlingError(error);
+            }
+        }
     }
 
     @Override
@@ -92,7 +115,6 @@ public class MapLcsServiceHandler extends MapServiceHandler implements MAPServic
             for (var listener : listeners) {
                 listener.onProvideSubscriberLocationResponse(content);
             }
-
 
         } catch (Exception e) {
             var msg = "Failed to parse MAP response: " + e.getMessage();
@@ -163,11 +185,13 @@ public class MapLcsServiceHandler extends MapServiceHandler implements MAPServic
         var uncertainty = Util.getValueOrElseNull(response.getLocationEstimate(), ExtGeographicalInformation::getUncertainty);
         var locationAge = response.getAgeOfLocationEstimate();
 
-        var cellInfo = response.getCellIdOrSai().getCellGlobalIdOrServiceAreaIdFixedLength();
-        var laiInfo = response.getCellIdOrSai().getLAIFixedLength();
-        boolean saiPresent = false;
+        var cellInfo = Util.getValueOrElseNull(response.getCellIdOrSai(),
+                CellGlobalIdOrServiceAreaIdOrLAI::getCellGlobalIdOrServiceAreaIdFixedLength);
+        var laiInfo = Util.getValueOrElseNull(response.getCellIdOrSai(),
+                CellGlobalIdOrServiceAreaIdOrLAI::getLAIFixedLength);
+        boolean saiPresent = response.getSaiPresent();
 
-        int mcc = 0, mnc = 0, lac = 0, cellId = 0;
+        Integer mcc = null, mnc = null, lac = null, cellId = null;
         if (cellInfo != null) {
             mcc = cellInfo.getMCC();
             mnc = cellInfo.getMNC();

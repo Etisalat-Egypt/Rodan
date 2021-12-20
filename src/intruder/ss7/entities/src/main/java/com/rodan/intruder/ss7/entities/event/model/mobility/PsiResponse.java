@@ -32,7 +32,7 @@ import lombok.ToString;
 @Getter @ToString
 public abstract class PsiResponse implements MapMessage {
     private com.rodan.intruder.ss7.entities.event.model.SubscriberInfo subscriberInfo;
-    private com.rodan.intruder.ss7.entities.event.model.LocationInfo locationInfo;
+    private LocationInfo locationInfo;
     private String vlrGt;
     private String sgsnGt;
 

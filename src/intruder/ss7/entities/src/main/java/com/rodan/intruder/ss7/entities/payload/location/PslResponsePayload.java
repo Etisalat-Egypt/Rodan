@@ -17,10 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-package com.rodan.intruder.ss7.entities.payload.mobility;
+package com.rodan.intruder.ss7.entities.payload.location;
 
 import com.rodan.intruder.ss7.entities.event.model.LocationInfo;
-import com.rodan.intruder.ss7.entities.event.model.SubscriberInfo;
 import com.rodan.intruder.ss7.entities.payload.Ss7Payload;
 import com.rodan.library.model.Constants;
 import lombok.Builder;
@@ -31,22 +30,15 @@ import lombok.ToString;
  * @author Ayman ElSherif
  */
 @Getter @ToString(callSuper = true)
-public class AtiResponsePayload extends Ss7Payload {
+public class PslResponsePayload extends Ss7Payload {
     private long invokeId;
-    private SubscriberInfo subscriberInfo;
     private LocationInfo locationInfo;
-    private String vmscGt;
-    private String vlrGt;
 
     @Builder
-    public AtiResponsePayload(String localGt, long invokeId, SubscriberInfo subscriberInfo, LocationInfo locationInfo,
-                              String vmscGt, String vlrGt) {
-        super(localGt, Constants.SCCP_HLR_SSN, Constants.SCCP_GSMSCF_SSN);
+    public PslResponsePayload(String localGt, long invokeId, LocationInfo locationInfo) {
+        super(localGt, Constants.SCCP_MSC_SSN, Constants.SCCP_GMLC_SSN);
         this.invokeId = invokeId;
-        this.subscriberInfo = subscriberInfo;
         this.locationInfo = locationInfo;
-        this.vmscGt = vmscGt;
-        this.vlrGt = vlrGt;
     }
 
     @Override
@@ -61,11 +53,11 @@ public class AtiResponsePayload extends Ss7Payload {
 
     @Override
     public String getPayloadName() {
-        return Constants.ATI_RESPONSE_PAYLOAD_NAME;
+        return Constants.PSI_RESPONSE_PAYLOAD_NAME;
     }
 
-    public AtiResponsePayload withInvokeId(long invokeId) {
+    public PslResponsePayload withInvokeId(long invokeId) {
         return this.invokeId == invokeId ? this :
-                new AtiResponsePayload(getLocalGt(), invokeId, subscriberInfo, locationInfo, vmscGt, vlrGt);
+                new PslResponsePayload(getLocalGt(), invokeId, locationInfo);
     }
 }

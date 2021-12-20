@@ -33,6 +33,7 @@ public class LocationInfo {
     private Integer mnc;
     private Integer lac;
     private Integer cellId;
+    private Boolean saiPresent;
 
     private Double longitude;
     private Double latitude;
@@ -45,12 +46,14 @@ public class LocationInfo {
     private Integer ageOfLocationPs;
 
     @Builder
-    public LocationInfo(Integer mcc, Integer mnc, Integer lac, Integer cellId, Double longitude, Double latitude, Double uncertainty,
-                        Integer ageOfLocation, Double longitudePs, Double latitudePs, Double uncertaintyPs, Integer ageOfLocationPs) {
+    public LocationInfo(Integer mcc, Integer mnc, Integer lac, Integer cellId, Boolean saiPresent, Double longitude,
+                        Double latitude, Double uncertainty, Integer ageOfLocation, Double longitudePs, Double latitudePs,
+                        Double uncertaintyPs, Integer ageOfLocationPs) {
         this.mcc = mcc;
         this.mnc = mnc;
         this.lac = lac;
         this.cellId = cellId;
+        this.saiPresent = saiPresent;
         this.longitude = longitude;
         this.latitude = latitude;
         this.uncertainty = uncertainty;

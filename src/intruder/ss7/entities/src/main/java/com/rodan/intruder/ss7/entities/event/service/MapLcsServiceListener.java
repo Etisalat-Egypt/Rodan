@@ -23,6 +23,7 @@
 
 package com.rodan.intruder.ss7.entities.event.service;
 
+import com.rodan.intruder.ss7.entities.event.model.lcs.PslRequest;
 import com.rodan.intruder.ss7.entities.event.model.lcs.PslResponse;
 import com.rodan.intruder.ss7.entities.event.model.lcs.SriLcsResponse;
 import org.apache.log4j.LogManager;
@@ -34,6 +35,11 @@ public interface MapLcsServiceListener extends MapServiceListener {
     default void onSendRoutingInfoForLCSResponse(SriLcsResponse response) {
         logger.debug("[[[[[[[[[[    onSendRoutingInfoForLCSResponse      ]]]]]]]]]]");
         logger.debug(response);
+    }
+
+    default void onProvideSubscriberLocationRequest(PslRequest request) {
+        logger.debug("[[[[[[[[[[    onProvideSubscriberLocationRequest      ]]]]]]]]]]");
+        logger.debug(request);
     }
 
     default void onProvideSubscriberLocationResponse(PslResponse response) {

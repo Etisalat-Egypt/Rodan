@@ -31,6 +31,7 @@ import com.rodan.connectivity.ss7.payloadwrapper.callhandling.SriPayloadWrapper;
 import com.rodan.connectivity.ss7.payloadwrapper.callhandling.SriResponsePayloadWrapper;
 import com.rodan.connectivity.ss7.payloadwrapper.camel.CamelConnectPayloadWrapper;
 import com.rodan.connectivity.ss7.payloadwrapper.location.PslPayloadWrapper;
+import com.rodan.connectivity.ss7.payloadwrapper.location.PslResponsePayloadWrapper;
 import com.rodan.connectivity.ss7.payloadwrapper.location.SriLcsPayloadWrapper;
 import com.rodan.connectivity.ss7.payloadwrapper.mobility.*;
 import com.rodan.connectivity.ss7.payloadwrapper.oam.SendImsiPayloadWrapper;
@@ -42,6 +43,7 @@ import com.rodan.intruder.ss7.entities.payload.callhandling.SriPayload;
 import com.rodan.intruder.ss7.entities.payload.callhandling.SriResponsePayload;
 import com.rodan.intruder.ss7.entities.payload.camel.CamelConnectPayload;
 import com.rodan.intruder.ss7.entities.payload.location.PslPayload;
+import com.rodan.intruder.ss7.entities.payload.location.PslResponsePayload;
 import com.rodan.intruder.ss7.entities.payload.location.SriLcsPayload;
 import com.rodan.intruder.ss7.entities.payload.mobility.*;
 import com.rodan.intruder.ss7.entities.payload.oam.SendImsiPayload;
@@ -105,6 +107,18 @@ public class PayloadMapper {
                     .msisdn(pl.getMsisdn()).imsi(pl.getImsi()).targetMscGt(pl.getTargetMscGt())
                     .gmlcGt(pl.getGmlcGt()).abuseOpcodeTag(pl.getAbuseOpcodeTag())
                     .mapVersion(pl.getMapVersion())
+                    .build();
+
+        } else if (payload.getClass() == PslResponsePayload.class) {
+            var pl = (PslResponsePayload) payload;
+            var mainService = mapAdapter.getLcsService();
+            jSs7Payload = PslResponsePayloadWrapper.builder()
+                    .mapAdapter(mapAdapter).sccpAdapter(sccpAdapter).nodeConfig(nodeConfig)
+                    .dialogGenerator(mainService::generateDialog)
+                    .localGt(pl.getLocalGt()).localSsn(pl.getLocalSsn()).remoteSsn(pl.getRemoteSsn())
+                    .invokeId(pl.getInvokeId())
+                    .longitude(pl.getLocationInfo().getLongitude()).latitude(pl.getLocationInfo().getLatitude())
+                    .uncertainty(pl.getLocationInfo().getUncertainty()).ageOfLocation(pl.getLocationInfo().getAgeOfLocation())
                     .build();
 
         } else if (payload.getClass() == SriLcsPayload.class) {

@@ -24,6 +24,7 @@ import com.rodan.intruder.main.cli.executor.AsyncModuleExecutor;
 import com.rodan.intruder.ss7.gateway.Ss7GatewayFactoryImpl;
 import com.rodan.intruder.ss7.usecases.port.Ss7GatewayFactory;
 import com.rodan.lab.ss7.kernel.usecases.Ss7SimulatorConstants;
+import com.rodan.lab.ss7.msc.usecases.simulation.location.LocationPslSimulator;
 import com.rodan.lab.ss7.vlr.usecases.model.Ss7SimulatorOptionsFactory;
 import com.rodan.lab.ss7.vlr.usecases.simulation.location.LocationPsiSimulator;
 import com.rodan.library.model.Constants;
@@ -52,11 +53,9 @@ public class Main {
     final static Logger logger = LogManager.getLogger(Main.class);
 
     public static final List<Class<?>> SS7_VLR_SIMULATORS = Util.getAvailableModules("com.rodan.lab.ss7.vlr.usecases.simulation");
-    // TODO IMP: revert after adding MSC simulators
-//    public static final List<Class<?>> SS7_MSC_SIMULATORS = Util.getAvailableModules("com.rodan.lab.ss7.msc.usecases.simulation");
-//    public static final List<Class<?>> SS7_SIMULATORS = Stream.concat(SS7_VLR_SIMULATORS.stream(),
-//            SS7_MSC_SIMULATORS.stream()).toList();
-    public static final List<Class<?>> SS7_SIMULATORS = SS7_VLR_SIMULATORS;
+    public static final List<Class<?>> SS7_MSC_SIMULATORS = Util.getAvailableModules("com.rodan.lab.ss7.msc.usecases.simulation");
+    public static final List<Class<?>> SS7_SIMULATORS = Stream.concat(SS7_VLR_SIMULATORS.stream(),
+            SS7_MSC_SIMULATORS.stream()).toList();
 
     private String configPath;
     @Setter
@@ -102,6 +101,10 @@ public class Main {
             var moduleOps = ss7Factory.create(simulatorName, nodeConfig);
             SignalingModule simulator = switch (simulatorName) {
                 case Ss7SimulatorConstants.LOCATION_PSI_SIM_NAME -> LocationPsiSimulator.builder()
+                        .moduleOptions(moduleOps)
+                        .gateway(ss7Gateway)
+                        .build();
+                case Ss7SimulatorConstants.LOCATION_PSL_SIM_NAME -> LocationPslSimulator.builder()
                         .moduleOptions(moduleOps)
                         .gateway(ss7Gateway)
                         .build();

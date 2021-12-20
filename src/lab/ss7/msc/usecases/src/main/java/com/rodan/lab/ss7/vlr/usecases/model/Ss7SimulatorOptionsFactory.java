@@ -22,6 +22,7 @@ package com.rodan.lab.ss7.vlr.usecases.model;
 import com.rodan.intruder.ss7.usecases.model.Ss7ModuleOptions;
 import com.rodan.intruder.ss7.usecases.model.Ss7ModuleOptionsFactory;
 import com.rodan.lab.ss7.kernel.usecases.Ss7SimulatorConstants;
+import com.rodan.lab.ss7.msc.usecases.model.LocationPslSimOptions;
 import com.rodan.lab.ss7.vlr.usecases.model.location.LocationPsiSimOptions;
 import com.rodan.library.model.config.node.config.LabNodeConfig;
 import com.rodan.library.model.error.ErrorCode;
@@ -47,6 +48,9 @@ public class Ss7SimulatorOptionsFactory implements Ss7ModuleOptionsFactory<LabNo
                     .nodeConfig(nodeConfig)
                     .imei(targetSubscriberInfo.getImei())
                     .vlrGt(targetNetworkInfo.getVlrGt()).vmscGt(targetNetworkInfo.getMscGt())
+                    .build();
+            case Ss7SimulatorConstants.LOCATION_PSL_SIM_NAME -> LocationPslSimOptions.builder()
+                    .nodeConfig(nodeConfig)
                     .build();
 
             default -> {

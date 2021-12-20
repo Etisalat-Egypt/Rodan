@@ -64,9 +64,6 @@ public class TimeBasedPayloadCollection <PL extends SignalingPayload> implements
         var totalTime = duration;
         var passedTime = LocalDateTime.now().minusMinutes(startTime.getMinute()).getMinute();
         var percentage = ((passedTime * 1.0) / totalTime) * 100;
-        logger.debug("###### passedTime: " + passedTime);
-        logger.debug("###### totalTime: " + totalTime);
-        logger.debug("###### percentage: " + percentage);
 
         return Math.round(percentage * 100.0) / 100.0;
     }

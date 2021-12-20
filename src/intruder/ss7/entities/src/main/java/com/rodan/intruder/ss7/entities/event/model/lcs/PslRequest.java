@@ -17,24 +17,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-/**
- * @author Ayman ElSherif
- */
-
 package com.rodan.intruder.ss7.entities.event.model.lcs;
 
-import com.rodan.intruder.ss7.entities.event.model.LocationInfo;
 import com.rodan.intruder.ss7.entities.event.model.MapMessage;
 import lombok.Getter;
 import lombok.ToString;
 
+/**
+ * @author Ayman ElSherif
+ */
 @Getter @ToString
-public abstract class PslResponse implements MapMessage {
-    private LocationInfo locationInfo;
-    private boolean saiPresent;
+public abstract class PslRequest implements MapMessage {
+    private String imsi;
+    private String msisdn;
+    private String mlcNumber;
 
-    public PslResponse(LocationInfo locationInfo, boolean saiPresent) {
-        this.locationInfo = locationInfo;
-        this.saiPresent = saiPresent;
+    public PslRequest(String imsi, String msisdn, String mlcNumber) {
+        this.imsi = imsi;
+        this.msisdn = msisdn;
+        this.mlcNumber = mlcNumber;
     }
 }

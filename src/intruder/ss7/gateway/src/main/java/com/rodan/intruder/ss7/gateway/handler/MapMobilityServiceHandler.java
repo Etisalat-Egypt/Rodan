@@ -30,7 +30,6 @@ import com.rodan.intruder.ss7.entities.event.model.auth.AuthTriplet;
 import com.rodan.intruder.ss7.entities.event.model.auth.EpcAuthVector;
 import com.rodan.intruder.ss7.entities.event.model.auth.SecurityContext;
 import com.rodan.intruder.ss7.entities.event.service.MapMobilityServiceListener;
-import com.rodan.intruder.ss7.gateway.handler.model.lcs.PslResponseImpl;
 import com.rodan.intruder.ss7.gateway.handler.model.mobility.*;
 import com.rodan.library.util.Util;
 import org.apache.commons.lang3.StringUtils;

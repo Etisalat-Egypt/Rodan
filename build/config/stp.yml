@@ -37,6 +37,7 @@ targetNetwork:
   sgsnGt: 8833010000040
   smscGt: 8833010000050
   gsmScfGt: 8833010000060
+  gmlcGt: 8833010000141
   cc: 883
   ndc: 30
   mcc: 901

@@ -47,6 +47,7 @@ targetNetwork: # Configuration of target network
   sgsnGt:
   smscGt:
   gsmScfGt:
+  gmlcGt:
   realm: localdomain
   mmeHostname: mme01
   cc: 883

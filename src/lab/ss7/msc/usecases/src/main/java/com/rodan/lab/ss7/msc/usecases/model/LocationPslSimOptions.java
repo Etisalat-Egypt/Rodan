@@ -17,24 +17,30 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-/**
- * @author Ayman ElSherif
- */
+package com.rodan.lab.ss7.msc.usecases.model;
 
-package com.rodan.intruder.ss7.entities.event.model.lcs;
-
-import com.rodan.intruder.ss7.entities.event.model.LocationInfo;
-import com.rodan.intruder.ss7.entities.event.model.MapMessage;
+import com.rodan.lab.ss7.kernel.usecases.Ss7SimulatorOptions;
+import com.rodan.library.model.Validator;
+import com.rodan.library.model.annotation.Option;
+import com.rodan.library.model.config.node.config.LabNodeConfig;
+import com.rodan.library.model.error.ValidationException;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 
-@Getter @ToString
-public abstract class PslResponse implements MapMessage {
-    private LocationInfo locationInfo;
-    private boolean saiPresent;
+import java.util.Objects;
 
-    public PslResponse(LocationInfo locationInfo, boolean saiPresent) {
-        this.locationInfo = locationInfo;
-        this.saiPresent = saiPresent;
+/**
+ * @author Ayman ElSherif
+ */
+@Getter @ToString
+public class LocationPslSimOptions extends Ss7SimulatorOptions<LabNodeConfig> {
+    @Builder
+    public LocationPslSimOptions(LabNodeConfig nodeConfig) {
+        super(nodeConfig);
+    }
+
+    @Override
+    public void validate() throws ValidationException {
     }
 }

@@ -39,6 +39,7 @@ public class TargetNetworkInfo {
     String sgsnGt;
     String smscGt;
     String gsmScfGt;
+    String gmlcGt;
 
     String realm;
     String mmeHostname;
@@ -50,13 +51,14 @@ public class TargetNetworkInfo {
 
     @Builder
     public TargetNetworkInfo(String hlrGt, String vlrGt, String mscGt, String sgsnGt, String smscGt, String gsmScfGt,
-                             String realm, String mmeHostname, String cc, String ndc, String mcc, String mnc) {
+                             String gmlcGt, String realm, String mmeHostname, String cc, String ndc, String mcc, String mnc) {
         this.hlrGt = hlrGt;
         this.vlrGt = vlrGt;
         this.mscGt = mscGt;
         this.sgsnGt = sgsnGt;
         this.smscGt = smscGt;
         this.gsmScfGt = gsmScfGt;
+        this.gmlcGt = gmlcGt;
 
         this.realm = realm;
         this.mmeHostname = mmeHostname;
@@ -80,6 +82,8 @@ public class TargetNetworkInfo {
             Validator.validateSmsc(smscGt);
         if (StringUtils.isNotBlank(gsmScfGt))
             Validator.validateGsmScf(gsmScfGt);
+        if (StringUtils.isNotBlank(gmlcGt))
+            Validator.validateGmlc(gmlcGt);
 
         // TODO IMP: Validate realm and mmeHostname;
         // target Realm should exists in peer realms

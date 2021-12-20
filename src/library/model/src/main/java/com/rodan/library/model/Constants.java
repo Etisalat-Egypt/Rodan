@@ -118,6 +118,7 @@ public interface Constants {
 	String PSI_PAYLOAD_NAME = "psi";
 	String PSI_RESPONSE_PAYLOAD_NAME = "psi_resp";
 	String PSL_PAYLOAD_NAME = "psl";
+	String PSL_RESPONSE_PAYLOAD_NAME = "psl_resp";
 	String REPORT_SM_DELIVERY_STATUS_PAYLOAD_NAME = "report_sm_delivery_status";
 	String FSM_PAYLOAD_NAME = "fsm";
 	String FSM_FORWARDER_PAYLOAD_NAME = "fsm_forwarder";

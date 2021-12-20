@@ -65,9 +65,6 @@ public class LazyPayloadCollection<PL extends SignalingPayload> implements Itera
     @Override
     public double getProgressPercentage() {
         var percentage = ((processedDataSize * 1.0) / totalDataSize) * 100;
-        logger.debug("###### processedDataSize: " + processedDataSize);
-        logger.debug("###### totalDataSize: " + totalDataSize);
-        logger.debug("###### percentage: " + percentage);
         return Math.round(percentage * 100.0) / 100.0;
     }
 }

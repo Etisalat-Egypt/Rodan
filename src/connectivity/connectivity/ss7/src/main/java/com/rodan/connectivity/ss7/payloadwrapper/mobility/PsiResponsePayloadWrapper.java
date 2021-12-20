@@ -137,7 +137,7 @@ public class PsiResponsePayloadWrapper extends JSs7PayloadWrapper<MapMobilitySer
 
 
         } catch (MAPException e) {
-            var msg = "Failed to add SRI-RESP to dialog";
+            var msg = "Failed to add PSI-RESP to dialog";
             logger.error(msg, e);
             throw SystemException.builder().code(ErrorCode.MAP_INITIALIZATION).message(msg).parent(e).build();
         }
