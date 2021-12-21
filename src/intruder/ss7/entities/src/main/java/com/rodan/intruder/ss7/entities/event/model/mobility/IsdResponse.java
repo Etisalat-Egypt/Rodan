@@ -29,5 +29,4 @@ import lombok.ToString;
 
 @Getter @ToString
 public abstract class IsdResponse implements MapMessage {
-
 }

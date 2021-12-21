@@ -42,7 +42,7 @@ public class NewAuthParameterOptions extends DiameterModuleOptions {
     @Option(name = "realm", description = "Destination realm", mandatory = true)
     private String destinationRealm;
 
-    @Option(name = "spoof", description = "Spoof origin host and realm (Yes or No)", mandatory = true)
+    @Option(name = "spoof", description = "Spoof origin address and realm (Yes or No)", mandatory = true)
     private String spoofOrigin;
 
     @Option(name = "shost", description = "Spoofed Origin-Host")

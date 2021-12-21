@@ -23,11 +23,15 @@
 
 package com.rodan.intruder.diameter.usecases.attacks;
 
+import com.rodan.intruder.diameter.entities.event.model.DiameterMessage;
 import com.rodan.intruder.diameter.entities.event.model.ErrorEvent;
 import com.rodan.intruder.diameter.entities.event.model.ResultCode;
 import com.rodan.intruder.diameter.entities.payload.DiameterPayload;
+import com.rodan.intruder.diameter.entities.payload.s6a.IdrPayload;
 import com.rodan.intruder.diameter.usecases.model.DiameterModuleOptions;
 import com.rodan.intruder.diameter.usecases.port.DiameterGateway;
+import com.rodan.library.model.error.ErrorCode;
+import com.rodan.library.model.error.SystemException;
 import com.rodan.library.util.IteratorWithProgress;
 import com.rodan.intruder.kernel.usecases.model.ModuleResponse;
 import com.rodan.library.model.Constants;
@@ -112,14 +116,6 @@ public abstract class DiameterBruteforceModuleTemplate extends DiameterModuleTem
         }
     }
 
-    private void reportProgress() {
-        var progress = (int) payloadIterator.getProgressPercentage();
-        if (progress % REPORT_PROGRESS_AT == 0 && progress != lastReportedProgress) {
-            notify("Progress: " + progress + "%", NotificationType.PROGRESS);
-            lastReportedProgress = progress;
-        }
-    }
-
     @Override
     public void onMessageHandlingError(ErrorEvent errorEvent) {
         logger.debug("[[[[[[[[[[    onMessageHandlingError      ]]]]]]]]]]");
@@ -134,15 +130,31 @@ public abstract class DiameterBruteforceModuleTemplate extends DiameterModuleTem
         logger.debug(msg);
     }
 
+    protected DiameterPayload getCorrespondingPayload(DiameterMessage message) throws SystemException {
+        var correspondingPayload = getSentPayloads().get(message.getSessionId());
+        if (correspondingPayload == null) {
+            var msg = "No corresponding payload found for session ID: " + message.getSessionId();
+            logger.error(msg);
+            throw SystemException.builder().code(ErrorCode.MISSING_PAYLOAD).message(msg).build();
+        }
+
+        return correspondingPayload;
+    }
+
     protected static boolean isPossibleValidNodeResultCode(ResultCode resultCode) {
         return resultCode != null && resultCode.getResultCode() != null &&
                 resultCode.getResultCode() != Constants.DIAMETER_ERROR_UNABLE_TO_DELIVER;
     }
 
     protected static boolean isUnknownUserResultCode(ResultCode resultCode) {
-        var isInvalidNode = resultCode != null && resultCode.getResultCode() != null &&
-                resultCode.getResultCode() == Constants.DIAMETER_ERROR_USER_UNKNOWN;
-        return !isInvalidNode;
+        return resultCode.getResultCode() == Constants.DIAMETER_ERROR_USER_UNKNOWN;
     }
 
+    private void reportProgress() {
+        var progress = (int) payloadIterator.getProgressPercentage();
+        if (progress % REPORT_PROGRESS_AT == 0 && progress != lastReportedProgress) {
+            notify("Progress: " + progress + "%", NotificationType.PROGRESS);
+            lastReportedProgress = progress;
+        }
+    }
 }

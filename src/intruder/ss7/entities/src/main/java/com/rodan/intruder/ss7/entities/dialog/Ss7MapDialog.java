@@ -26,6 +26,7 @@ package com.rodan.intruder.ss7.entities.dialog;
 public interface Ss7MapDialog {
     void setAbuseOpcodeTag(boolean value);
     void setUserObject(Object userObject);
+    String getRemoteAddress();
     Long getLocalDialogId();
     Long getRemoteDialogId();
 }

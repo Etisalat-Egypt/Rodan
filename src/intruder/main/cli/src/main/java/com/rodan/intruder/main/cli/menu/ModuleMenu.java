@@ -253,6 +253,10 @@ public class ModuleMenu extends MenuTemplate {
                             .moduleOptions(moduleOps)
                             .gateway(ss7Gateway)
                             .build();
+                    case Ss7ModuleConstants.VLR_DISCOVERY_NAME -> VlrDiscoveryModule.builder()
+                            .moduleOptions(moduleOps)
+                            .gateway(ss7Gateway)
+                            .build();
 
                     // Location Tracking
                     case Ss7ModuleConstants.LOCATION_ATI_NAME -> LocationAtiModule.builder()

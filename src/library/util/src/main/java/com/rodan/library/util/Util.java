@@ -26,6 +26,7 @@ package com.rodan.library.util;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.rodan.library.model.Constants;
+import com.rodan.library.model.PayloadStream;
 import com.rodan.library.model.Validator;
 import com.rodan.library.model.annotation.Module;
 import com.rodan.library.model.config.node.config.NodeConfig;
@@ -50,7 +51,6 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.LongStream;
-import java.util.stream.Stream;
 
 public class Util {
 	final static Logger logger = LogManager.getLogger(Util.class);
@@ -85,22 +85,13 @@ public class Util {
 		}
 	}
 
-	public static long getFileSize(String path) throws SystemException {
-		try {
-			return Files.size(Paths.get(path));
-
-		} catch (IOException e) {
-			var msg = String.format("Failed to load file: %s!", path);
-			logger.error(msg, e);
-			throw SystemException.builder().code(ErrorCode.INVALID_FILE).message(msg).parent(e).build();
-		}
-	}
-
-	public static Stream<String> loadWordListLazy(String path) throws SystemException {
+	public static PayloadStream loadWordListLazy(String path) throws SystemException {
 		try {
 			logger.debug("Loading wordlist from file: " + path);
 			var filePath = Paths.get(path);
-			return Files.lines(filePath);
+			var stream = Files.lines(filePath);
+			var streamSize = Files.size(filePath);;
+			return PayloadStream.builder().size(streamSize).stream(stream).build();
 
 		} catch (IOException e) {
 			var msg = String.format("Failed to load wordlist file: %s!", path);
@@ -397,31 +388,27 @@ public class Util {
 		return (byte) (value / (int)Math.pow(10, position - 1) % 10);
 	}
 
-	public static List<String> generateGtRange(String rangeDefinition) {
+	public static PayloadStream generateGtRange(String rangeDefinition) {
 		logger.debug("Generating GT range for: " + rangeDefinition);
-		List<String> range = new ArrayList<>();
-		try {
-			List<String> rangeList = new ArrayList<>();
-			var parts = rangeDefinition.split(",");
-			for (var part : parts) {
-				if (part.contains("-")) {
-					var start = Long.valueOf(part.split("-")[0].trim());
-					var end = Long.valueOf(part.split("-")[1].trim());
-					logger.debug("Adding from GT: " + start + " to GT: " + end + " to range");
-					LongStream.rangeClosed(start, end).boxed().forEach(v -> rangeList.add(String.valueOf(v)));
-				} else {
-					logger.debug("Adding GT: " + part.trim() + " to range");
-					rangeList.add(part.trim());
-				}
+		List<String> rangeList = new ArrayList<>();
+		var parts = rangeDefinition.split(",");
+		for (var part : parts) {
+			if (part.contains("-")) {
+				var start = Long.valueOf(part.split("-")[0].trim());
+				var end = Long.valueOf(part.split("-")[1].trim());
+				logger.debug("Adding from GT: " + start + " to GT: " + end + " to range");
+				LongStream.rangeClosed(start, end).boxed().forEach(v -> rangeList.add(String.valueOf(v)));
+
+			} else {
+				logger.debug("Adding GT: " + part.trim() + " to range");
+				rangeList.add(part.trim());
 			}
-
-			range = rangeList.stream().distinct().sorted().collect(Collectors.toList());
-
-		} catch (Exception e) {
-			range.clear();
 		}
 
-		return range;
+		var gtSize = rangeList.get(0).getBytes().length;
+		var gtStream = rangeList.stream().distinct().sorted();
+		var streamSize = (long) gtSize * rangeList.size(); // Not accurate, should count after distinct, but used to avoid closing the stream.
+		return PayloadStream.builder().size(streamSize).stream(gtStream).build();
 	}
 
 	public static List<String> generateHostRange(String rangeDefinition) {
@@ -478,18 +465,10 @@ public class Util {
 		return buffer.toString();
 	}
 
-	public static List<Class<?>> getAvailableModules(String /**
- * @author Ayman ElSherif
- */
-
-packageName) {
+	public static List<Class<?>> getAvailableModules(String packageName) {
 		// Reflections version 0.9.12 will crash if no classes were found,
 		// revert to 0.9.11 or wait for a fix in 0.9.13
-		var reflections = new Reflections(/**
- * @author Ayman ElSherif
- */
-
-packageName);
+		var reflections = new Reflections(packageName);
 		return reflections.getTypesAnnotatedWith(Module.class).stream()
 				.filter( m -> m.getAnnotation(Module.class).display())
 				.sorted(Comparator.<Class<?>, String>comparing(m -> m.getAnnotation(Module.class).category())

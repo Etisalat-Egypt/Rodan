@@ -34,8 +34,8 @@ import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-public class LazyPayloadCollection<PL extends SignalingPayload> implements IteratorWithProgress<PL> {
-    final static Logger logger = LogManager.getLogger(LazyPayloadCollection.class);
+public class PayloadCollection<PL extends SignalingPayload> implements IteratorWithProgress<PL> {
+    final static Logger logger = LogManager.getLogger(PayloadCollection.class);
 
     private Iterator<String> dataSourceIterator;
     private Long totalDataSize;
@@ -43,7 +43,7 @@ public class LazyPayloadCollection<PL extends SignalingPayload> implements Itera
     private Function<String, PL> payloadGenerator;
 
     @Builder
-    public LazyPayloadCollection(Stream<String> dataSource, Long totalDataSize, Function<String, PL> payloadGenerator) {
+    public PayloadCollection(Stream<String> dataSource, Long totalDataSize, Function<String, PL> payloadGenerator) {
         this.dataSourceIterator = dataSource.iterator(); // TODO make mandatory
         this.totalDataSize = Objects.requireNonNull(totalDataSize);
         this.processedDataSize = 0;

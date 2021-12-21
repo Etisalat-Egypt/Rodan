@@ -39,7 +39,7 @@ import com.rodan.library.model.annotation.Module;
 import com.rodan.library.model.error.SystemException;
 import com.rodan.library.model.notification.NotificationType;
 import com.rodan.intruder.kernel.usecases.SignalingModule;
-import com.rodan.intruder.kernel.usecases.model.LazyPayloadCollection;
+import com.rodan.intruder.kernel.usecases.model.PayloadCollection;
 import com.rodan.library.util.Util;
 import lombok.Builder;
 import lombok.SneakyThrows;
@@ -75,9 +75,8 @@ public class MmeIdrBruteforceModule extends DiameterBruteforceModuleTemplate imp
         var filePath = Util.getWordListsDirectory() + File.separator + options.getTargetMmeFileName();
 
         var mmeHostStream = Util.loadWordListLazy(filePath);
-        var mmeHostFileSize = Util.getFileSize(filePath);
-        var lazyPayloadCollection = LazyPayloadCollection.<DiameterPayload>builder()
-                .dataSource(mmeHostStream).totalDataSize(mmeHostFileSize)
+        var payloadCollection = PayloadCollection.<DiameterPayload>builder()
+                .dataSource(mmeHostStream.getStream()).totalDataSize(mmeHostStream.getSize())
                 .payloadGenerator((host) ->
                     IdrPayload.builder()
                             .usage(IdrPayload.Usage.LOCATION)
@@ -87,15 +86,15 @@ public class MmeIdrBruteforceModule extends DiameterBruteforceModuleTemplate imp
                 )
                 .build();
 
-        setPayloadIterator(lazyPayloadCollection);
+        setPayloadIterator(payloadCollection);
         var dummyPayload = IdrPayload.builder()
                 .usage(IdrPayload.Usage.LOCATION)
                 .destinationRealm(options.getDestinationRealm())
-                .imsi(options.getImsi()).targetMmeHost("host")
+                .imsi(options.getImsi()).targetMmeHost("address")
                 .build();
         setMainPayload(dummyPayload);
         setCurrentPayload(getMainPayload());
-        logger.debug("Payloads: " + lazyPayloadCollection);
+        logger.debug("Payloads: " + payloadCollection);
     }
 
     @Override

@@ -46,7 +46,7 @@ public class DosMtAllOptions extends DiameterModuleOptions {
 //    @Option(name = "mme", description = "Target MME")
 //    private String targetMmeHost;
 //
-//    @Option(name = "spoof", description = "Spoof origin host to target MME (Yes/No)", mandatory = true)
+//    @Option(name = "spoof", description = "Spoof origin address to target MME (Yes/No)", mandatory = true)
 //    private String spoofMme;
 
     @Builder

@@ -17,26 +17,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-/**
- * @author Ayman ElSherif
- */
+package com.rodan.library.model;
 
-package com.rodan.intruder.diameter.usecases.model.infogathering;
-
-import com.rodan.intruder.kernel.usecases.model.NodeDiscoveryInfo;
-import com.rodan.intruder.kernel.usecases.model.ModuleResponse;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 
-import java.util.List;
+import java.util.Objects;
+import java.util.stream.Stream;
 
+/**
+ * @author Ayman ElSherif
+ */
 @Getter @ToString
-public class MmeIdrDiscoveryResponse extends ModuleResponse {
-    private List<NodeDiscoveryInfo> discoveredMmeHosts;
+public class PayloadStream {
+    Long size;
+    Stream<String> stream;
 
     @Builder
-    public MmeIdrDiscoveryResponse(List<NodeDiscoveryInfo> discoveredMmeHosts) {
-        this.discoveredMmeHosts = discoveredMmeHosts;
+    public PayloadStream(Long size, Stream<String> stream) {
+        this.size = Objects.requireNonNull(size);
+        this.stream = Objects.requireNonNull(stream);
     }
 }

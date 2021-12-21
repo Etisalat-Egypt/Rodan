@@ -17,10 +17,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
+package com.rodan.intruder.ss7.usecases.model.infogathering;
+
+import com.rodan.intruder.kernel.usecases.model.ModuleResponse;
+import com.rodan.intruder.kernel.usecases.model.NodeDiscoveryInfo;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.ToString;
+
+import java.util.List;
+
 /**
  * @author Ayman ElSherif
  */
+@Getter @ToString
+public class VlrDiscoveryResponse extends ModuleResponse {
+    private List<NodeDiscoveryInfo> discoveredVlrGts;
 
-package com.rodan.intruder.diameter.usecases.model;
-
-public record MmeDiscoveryInfo(String host, String reason, String notes) {}
+    @Builder
+    public VlrDiscoveryResponse(List<NodeDiscoveryInfo> discoveredVlrGts) {
+        this.discoveredVlrGts = discoveredVlrGts;
+    }
+}

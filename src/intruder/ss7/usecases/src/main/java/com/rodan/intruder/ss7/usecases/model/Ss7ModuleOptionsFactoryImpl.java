@@ -19,6 +19,7 @@
 
 package com.rodan.intruder.ss7.usecases.model;
 
+import com.rodan.intruder.ss7.usecases.attacks.infogathering.VlrDiscoveryModule;
 import com.rodan.intruder.ss7.usecases.model.dos.DosCallBarringOptions;
 import com.rodan.intruder.ss7.usecases.model.dos.DosClOptions;
 import com.rodan.intruder.ss7.usecases.model.dos.DosDsdOptions;
@@ -96,6 +97,10 @@ public class Ss7ModuleOptionsFactoryImpl implements Ss7ModuleOptionsFactory<Intr
             case Ss7ModuleConstants.VLR_BF_NAME -> VlrBruteforceOptions.builder()
                     .nodeConfig(nodeConfig)
                     .imsi(targetSubscriberInfo.getImsi())
+                    .build();
+            case Ss7ModuleConstants.VLR_DISCOVERY_NAME -> VlrDiscoveryOptions.builder()
+                    .nodeConfig(nodeConfig)
+                    .mcc(targetNetworkInfo.getMcc()).mnc(targetNetworkInfo.getMnc())
                     .build();
 
             // Location Tracking

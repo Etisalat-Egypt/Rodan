@@ -63,8 +63,8 @@ public interface DiameterModuleConstants {
 
     String MME_IDR_DISCOVERY_NAME = INFO_GATHERING_CATEGORY + "/diameter/mme_discovery";
     String MME_IDR_DISCOVERY_DISPLAY_NAME = "Insert Subscriber Data Request (IDR) message";
-    String MME_IDR_DISCOVERY_BRIEF = "Discover all valid MME addresseses";
-    String MME_IDR_DISCOVERY_DESCRIPTION = "Disclose all valid MME addresses by sending IDR message to provided provided hosts list.";
+    String MME_IDR_DISCOVERY_BRIEF = "Discover all valid MME addressees";
+    String MME_IDR_DISCOVERY_DESCRIPTION = "Disclose all valid MME addresses by sending IDR message to provided hosts list.";
     String MME_IDR_DISCOVERY_RANK = "good";
 
 

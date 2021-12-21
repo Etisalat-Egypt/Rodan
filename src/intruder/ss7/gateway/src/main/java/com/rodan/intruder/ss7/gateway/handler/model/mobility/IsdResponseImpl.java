@@ -37,7 +37,7 @@ public class IsdResponseImpl extends IsdResponse {
     private long invokeId;
 
     @Builder
-    public IsdResponseImpl(long invokeId, MAPDialog mapDialog) {
+    public IsdResponseImpl(MAPDialog mapDialog, long invokeId) {
         this.invokeId = invokeId;
         this.ss7Dialog = Ss7MapDialogImpl.builder().jss7Dialog(mapDialog).build();
     }

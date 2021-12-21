@@ -58,8 +58,9 @@ public class DosCallBarringOptions extends Ss7ModuleOptions<IntruderNodeConfig> 
     private String mapVersion;
 
     @Builder
-    public DosCallBarringOptions(IntruderNodeConfig nodeConfig, String imsi, String msisdn, String forwardMsisdn, String gsmScf, String barred, String targetVlrGt, String targetHlrGt,
-                                 String spoofHlr, String mapVersion) {
+    public DosCallBarringOptions(IntruderNodeConfig nodeConfig, String imsi, String msisdn, String forwardMsisdn,
+                                 String gsmScf, String barred, String targetVlrGt, String targetHlrGt, String spoofHlr,
+                                 String mapVersion) {
         super(nodeConfig);
         this.imsi = Objects.requireNonNullElse(imsi, "");
         this.msisdn = Objects.requireNonNullElse(msisdn, "");

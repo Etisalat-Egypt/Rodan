@@ -33,11 +33,9 @@ import java.util.List;
 @Getter @ToString
 public class VlrBruteforceResponse extends ModuleResponse {
     private String vlrGt;
-    private List<String> discoveredVlrGts; // TODO add reason for each entry
 
     @Builder
-    public VlrBruteforceResponse(String vlrGt, List<String> discoveredVlrGts) {
+    public VlrBruteforceResponse(String vlrGt) {
         this.vlrGt = vlrGt;
-        this.discoveredVlrGts = discoveredVlrGts;
     }
 }

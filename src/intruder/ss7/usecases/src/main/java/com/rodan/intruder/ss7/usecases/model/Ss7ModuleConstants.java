@@ -91,6 +91,12 @@ public interface Ss7ModuleConstants {
     String CAMEL_INFO_DESCRIPTION = "Disclose gsmSCF address using Update-Location (UL) message. Address can be used to spoof messages (ex: ATI) \nto bypass basic SS7 message filtering. Module does cancels the UL procedure after disclosing gsmSCF address to avoid by subscriber DoS.";
     String CAMEL_INFO_RANK = "great";
 
+    String VLR_DISCOVERY_NAME = INFO_GATHERING_CATEGORY + "/ss7/vlr_discovery";
+    String VLR_DISCOVERY_DISPLAY_NAME = "Insert-Subscriber-Data (ISD) message";
+    String VLR_DISCOVERY_BRIEF = "Discover all valid VLR addressees";
+    String VLR_DISCOVERY_DESCRIPTION = "Disclose all valid VLR addresses by sending ISD message to provided address list.";
+    String VLR_DISCOVERY_RANK = "good";
+
     String VLR_BF_NAME = INFO_GATHERING_CATEGORY + "/ss7/vlr_bf";
     String VLR_BF_DISPLAY_NAME = "Provide-Subscriber-Info (PSI) message";
     String VLR_BF_BRIEF = "Brute force VLR address";

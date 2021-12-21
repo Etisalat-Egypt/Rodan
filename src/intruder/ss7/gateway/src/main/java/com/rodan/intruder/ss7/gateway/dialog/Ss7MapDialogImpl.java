@@ -27,6 +27,7 @@ import com.rodan.intruder.ss7.entities.dialog.Ss7MapDialog;
 import com.rodan.intruder.ss7.entities.event.model.error.details.ReturnErrorProblemType;
 import com.rodan.library.model.error.ErrorCode;
 import com.rodan.library.model.error.SystemException;
+import com.rodan.library.util.Util;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
@@ -35,6 +36,9 @@ import org.apache.log4j.Logger;
 import org.mobicents.protocols.ss7.map.MAPDialogImpl;
 import org.mobicents.protocols.ss7.map.api.MAPDialog;
 import org.mobicents.protocols.ss7.map.api.MAPException;
+import org.mobicents.protocols.ss7.sccp.impl.parameter.GlobalTitle0100Impl;
+import org.mobicents.protocols.ss7.sccp.parameter.GlobalTitle;
+import org.mobicents.protocols.ss7.sccp.parameter.SccpAddress;
 import org.mobicents.protocols.ss7.tcap.asn.ProblemImpl;
 
 @ToString
@@ -51,6 +55,12 @@ public class Ss7MapDialogImpl implements Ss7MapDialog {
     @Override
     public void setAbuseOpcodeTag(boolean value) {
         ((MAPDialogImpl) jss7Dialog).setAbuseOpcodeTag(value);
+    }
+
+    @Override
+    public String getRemoteAddress() {
+        var remoteGt = Util.getValueOrElse(jss7Dialog.getRemoteAddress(), SccpAddress::getGlobalTitle, new GlobalTitle0100Impl());
+        return Util.getValueOrElseNull(remoteGt, GlobalTitle::getDigits);
     }
 
     @Override

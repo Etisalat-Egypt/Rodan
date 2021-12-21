@@ -21,22 +21,6 @@
  * @author Ayman ElSherif
  */
 
-package com.rodan.intruder.diameter.usecases.model.infogathering;
+package com.rodan.intruder.kernel.usecases.model;
 
-import com.rodan.intruder.kernel.usecases.model.NodeDiscoveryInfo;
-import com.rodan.intruder.kernel.usecases.model.ModuleResponse;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.ToString;
-
-import java.util.List;
-
-@Getter @ToString
-public class MmeIdrDiscoveryResponse extends ModuleResponse {
-    private List<NodeDiscoveryInfo> discoveredMmeHosts;
-
-    @Builder
-    public MmeIdrDiscoveryResponse(List<NodeDiscoveryInfo> discoveredMmeHosts) {
-        this.discoveredMmeHosts = discoveredMmeHosts;
-    }
-}
+public record NodeDiscoveryInfo(String address, String reason, String notes) {}
