@@ -234,7 +234,7 @@ public abstract class Ss7ModuleTemplate extends SignalingModuleTemplate<Ss7Modul
 		String msg = String.format("reject: [%s]", reject);
 		logger.error(msg);
 		setExecutionError(true);
-		msg = "MAP dialog reject received. RefuseReason: " + reject.getRefuseReason();
+		msg = "MAP dialog reject received. RefuseReason: " + reject.getRefuseReason() + ", returnCause: " + reject.getTcapReturnCauseValue();
 		notify(msg, NotificationType.FAILURE);
 	}
 }

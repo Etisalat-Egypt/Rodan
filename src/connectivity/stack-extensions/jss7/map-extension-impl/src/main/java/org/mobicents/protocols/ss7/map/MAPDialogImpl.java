@@ -35,6 +35,7 @@ import org.mobicents.protocols.ss7.map.api.errors.MAPErrorMessage;
 import org.mobicents.protocols.ss7.map.api.primitives.AddressString;
 import org.mobicents.protocols.ss7.map.api.primitives.MAPExtensionContainer;
 import org.mobicents.protocols.ss7.map.errors.MAPErrorMessageImpl;
+import org.mobicents.protocols.ss7.sccp.parameter.ReturnCauseValue;
 import org.mobicents.protocols.ss7.sccp.parameter.SccpAddress;
 import org.mobicents.protocols.ss7.tcap.api.MessageType;
 import org.mobicents.protocols.ss7.tcap.api.TCAPException;
@@ -88,6 +89,8 @@ public abstract class MAPDialogImpl implements MAPDialog {
     protected DelayedAreaState delayedAreaState;
 
     // ########### TRX: PATCH START
+    protected ReturnCauseValue tcapReturnCauseValue;
+
     protected boolean abuseOpcodeTag;
     // ########### TRX: PATCH END
 
@@ -105,6 +108,14 @@ public abstract class MAPDialogImpl implements MAPDialog {
     }
 
     // ########### TRX: PATCH START
+    public void setTcapReturnCauseValue(ReturnCauseValue tcapReturnCauseValue) {
+        this.tcapReturnCauseValue = tcapReturnCauseValue;
+    }
+
+    public ReturnCauseValue getTcapReturnCauseValue() {
+        return this.tcapReturnCauseValue;
+    }
+
     public void setAbuseOpcodeTag(boolean abuseOpcodeTag) {
         this.abuseOpcodeTag = abuseOpcodeTag;
     }

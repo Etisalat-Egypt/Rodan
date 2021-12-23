@@ -24,6 +24,7 @@
 package com.rodan.intruder.ss7.entities.event.model.error;
 
 import com.rodan.intruder.ss7.entities.event.model.MapMessage;
+import com.rodan.intruder.ss7.entities.event.model.error.details.TcapReturnCauseValue;
 import lombok.Getter;
 import lombok.ToString;
 
@@ -33,10 +34,12 @@ public abstract class DialogReject implements MapMessage {
         NoReasonGiven, RemoteNodeNotReachable, PotentialVersionIncompatibility, PotentialVersionIncompatibilityTcap}
 
     private MapRefuseReason refuseReason;
+    private TcapReturnCauseValue tcapReturnCauseValue;
     private String applicationContextName;
 
-    public DialogReject(MapRefuseReason refuseReason, String applicationContextName) {
+    public DialogReject(MapRefuseReason refuseReason, TcapReturnCauseValue tcapReturnCauseValue, String applicationContextName) {
         this.refuseReason = refuseReason;
+        this.tcapReturnCauseValue = tcapReturnCauseValue;
         this.applicationContextName = applicationContextName;
     }
 }

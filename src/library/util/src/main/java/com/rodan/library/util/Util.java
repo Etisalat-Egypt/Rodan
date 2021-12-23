@@ -481,4 +481,13 @@ public class Util {
 		var value = Integer.parseInt(hex, 16);
 		return String.valueOf(value);
 	}
+
+	public static void printStackTrace() {
+		logger.debug("###### Printing stack trace...");
+		var stackTrace = Thread.currentThread().getStackTrace();
+		for (var trace : stackTrace) {
+			logger.debug("\t"+ trace);
+		}
+		logger.debug("###### Done!");
+	}
 }

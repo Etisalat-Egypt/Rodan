@@ -1751,6 +1751,11 @@ public class MAPProviderImpl implements MAPProvider, TCListener {
                 // issue a MAP-OP EN Cnf primitive with the result parameter
                 // indicating Refused and a refuse reason Remote node not
                 // reachable�.
+
+                // ########### TRX: PATCH START
+                mapDialogImpl.setTcapReturnCauseValue(ind.getReportCause());
+                // ########### TRX: PATCH END
+
                 this.deliverDialogReject(mapDialogImpl, MAPRefuseReason.RemoteNodeNotReachable, null, null);
                 mapDialogImpl.setState(MAPDialogState.EXPUNGED);
             } else if (mapDialogImpl.getState() == MAPDialogState.ACTIVE) {

@@ -25,6 +25,7 @@ package com.rodan.intruder.ss7.gateway.handler.model.error;
 
 import com.rodan.intruder.ss7.entities.dialog.Ss7MapDialog;
 import com.rodan.intruder.ss7.entities.event.model.error.DialogReject;
+import com.rodan.intruder.ss7.entities.event.model.error.details.TcapReturnCauseValue;
 import com.rodan.intruder.ss7.gateway.dialog.Ss7MapDialogImpl;
 import lombok.Builder;
 import lombok.Getter;
@@ -37,8 +38,8 @@ public class DialogRejectImpl extends DialogReject {
     private long invokeId;
 
     @Builder
-    public DialogRejectImpl(MapRefuseReason refuseReason, String applicationContextName, MAPDialog mapDialog, long invokeId) {
-        super(refuseReason, applicationContextName);
+    public DialogRejectImpl(MapRefuseReason refuseReason, TcapReturnCauseValue tcapReturnCauseValue, String applicationContextName, MAPDialog mapDialog, long invokeId) {
+        super(refuseReason, tcapReturnCauseValue, applicationContextName);
         this.ss7Dialog = Ss7MapDialogImpl.builder().jss7Dialog(mapDialog).build();
         this.invokeId = invokeId;
     }

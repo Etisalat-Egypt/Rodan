@@ -23,6 +23,7 @@
 
 package com.rodan.intruder.ss7.gateway.handler;
 
+import com.rodan.intruder.ss7.entities.event.model.error.details.TcapReturnCauseValue;
 import com.rodan.intruder.ss7.gateway.dialog.Ss7MapDialogImpl;
 import com.rodan.intruder.ss7.gateway.handler.model.error.DialogProviderAbortImpl;
 import com.rodan.intruder.ss7.gateway.handler.model.error.DialogRejectImpl;
@@ -31,8 +32,10 @@ import com.rodan.intruder.ss7.entities.event.dialog.MapDialogEventListener;
 import com.rodan.intruder.ss7.entities.event.model.error.DialogProviderAbort;
 import com.rodan.intruder.ss7.entities.event.model.error.DialogReject;
 import com.rodan.intruder.ss7.entities.event.model.error.DialogUserAbort;
+import com.rodan.library.util.Util;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import org.mobicents.protocols.ss7.map.MAPDialogImpl;
 import org.mobicents.protocols.ss7.map.api.MAPDialog;
 import org.mobicents.protocols.ss7.map.api.MAPDialogListener;
 import org.mobicents.protocols.ss7.map.api.dialog.*;
@@ -148,8 +151,11 @@ public class MapDialogEventHandler implements MAPDialogListener {
                                 ApplicationContextName alternativeApplicationContext, MAPExtensionContainer extensionContainer) {
         logger.debug("[[[[[[[[[[    onDialogReject      ]]]]]]]]]]");
 		String msg = String.format(
-				"onDialogReject received for dialogId: [%d], refuseReason: [%s], alternativeApplicationContext: [%s], extensionContainer: [%s]",
-				mapDialog.getLocalDialogId(), refuseReason, alternativeApplicationContext, extensionContainer);
+				"onDialogReject received for dialogId: [%d], refuseReason: [%s], tcapReturnCauseValue: [%s], " +
+                        "alternativeApplicationContext: [%s], extensionContainer: [%s]",
+				mapDialog.getLocalDialogId(), refuseReason, ((MAPDialogImpl) mapDialog).getTcapReturnCauseValue(),
+                alternativeApplicationContext, extensionContainer);
+        var tcapReturnCause = ((MAPDialogImpl) mapDialog).getTcapReturnCauseValue();
 		logger.error(msg);
         DialogReject.MapRefuseReason reason = null;
         if (refuseReason != null) {
@@ -163,11 +169,13 @@ public class MapDialogEventHandler implements MAPDialogListener {
                 case PotentialVersionIncompatibilityTcap -> DialogReject.MapRefuseReason.PotentialVersionIncompatibilityTcap;
             };
         }
+
+        var tcapReturnCauseValue = (tcapReturnCause != null) ? TcapReturnCauseValue.getInstance(tcapReturnCause.getValue()) : null;
 		var appCtx = (alternativeApplicationContext != null)?
                 ((ApplicationContextNameImpl) alternativeApplicationContext).getStringValue() : "";
         var content = DialogRejectImpl.builder()
                 .mapDialog(mapDialog)
-                .refuseReason(reason).applicationContextName(appCtx)
+                .refuseReason(reason).tcapReturnCauseValue(tcapReturnCauseValue).applicationContextName(appCtx)
                 .build();
         for (var listener : listeners) {
             listener.onDialogReject(content);
