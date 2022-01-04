@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings xmlns="http://maven.apache.org/SETTINGS/1.2.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.2.0 https://maven.apache.org/xsd/settings-1.2.0.xsd">
+  <mirrors>
+     <!-- Mirror repos for insecure HTTP repos -->
+    <mirror>
+      <id>secure-repository.jboss.org</id>
+      <mirrorOf>repository.jboss.org</mirrorOf>
+      <name>HTTPS repository mirror</name>
+      <url>https://repository.jboss.org/maven2/</url>
+    </mirror>
+    <mirror>
+      <id>secure-jboss-public-repository-group</id>
+      <mirrorOf>jboss-public-repository-group</mirrorOf>
+      <name>HTTPS repository mirror</name>
+      <url>https://repository.jboss.org/nexus/content/groups/public/</url>
+    </mirror>
+    <mirror>
+      <id>secure-jboss-3rd-party-repository-group</id>
+      <mirrorOf>jboss-3rd-party-repository-group</mirrorOf>
+      <name>HTTPS repository mirror</name>
+      <url>https://repository.jboss.org/nexus/content/repositories/thirdparty-releases/</url>
+    </mirror>
+    <mirror>
+      <id>secure-jboss-3rd-party-upload-repository-group</id>
+      <mirrorOf>jboss-3rd-party-upload-repository-group</mirrorOf>
+      <name>HTTPS repository mirror</name>
+      <url>https://repository.jboss.org/nexus/content/repositories/thirdparty-upload/</url>
+    </mirror>
+    <mirror>
+      <id>secure-backup.repository.jboss.org</id>
+      <mirrorOf>backup.repository.jboss.org</mirrorOf>
+      <name>HTTPS repository mirror</name>
+      <url>https://anonsvn.jboss.org/repos/repository.jboss.org/maven2/</url>
+    </mirror>
+    <mirror>
+      <id>secure-java.net-Public</id>
+      <mirrorOf>java.net-Public</mirrorOf>
+      <name>HTTPS repository mirror</name>
+      <url>https://download.java.net/maven/2/</url>
+    </mirror>
+  </mirrors>
+</settings>
