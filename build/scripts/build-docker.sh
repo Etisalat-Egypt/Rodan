@@ -53,32 +53,28 @@ if [[ ! -d $MAEVEN_REPO ]]
     run_command "mkdir -p $MAEVEN_REPO"
 fi
 
-# Build maven image
-run_command "cd ${DOCKER_HOME}"
-run_command "docker build --tag rodan-mvn:latest -f Dockerfile-mvn ."
-
 cd "${RODAN_HOME}"
 # Build jSS7 stack extentions
-run_command "docker run -it --rm --name stack-builder --volume $ASN_STACK_EXTENSION_PATH:/usr/src/app --volume $MAEVEN_REPO:/root/.m2 -w /usr/src/app rodan-mvn:latest mvn install -Dmaven.test.skip=true -Dcheckstyle.skip"
-run_command "docker run -it --rm --name stack-builder --volume $SCCP_STACK_EXTENSION_PATH:/usr/src/app --volume $MAEVEN_REPO:/root/.m2 -w /usr/src/app rodan-mvn:latest mvn install -Dmaven.test.skip=true -Dcheckstyle.skip"
-run_command "docker run -it --rm --name stack-builder --volume $TCAP_STACK_EXTENSION_PATH:/usr/src/app --volume $MAEVEN_REPO:/root/.m2 -w /usr/src/app rodan-mvn:latest mvn install -Dmaven.test.skip=true -Dcheckstyle.skip"
-run_command "docker run -it --rm --name stack-builder --volume $MAP_STACK_EXTENSION_PATH:/usr/src/app --volume $MAEVEN_REPO:/root/.m2 -w /usr/src/app rodan-mvn:latest mvn install -Dmaven.test.skip=true -Dcheckstyle.skip"
+run_command "docker run -it --rm --name stack-builder --volume $ASN_STACK_EXTENSION_PATH:/usr/src/app --volume $MAEVEN_REPO:/root/.m2 -w /usr/src/app maven:3.8.4-openjdk-17 mvn install -Dmaven.test.skip=true -Dcheckstyle.skip"
+run_command "docker run -it --rm --name stack-builder --volume $SCCP_STACK_EXTENSION_PATH:/usr/src/app --volume $MAEVEN_REPO:/root/.m2 -w /usr/src/app maven:3.8.4-openjdk-17 mvn install -Dmaven.test.skip=true -Dcheckstyle.skip"
+run_command "docker run -it --rm --name stack-builder --volume $TCAP_STACK_EXTENSION_PATH:/usr/src/app --volume $MAEVEN_REPO:/root/.m2 -w /usr/src/app maven:3.8.4-openjdk-17 mvn install -Dmaven.test.skip=true -Dcheckstyle.skip"
+run_command "docker run -it --rm --name stack-builder --volume $MAP_STACK_EXTENSION_PATH:/usr/src/app --volume $MAEVEN_REPO:/root/.m2 -w /usr/src/app maven:3.8.4-openjdk-17 mvn install -Dmaven.test.skip=true -Dcheckstyle.skip"
 
 # Build jDiameter stack extentions
-run_command "docker run -it --rm --name stack-builder --volume $JDIAMETER_STACK_EXTENSION_PATH:/usr/src/app --volume $MAEVEN_REPO:/root/.m2 -w /usr/src/app rodan-mvn:latest mvn install -Dmaven.test.skip=true -Dcheckstyle.skip"
+run_command "docker run -it --rm --name stack-builder --volume $JDIAMETER_STACK_EXTENSION_PATH:/usr/src/app --volume $MAEVEN_REPO:/root/.m2 -w /usr/src/app maven:3.8.4-openjdk-17 mvn install -Dmaven.test.skip=true -Dcheckstyle.skip"
 
 # Build Library Module
-run_command "docker run -it --rm --name rodan-builder --volume $LIBRARY_MODULE_PATH:/usr/src/app --volume $MAEVEN_REPO:/root/.m2 -w /usr/src/app rodan-mvn:latest mvn install -Dmaven.test.skip=true"
+run_command "docker run -it --rm --name rodan-builder --volume $LIBRARY_MODULE_PATH:/usr/src/app --volume $MAEVEN_REPO:/root/.m2 -w /usr/src/app maven:3.8.4-openjdk-17 mvn install -Dmaven.test.skip=true"
 
 # Build Connectivity Module
-run_command "docker run -it --rm --name rodan-builder --volume $CONNECTIVITY_MODULE_PATH:/usr/src/app --volume $MAEVEN_REPO:/root/.m2 -w /usr/src/app rodan-mvn:latest mvn install -Dmaven.test.skip=true"
+run_command "docker run -it --rm --name rodan-builder --volume $CONNECTIVITY_MODULE_PATH:/usr/src/app --volume $MAEVEN_REPO:/root/.m2 -w /usr/src/app maven:3.8.4-openjdk-17 mvn install -Dmaven.test.skip=true"
 
 
 # Build Intruder Module
-run_command "docker run -it --rm --name rodan-builder --volume $INTRUDER_MODULE_PATH:/usr/src/app --volume $MAEVEN_REPO:/root/.m2 -w /usr/src/app rodan-mvn:latest mvn install -Dmaven.test.skip=true"
+run_command "docker run -it --rm --name rodan-builder --volume $INTRUDER_MODULE_PATH:/usr/src/app --volume $MAEVEN_REPO:/root/.m2 -w /usr/src/app maven:3.8.4-openjdk-17 mvn install -Dmaven.test.skip=true"
 
 # Build Lab Module
-run_command "docker run -it --rm --name rodan-builder --volume $LAB_MODULE_PATH:/usr/src/app --volume $MAEVEN_REPO:/root/.m2 -w /usr/src/app rodan-mvn:latest mvn install -Dmaven.test.skip=true"
+run_command "docker run -it --rm --name rodan-builder --volume $LAB_MODULE_PATH:/usr/src/app --volume $MAEVEN_REPO:/root/.m2 -w /usr/src/app maven:3.8.4-openjdk-17 mvn install -Dmaven.test.skip=true"
 
 
 run_command "cd ${DOCKER_HOME}"
