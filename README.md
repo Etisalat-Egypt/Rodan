@@ -83,18 +83,6 @@ To create the latest development build from this source repository:
 $ sudo apt install lksctp-tools
 ```
 
-#### Disable Maven's default http blocker by removing or commenting out below element in settings.xml.
-```xml
-  <mirror>
-      <id>maven-default-http-blocker</id>
-      <mirrorOf>external:http:*</mirrorOf>
-      <name>Pseudo repository to mirror external repositories initially using HTTP.</name>
-      <url>http://0.0.0.0/</url>
-      <blocked>true</blocked>
-    </mirror>
-  </mirrors>
-```
-
 #### Build framework and stack extentions: 
 ```bash
 $ cd build/scripts
