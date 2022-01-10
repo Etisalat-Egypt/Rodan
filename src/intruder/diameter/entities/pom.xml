@@ -23,7 +23,7 @@
     <parent>
         <groupId>com.rodan.intruder.diameter</groupId>
         <artifactId>diameter</artifactId>
-        <version>1.2.1-SNAPSHOT</version>
+        <version>1.2.2-SNAPSHOT</version>
     </parent>
     <artifactId>entities</artifactId>
     <name>Diameter Entities</name>
@@ -33,7 +33,7 @@
         <dependency>
             <groupId>com.rodan.intruder.kernel</groupId>
             <artifactId>entities</artifactId>
-            <version>1.2.1-SNAPSHOT</version>
+            <version>1.2.2-SNAPSHOT</version>
         </dependency>
     </dependencies>
 </project>

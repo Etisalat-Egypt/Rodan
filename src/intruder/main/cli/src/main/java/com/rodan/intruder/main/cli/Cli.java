@@ -123,7 +123,7 @@ public class Cli {
 				"                    d.X                     ", "                     X.a                    ",
 				"                    n.X                     ", "                     X                      " };
 
-		var versionString = new String[] { "     Rodan Exploitation Framework v1.2.1!     " };
+		var versionString = new String[] { "     Rodan Exploitation Framework v1.2.2!     " };
 
 		int logoIndex = 0, headerIndex = 0, appNameIndex = 0, footerIndex = 0, versionStringIndex = 0;
 		// header 21

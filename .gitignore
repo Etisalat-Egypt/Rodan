@@ -55,6 +55,8 @@ secrets.yml
 *.burp
 *.log
 logs/
+.vscode
+*.pcap
 # Heroku Files/Folders
 .sts4-cache
 

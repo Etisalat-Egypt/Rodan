@@ -23,7 +23,7 @@
     <parent>
         <groupId>com.rodan.lab.ss7</groupId>
         <artifactId>ss7</artifactId>
-        <version>1.2.1-SNAPSHOT</version>
+        <version>1.2.2-SNAPSHOT</version>
     </parent>
     <groupId>com.rodan.lab.ss7.hlr</groupId>
     <artifactId>hlr</artifactId>
