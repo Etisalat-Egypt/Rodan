@@ -29,6 +29,7 @@ import com.rodan.intruder.ss7.entities.event.model.auth.AuthQuintuplet;
 import com.rodan.intruder.ss7.entities.event.model.auth.AuthTriplet;
 import com.rodan.intruder.ss7.entities.event.model.auth.EpcAuthVector;
 import com.rodan.intruder.ss7.entities.event.model.auth.SecurityContext;
+import com.rodan.intruder.ss7.entities.event.model.mobility.details.CancellationType;
 import com.rodan.intruder.ss7.entities.event.service.MapMobilityServiceListener;
 import com.rodan.intruder.ss7.gateway.handler.model.mobility.*;
 import com.rodan.library.util.Util;
@@ -147,8 +148,15 @@ public class MapMobilityServiceHandler extends MapServiceHandler implements MAPS
     public void onCancelLocationRequest(CancelLocationRequest request) {
         logger.debug("[[[[[[[[[[    onCancelLocationRequest      ]]]]]]]]]]");
         logger.debug(request);
+        var imsi = Util.getValueOrElse(request.getImsi(), IMSI::getData, "");
+        var newMsc = Util.getValueOrElseNull(request.getNewMSCNumber(), ISDNAddressString::getAddress);
+        CancellationType cancellationType = null;
+        if (request.getCancellationType() != null)
+            cancellationType = CancellationType.getInstance(request.getCancellationType().getCode());
         var content = ClRequestImpl.builder()
-                .invokeId(request.getInvokeId()).mapDialog(request.getMAPDialog())
+                .imsi(imsi).invokeId(request.getInvokeId())
+                .cancellationType(cancellationType).newMscGt(newMsc)
+                .mapDialog(request.getMAPDialog())
                 .build();
         for (var listener : listeners) {
             listener.onCancelLocationRequest(content);

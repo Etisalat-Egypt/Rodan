@@ -1,6 +1,6 @@
 /*
  * Etisalat Egypt, Open Source
- * Copyright 2021, Etisalat Egypt and individual contributors
+ * Copyright 2022, Etisalat Egypt and individual contributors
  * by the @authors tag.
  *
  * This program is free software: you can redistribute it and/or modify
@@ -17,26 +17,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-package com.rodan.lab.ss7.msc.usecases.model;
+package com.rodan.lab.ss7.msc.usecases.model.mobility;
 
 import com.rodan.lab.ss7.kernel.usecases.Ss7SimulatorOptions;
-import com.rodan.library.model.Validator;
-import com.rodan.library.model.annotation.Option;
 import com.rodan.library.model.config.node.config.LabNodeConfig;
 import com.rodan.library.model.error.ValidationException;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 
-import java.util.Objects;
-
 /**
  * @author Ayman ElSherif
  */
 @Getter @ToString
-public class LocationPslSimOptions extends Ss7SimulatorOptions<LabNodeConfig> {
+public class ClResponderSimOptions extends Ss7SimulatorOptions<LabNodeConfig> {
     @Builder
-    public LocationPslSimOptions(LabNodeConfig nodeConfig) {
+    public ClResponderSimOptions(LabNodeConfig nodeConfig) {
         super(nodeConfig);
     }
 

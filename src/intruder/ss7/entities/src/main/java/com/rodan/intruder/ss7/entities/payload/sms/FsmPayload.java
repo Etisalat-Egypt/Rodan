@@ -24,6 +24,7 @@
 package com.rodan.intruder.ss7.entities.payload.sms;
 
 import com.rodan.intruder.ss7.entities.payload.Ss7Payload;
+import com.rodan.intruder.ss7.entities.payload.mobility.UlResponsePayload;
 import com.rodan.library.model.Constants;
 import lombok.Builder;
 import lombok.Getter;
@@ -67,5 +68,20 @@ public class FsmPayload extends Ss7Payload {
     @Override
     public String getPayloadName() {
         return Constants.FSM_PAYLOAD_NAME;
+    }
+
+    public FsmPayload withImsi(String imsi) {
+        return imsi.equals(this.imsi) ? this : new FsmPayload(getLocalGt(), imsi, getSender(), getTargetMscGt(),
+                getContent(), getMessageType(), getSpoofSmsc(), getSmscGt(), getMapVersion());
+    }
+
+    public FsmPayload withTargetMscGt(String targetMscGt) {
+        return targetMscGt.equals(this.targetMscGt) ? this : new FsmPayload(getLocalGt(), getImsi(), getSender(), targetMscGt,
+                getContent(), getMessageType(), getSpoofSmsc(), getSmscGt(), getMapVersion());
+    }
+
+    public FsmPayload withContent(String content) {
+        return content.equals(this.content) ? this : new FsmPayload(getLocalGt(), getImsi(), getSender(), getTargetMscGt(),
+                content, getMessageType(), getSpoofSmsc(), getSmscGt(), getMapVersion());
     }
 }

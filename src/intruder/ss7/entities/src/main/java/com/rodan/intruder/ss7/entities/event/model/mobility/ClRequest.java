@@ -24,9 +24,19 @@
 package com.rodan.intruder.ss7.entities.event.model.mobility;
 
 import com.rodan.intruder.ss7.entities.event.model.MapMessage;
+import com.rodan.intruder.ss7.entities.event.model.mobility.details.CancellationType;
 import lombok.Getter;
 import lombok.ToString;
 
 @Getter @ToString
 public abstract class ClRequest implements MapMessage {
+    private String imsi;
+    private CancellationType cancellationType;
+    private String newMscGt;
+
+    public ClRequest(String imsi, CancellationType cancellationType, String newMscGt) {
+        this.imsi = imsi;
+        this.cancellationType = cancellationType;
+        this.newMscGt = newMscGt;
+    }
 }

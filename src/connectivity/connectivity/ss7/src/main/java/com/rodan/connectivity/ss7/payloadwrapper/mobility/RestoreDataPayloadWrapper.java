@@ -31,6 +31,7 @@ import com.rodan.connectivity.ss7.service.MapMobilityService;
 import com.rodan.library.model.Constants;
 import com.rodan.library.model.annotation.Payload;
 import com.rodan.library.model.config.node.config.IntruderNodeConfig;
+import com.rodan.library.model.config.node.config.LabNodeConfig;
 import com.rodan.library.model.config.node.config.NodeConfig;
 import com.rodan.library.model.error.ErrorCode;
 import com.rodan.library.model.error.SystemException;
@@ -85,7 +86,10 @@ public class RestoreDataPayloadWrapper extends JSs7PayloadWrapper<MapMobilitySer
                 getCc(), getNdc());
         var calledGt = sccpFactory.createGlobalTitle(calledGtStr, TRANSLATION_TYPE, ISDN_MOBILE_INDICATOR,
                 ENCODING_SCHEME, NATURE_OF_ADDRESS);
-        var calledPc = Integer.valueOf(((IntruderNodeConfig) getNodeConfig()).getSs7Association().getPeerNode().getPointCode());
+        var peerNode = (getNodeConfig() instanceof IntruderNodeConfig) ?
+                ((IntruderNodeConfig) getNodeConfig()).getSs7Association().getPeerNode() :
+                ((LabNodeConfig) getNodeConfig()).getSs7Association().getPeerNode();
+        var calledPc = Integer.valueOf(peerNode.getPointCode());
         var calledParty = sccpFactory.createSccpAddress(RoutingIndicator.ROUTING_BASED_ON_GLOBAL_TITLE, calledGt,
                 calledPc, getRemoteSsn());
 

@@ -31,6 +31,7 @@ import com.rodan.connectivity.ss7.service.MapMobilityService;
 import com.rodan.library.model.Constants;
 import com.rodan.library.model.annotation.Payload;
 import com.rodan.library.model.config.node.config.IntruderNodeConfig;
+import com.rodan.library.model.config.node.config.LabNodeConfig;
 import com.rodan.library.model.config.node.config.NodeConfig;
 import com.rodan.library.model.error.ErrorCode;
 import com.rodan.library.model.error.SystemException;
@@ -42,6 +43,7 @@ import org.mobicents.protocols.ss7.indicator.RoutingIndicator;
 import org.mobicents.protocols.ss7.map.api.MAPApplicationContext;
 import org.mobicents.protocols.ss7.map.api.MAPApplicationContextName;
 import org.mobicents.protocols.ss7.map.api.MAPException;
+import org.mobicents.protocols.ss7.map.api.primitives.AddressNature;
 import org.mobicents.protocols.ss7.map.api.service.mobility.MAPDialogMobility;
 import org.mobicents.protocols.ss7.map.api.service.mobility.locationManagement.CancellationType;
 
@@ -52,17 +54,22 @@ public class CLPayloadWrapper extends JSs7PayloadWrapper<MapMobilityService, MAP
     @Getter(AccessLevel.PRIVATE) private String targetVlrGt;
     @Getter(AccessLevel.PRIVATE) private String spoofHlr;
     @Getter(AccessLevel.PRIVATE) private String targetHlrGt;
+    @Getter(AccessLevel.PRIVATE) private CancellationType cancellationType;
+    @Getter(AccessLevel.PRIVATE) private String newMscGt;
     @Getter(AccessLevel.PRIVATE) private String mapVersion;
 
     @Builder
     public CLPayloadWrapper(String localGt, int localSsn, int remoteSsn, NodeConfig nodeConfig, SccpAdapter sccpAdapter, 
                             MapAdapter mapAdapter, MapDialogGenerator<MAPDialogMobility> dialogGenerator, String imsi, 
-                            String targetVlrGt, String spoofHlr, String targetHlrGt, String mapVersion) {
+                            String targetVlrGt, String spoofHlr, String targetHlrGt, CancellationType cancellationType,
+                            String newMscGt, String mapVersion) {
         super(localGt, localSsn, remoteSsn, nodeConfig, sccpAdapter, mapAdapter, dialogGenerator);
         this.imsi = imsi;
         this.targetVlrGt = targetVlrGt;
         this.spoofHlr = spoofHlr;
         this.targetHlrGt = targetHlrGt;
+        this.cancellationType = cancellationType;
+        this.newMscGt = newMscGt;
         this.mapVersion = mapVersion;
     }
 
@@ -80,7 +87,10 @@ public class CLPayloadWrapper extends JSs7PayloadWrapper<MapMobilityService, MAP
                 callingPc, getLocalSsn());
         var calledGt = sccpFactory.createGlobalTitle(getTargetVlrGt(), TRANSLATION_TYPE,
                 ISDN_TELEPHONY_INDICATOR, ENCODING_SCHEME, NATURE_OF_ADDRESS);
-        var calledPc = Integer.valueOf(((IntruderNodeConfig) getNodeConfig()).getSs7Association().getPeerNode().getPointCode());
+        var peerNode = (getNodeConfig() instanceof IntruderNodeConfig) ?
+                ((IntruderNodeConfig) getNodeConfig()).getSs7Association().getPeerNode() :
+                ((LabNodeConfig) getNodeConfig()).getSs7Association().getPeerNode();
+        var calledPc = Integer.valueOf(peerNode.getPointCode());
         var calledParty = sccpFactory.createSccpAddress(RoutingIndicator.ROUTING_BASED_ON_GLOBAL_TITLE, calledGt,
                 calledPc, getRemoteSsn());
 
@@ -95,10 +105,11 @@ public class CLPayloadWrapper extends JSs7PayloadWrapper<MapMobilityService, MAP
             var mapFactory = getMapAdapter().getParamFactory();
             var imsi = mapFactory.createIMSI(getImsi());
 
-            //  TODO Check CancellationType.subscriptionWithdraw
-            dialog.addCancelLocationRequest(imsi, null, CancellationType.updateProcedure,
-                    null, null, false, false,
-                    null, null, null);
+            var newMsc = mapFactory.createISDNAddressString(AddressNature.international_number,
+                    org.mobicents.protocols.ss7.map.api.primitives.NumberingPlan.ISDN, newMscGt);
+
+            dialog.addCancelLocationRequest(imsi, null, cancellationType, null,
+                    null, false, false, newMsc, null, null);
 
         } catch (MAPException e) {
             var msg = "Failed to add CL to dialog";

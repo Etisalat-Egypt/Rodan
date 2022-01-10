@@ -118,7 +118,6 @@ public class SccpAdapter implements SccpSstListener {
     }
 
     private void addRemoteEndpoints() throws SystemException {
-        // TODO IMP: STP: check of this is required for STP only or for all nodes
         int networkIndicator;
         var peerNodeList = new ArrayList<Ss7NodeInfo>();
         networkIndicator = Integer.valueOf(nodeConfig.getSs7Association().getNetworkIndicator());
@@ -275,7 +274,8 @@ public class SccpAdapter implements SccpSstListener {
             var factory = getParamFactory();
             var router = getRouter();
 
-            var translationType = Constants.TRANSLATION_TYPE_NOT_USED;
+            var defaultTt = Constants.TRANSLATION_TYPE_NOT_USED;
+            var trustedNodeTt = Constants.TRANSLATION_TYPE_TRUSTED_NODE;
             var numberingPlan = NumberingPlan.ISDN_TELEPHONY;
             var e214NumberingPlan = NumberingPlan.ISDN_MOBILE;
             EncodingScheme encodingScheme = null; // use default encoding scheme (even/odd BCD)
@@ -288,22 +288,22 @@ public class SccpAdapter implements SccpSstListener {
             var localPc = Integer.valueOf(nodeConfig.getSs7Association().getLocalNode().getPointCode());
             // TODO IMP TRX: STP: Define subscriber's MSISDN prefix instead of wildcard
             var wildcardGt = factory.createGlobalTitle(Constants.SCCP_DIGITS_PATTERN_WILD_CARD_ALL,
-                    translationType, numberingPlan, encodingScheme, natureOfAddress);
+                    defaultTt, numberingPlan, encodingScheme, natureOfAddress);
             var wildcardGtE214 = factory.createGlobalTitle(Constants.SCCP_DIGITS_PATTERN_WILD_CARD_ALL,
-                    translationType, e214NumberingPlan, encodingScheme, natureOfAddress);
+                    defaultTt, e214NumberingPlan, encodingScheme, natureOfAddress);
 
             // Adding GTT rules for STP node
             if (nodeConfig instanceof StpNodeConfig cfg) {
                 // Translate all incoming messages with peer GT to peer nodes.
                 for (var peerNode : cfg.getSs7Association().getPeerNodes()) {
                     var peerGt = factory.createGlobalTitle(peerNode.getGlobalTitle(),
-                            translationType, numberingPlan, encodingScheme, natureOfAddress);
+                            defaultTt, numberingPlan, encodingScheme, natureOfAddress);
                     var peerPc = Integer.valueOf(peerNode.getPointCode());
+                    matchPattern = factory.createSccpAddress(RoutingIndicator.ROUTING_BASED_ON_GLOBAL_TITLE,
+                            peerGt, Constants.SCCP_SPC_NOT_PRESENT, Constants.SCCP_SSN_NOT_PRESENT);
                     translationAddress = factory.createSccpAddress(RoutingIndicator.ROUTING_BASED_ON_GLOBAL_TITLE,
                             peerGt, peerPc, Constants.SCCP_SSN_NOT_PRESENT);
                     translationAddressId = addIfNotExist(translationAddress);
-                    matchPattern = factory.createSccpAddress(RoutingIndicator.ROUTING_BASED_ON_GLOBAL_TITLE,
-                            peerGt, Constants.SCCP_SPC_NOT_PRESENT, Constants.SCCP_SSN_NOT_PRESENT);
                     logger.debug("Adding GTT matchPattern: [" + matchPattern + "], translationAddress: [" + translationAddress + "]");
                     // OriginationType.LOCAL means match rules only on messages generated locally by this node
                     // OriginationType.REMOTE means match rules only on messages received from a remote node
@@ -316,6 +316,20 @@ public class SccpAdapter implements SccpSstListener {
                             Constants.SCCP_MASK_REPLACE, translationAddressId, Constants.SCCP_ROUTING_ADDRESS_ID_NOT_USED,
                             null, 0, null);
                     rulesIndex++;
+
+                    // Translate all incoming messages with peer GT and TRANSLATION_TYPE_TRUSTED_NODE to peer nodes.
+                    var peerGtTrustedNode = factory.createGlobalTitle(peerNode.getGlobalTitle(),
+                            trustedNodeTt, numberingPlan, encodingScheme, natureOfAddress);
+                    matchPattern = factory.createSccpAddress(RoutingIndicator.ROUTING_BASED_ON_GLOBAL_TITLE,
+                            peerGtTrustedNode, Constants.SCCP_SPC_NOT_PRESENT, Constants.SCCP_SSN_NOT_PRESENT);
+                    translationAddress = factory.createSccpAddress(RoutingIndicator.ROUTING_BASED_ON_GLOBAL_TITLE,
+                            peerGt, peerPc, Constants.SCCP_SSN_NOT_PRESENT); // Only STP should add TRANSLATION_TYPE_TRUSTED_NODE
+                    translationAddressId = addIfNotExist(translationAddress);
+                    logger.debug("Adding GTT matchPattern: [" + matchPattern + "], translationAddress: [" + translationAddress + "]");
+                    router.addRule(rulesIndex, RuleType.SOLITARY, null, OriginationType.REMOTE, matchPattern,
+                            Constants.SCCP_MASK_REPLACE, translationAddressId, Constants.SCCP_ROUTING_ADDRESS_ID_NOT_USED,
+                            null, 0, null);
+                    rulesIndex++;
                 }
 
                 // Translate all incoming messages targeted to subscriber's MSISDN range to HLR
@@ -323,28 +337,28 @@ public class SccpAdapter implements SccpSstListener {
                 var hlrNode = ((StpNodeConfig) nodeConfig).getSs7Association().getPeerNodes().stream()
                         .filter(node -> node.getGlobalTitle().equals(hlrGtStr)).findFirst().get();
                 var hlrGt = factory.createGlobalTitle(hlrNode.getGlobalTitle(),
-                        translationType, numberingPlan, encodingScheme, natureOfAddress);
+                        defaultTt, numberingPlan, encodingScheme, natureOfAddress);
                 var hlrPc = Integer.valueOf(hlrNode.getPointCode());
+                matchPattern = factory.createSccpAddress(RoutingIndicator.ROUTING_BASED_ON_GLOBAL_TITLE,
+                        wildcardGt, Constants.SCCP_SPC_NOT_PRESENT, Constants.SCCP_SSN_NOT_PRESENT); // DCP is not used in matching
                 translationAddress = factory.createSccpAddress(RoutingIndicator.ROUTING_BASED_ON_GLOBAL_TITLE,
                         hlrGt, hlrPc, Constants.SCCP_SSN_NOT_PRESENT);
                 translationAddressId = addIfNotExist(translationAddress);
-                matchPattern = factory.createSccpAddress(RoutingIndicator.ROUTING_BASED_ON_GLOBAL_TITLE,
-                        wildcardGt, Constants.SCCP_SPC_NOT_PRESENT, Constants.SCCP_SSN_NOT_PRESENT); // DCP is not used in matching
                 logger.debug("Adding GTT matchPattern: [" + matchPattern + "], translationAddress: [" + translationAddress + "]");
                 router.addRule(rulesIndex, RuleType.SOLITARY, null, OriginationType.REMOTE, matchPattern,
                         Constants.SCCP_MASK_REPLACE, translationAddressId, Constants.SCCP_ROUTING_ADDRESS_ID_NOT_USED,
                         null, 0, null);
                 rulesIndex++;
 
-                // Translate all incoming messages targeted to subscriber's IMSI (E.214) to HLR
-                // to simulate Home Routing bypass
-                var e214HlrGt = factory.createGlobalTitle(hlrNode.getGlobalTitle(),
-                        translationType, e214NumberingPlan, encodingScheme, natureOfAddress);
-                translationAddress = factory.createSccpAddress(RoutingIndicator.ROUTING_BASED_ON_GLOBAL_TITLE,
-                        e214HlrGt, hlrPc, Constants.SCCP_SSN_NOT_PRESENT);
-                translationAddressId = addIfNotExist(translationAddress);
+                // Translate all incoming messages targeted to subscriber's IMSI (E.214) to HLR changing TT to
+                // TRANSLATION_TYPE_TRUSTED_NODE to simulate Home Routing bypass
+                var hlrGtTrustedNode = factory.createGlobalTitle(hlrNode.getGlobalTitle(), trustedNodeTt,
+                        numberingPlan, encodingScheme, natureOfAddress);
                 matchPattern = factory.createSccpAddress(RoutingIndicator.ROUTING_BASED_ON_GLOBAL_TITLE,
                         wildcardGtE214, Constants.SCCP_SPC_NOT_PRESENT, Constants.SCCP_SSN_NOT_PRESENT);
+                translationAddress = factory.createSccpAddress(RoutingIndicator.ROUTING_BASED_ON_GLOBAL_TITLE,
+                        hlrGtTrustedNode, hlrPc, Constants.SCCP_SSN_NOT_PRESENT);
+                translationAddressId = addIfNotExist(translationAddress);
                 logger.debug("Adding GTT matchPattern: [" + matchPattern + "], translationAddress: [" + translationAddress + "]");
                 router.addRule(rulesIndex, RuleType.SOLITARY, null, OriginationType.REMOTE, matchPattern,
                         Constants.SCCP_MASK_REPLACE, translationAddressId, Constants.SCCP_ROUTING_ADDRESS_ID_NOT_USED,
@@ -353,16 +367,30 @@ public class SccpAdapter implements SccpSstListener {
 
             } else {
                 // Adding GTT rules for Intruder and other Lab nodes (HLR, VLR/MSC)
-                // Translate all outgoing messages with 'routing based on GT' to peer node SPC (STP)
+                // Translate all outgoing messages to peer node SPC (STP)
                 var localGt = factory.createGlobalTitle(((SepNodeConfig) nodeConfig).getSs7Association()
-                                .getLocalNode().getGlobalTitle(), translationType, numberingPlan, encodingScheme, natureOfAddress);
+                                .getLocalNode().getGlobalTitle(), defaultTt, numberingPlan, encodingScheme, natureOfAddress);
                 var peerNode = ((SepNodeConfig) nodeConfig).getSs7Association().getPeerNode();
                 var peerPc = Integer.valueOf(peerNode.getPointCode());
+                matchPattern = factory.createSccpAddress(RoutingIndicator.ROUTING_BASED_ON_GLOBAL_TITLE,
+                        wildcardGt, Constants.SCCP_SPC_NOT_PRESENT, Constants.SCCP_SSN_NOT_PRESENT);
                 translationAddress = factory.createSccpAddress(RoutingIndicator.ROUTING_BASED_ON_GLOBAL_TITLE,
                         wildcardGt, peerPc, Constants.SCCP_SSN_NOT_PRESENT);
                 translationAddressId = addIfNotExist(translationAddress);
+                logger.debug("Adding GTT matchPattern: [" + matchPattern + "], translationAddress: [" + translationAddress + "]");
+                router.addRule(rulesIndex, RuleType.SOLITARY, null, OriginationType.LOCAL, matchPattern,
+                        Constants.SCCP_MASK_KEEP, translationAddressId, Constants.SCCP_ROUTING_ADDRESS_ID_NOT_USED,
+                        null, 0, null);
+                rulesIndex++;
+
+                // Translate all outgoing messages with TRANSLATION_TYPE_TRUSTED_NODE to peer node SPC (STP)
+                var wildcardGtTrustedNode = factory.createGlobalTitle(Constants.SCCP_DIGITS_PATTERN_WILD_CARD_ALL,
+                        trustedNodeTt, numberingPlan, encodingScheme, natureOfAddress);
                 matchPattern = factory.createSccpAddress(RoutingIndicator.ROUTING_BASED_ON_GLOBAL_TITLE,
-                        wildcardGt, Constants.SCCP_SPC_NOT_PRESENT, Constants.SCCP_SSN_NOT_PRESENT);
+                        wildcardGtTrustedNode, Constants.SCCP_SPC_NOT_PRESENT, Constants.SCCP_SSN_NOT_PRESENT);
+                translationAddress = factory.createSccpAddress(RoutingIndicator.ROUTING_BASED_ON_GLOBAL_TITLE,
+                        wildcardGt, peerPc, Constants.SCCP_SSN_NOT_PRESENT);
+                translationAddressId = addIfNotExist(translationAddress);
                 logger.debug("Adding GTT matchPattern: [" + matchPattern + "], translationAddress: [" + translationAddress + "]");
                 router.addRule(rulesIndex, RuleType.SOLITARY, null, OriginationType.LOCAL, matchPattern,
                         Constants.SCCP_MASK_KEEP, translationAddressId, Constants.SCCP_ROUTING_ADDRESS_ID_NOT_USED,
@@ -370,11 +398,11 @@ public class SccpAdapter implements SccpSstListener {
                 rulesIndex++;
 
                 // Translate incoming messages with local GT to local node SPC
-                translationAddress = factory.createSccpAddress(RoutingIndicator.ROUTING_BASED_ON_DPC_AND_SSN,
-                        localGt, localPc, Constants.SCCP_SSN_NOT_PRESENT);
-                translationAddressId = addIfNotExist(translationAddress);
                 matchPattern = factory.createSccpAddress(RoutingIndicator.ROUTING_BASED_ON_GLOBAL_TITLE,
                         localGt, Constants.SCCP_SPC_NOT_PRESENT, Constants.SCCP_SSN_NOT_PRESENT);
+                translationAddress = factory.createSccpAddress(RoutingIndicator.ROUTING_BASED_ON_GLOBAL_TITLE,
+                        localGt, localPc, Constants.SCCP_SSN_NOT_PRESENT);
+                translationAddressId = addIfNotExist(translationAddress);
                 logger.debug("Adding GTT matchPattern: [" + matchPattern + "], translationAddress: [" + translationAddress + "]");
                 router.addRule(rulesIndex, RuleType.SOLITARY, null, OriginationType.REMOTE, matchPattern,
                         Constants.SCCP_MASK_REPLACE, translationAddressId, Constants.SCCP_ROUTING_ADDRESS_ID_NOT_USED,
@@ -382,21 +410,35 @@ public class SccpAdapter implements SccpSstListener {
                 rulesIndex++;
 
                 if (nodeConfig instanceof LabNodeConfig cfg) {
+                    // Translate incoming messages with local GT and TRANSLATION_TYPE_TRUSTED_NODE to local node SPC
+                    var localGtTrustedNode = factory.createGlobalTitle(((SepNodeConfig) nodeConfig)
+                                    .getSs7Association().getLocalNode().getGlobalTitle(), trustedNodeTt, numberingPlan,
+                            encodingScheme, natureOfAddress);
+                    matchPattern = factory.createSccpAddress(RoutingIndicator.ROUTING_BASED_ON_GLOBAL_TITLE,
+                            localGtTrustedNode, Constants.SCCP_SPC_NOT_PRESENT, Constants.SCCP_SSN_NOT_PRESENT);
+                    translationAddress = factory.createSccpAddress(RoutingIndicator.ROUTING_BASED_ON_GLOBAL_TITLE,
+                            localGtTrustedNode, localPc, Constants.SCCP_SSN_NOT_PRESENT);
+                    translationAddressId = addIfNotExist(translationAddress);
+                    logger.debug("Adding GTT matchPattern: [" + matchPattern + "], translationAddress: [" + translationAddress + "]");
+                    router.addRule(rulesIndex, RuleType.SOLITARY, null, OriginationType.REMOTE, matchPattern,
+                            Constants.SCCP_MASK_REPLACE, translationAddressId, Constants.SCCP_ROUTING_ADDRESS_ID_NOT_USED,
+                            null, 0, null);
+                    rulesIndex++;
+
                     // Translate incoming messages with local GT E.214 to local node SPC
                     var e214LocalGt = factory.createGlobalTitle(((SepNodeConfig) nodeConfig).getSs7Association()
-                            .getLocalNode().getGlobalTitle(), translationType, e214NumberingPlan, encodingScheme, natureOfAddress);
-                    translationAddress = factory.createSccpAddress(RoutingIndicator.ROUTING_BASED_ON_DPC_AND_SSN,
-                            e214LocalGt, localPc, Constants.SCCP_SSN_NOT_PRESENT);
-                    translationAddressId = addIfNotExist(translationAddress);
+                            .getLocalNode().getGlobalTitle(), defaultTt, e214NumberingPlan, encodingScheme, natureOfAddress);
                     matchPattern = factory.createSccpAddress(RoutingIndicator.ROUTING_BASED_ON_GLOBAL_TITLE,
                             e214LocalGt, Constants.SCCP_SPC_NOT_PRESENT, Constants.SCCP_SSN_NOT_PRESENT);
+                    translationAddress = factory.createSccpAddress(RoutingIndicator.ROUTING_BASED_ON_GLOBAL_TITLE,
+                            e214LocalGt, localPc, Constants.SCCP_SSN_NOT_PRESENT);
+                    translationAddressId = addIfNotExist(translationAddress);
                     logger.debug("Adding GTT matchPattern: [" + matchPattern + "], translationAddress: [" + translationAddress + "]");
                     router.addRule(rulesIndex, RuleType.SOLITARY, null, OriginationType.REMOTE, matchPattern,
                             Constants.SCCP_MASK_REPLACE, translationAddressId, Constants.SCCP_ROUTING_ADDRESS_ID_NOT_USED,
                             null, 0, null);
                 }
             }
-
             logger.debug("GTT rules added successfully.");
 
         } catch (Exception e) {

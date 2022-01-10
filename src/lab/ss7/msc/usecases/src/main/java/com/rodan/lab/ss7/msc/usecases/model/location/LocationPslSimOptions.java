@@ -1,6 +1,6 @@
 /*
  * Etisalat Egypt, Open Source
- * Copyright 2021, Etisalat Egypt and individual contributors
+ * Copyright 2022, Etisalat Egypt and individual contributors
  * by the @authors tag.
  *
  * This program is free software: you can redistribute it and/or modify
@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-package com.rodan.lab.ss7.hlr.usecases.model.infogathering;
+package com.rodan.lab.ss7.msc.usecases.model.location;
 
 import com.rodan.lab.ss7.kernel.usecases.Ss7SimulatorOptions;
 import com.rodan.library.model.Validator;
@@ -34,23 +34,13 @@ import java.util.Objects;
  * @author Ayman ElSherif
  */
 @Getter @ToString
-public class UlResponderSimOptions extends Ss7SimulatorOptions<LabNodeConfig> {
-    @Option(name = "hlr", description = "HLR of target", mandatory = true)
-    private String hlrGt;
-
-    @Option(name = "gsmScf", description = "Current gsmSCF of target", mandatory = true)
-    private String gsmScfGt;
-
+public class LocationPslSimOptions extends Ss7SimulatorOptions<LabNodeConfig> {
     @Builder
-    public UlResponderSimOptions(LabNodeConfig nodeConfig, String hlrGt, String gsmScfGt) {
+    public LocationPslSimOptions(LabNodeConfig nodeConfig) {
         super(nodeConfig);
-        this.hlrGt = Objects.requireNonNull(hlrGt);
-        this.gsmScfGt = Objects.requireNonNull(gsmScfGt);
     }
 
     @Override
     public void validate() throws ValidationException {
-        Validator.validateHlr(hlrGt);
-        Validator.validateGsmScf(gsmScfGt);
     }
 }

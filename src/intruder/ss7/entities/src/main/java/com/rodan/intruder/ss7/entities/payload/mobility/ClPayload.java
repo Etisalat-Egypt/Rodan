@@ -23,6 +23,7 @@
 
 package com.rodan.intruder.ss7.entities.payload.mobility;
 
+import com.rodan.intruder.ss7.entities.event.model.mobility.details.CancellationType;
 import com.rodan.intruder.ss7.entities.payload.Ss7Payload;
 import com.rodan.library.model.Constants;
 import lombok.Builder;
@@ -35,16 +36,20 @@ public class ClPayload extends Ss7Payload {
     private String targetVlrGt;
     private String spoofHlr;
     private String targetHlrGt;
+    private CancellationType cancellationType;
+    private String newMscGt;
     private String mapVersion;
 
     @Builder
-    public ClPayload(String localGt, String imsi, String targetVlrGt, String spoofHlr,
-                     String targetHlrGt, String mapVersion) {
+    public ClPayload(String localGt, String imsi, String targetVlrGt, String spoofHlr, String targetHlrGt,
+                     CancellationType cancellationType, String newMscGt, String mapVersion) {
         super(localGt, Constants.SCCP_HLR_SSN, Constants.SCCP_VLR_SSN);
         this.imsi = imsi;
         this.targetVlrGt = targetVlrGt;
         this.spoofHlr = spoofHlr;
         this.targetHlrGt = targetHlrGt;
+        this.cancellationType = cancellationType;
+        this.newMscGt = newMscGt;
         this.mapVersion = mapVersion;
     }
 

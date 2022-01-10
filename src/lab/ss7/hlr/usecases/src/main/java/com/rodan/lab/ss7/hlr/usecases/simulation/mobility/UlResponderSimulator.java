@@ -1,6 +1,6 @@
 /*
  * Etisalat Egypt, Open Source
- * Copyright 2021, Etisalat Egypt and individual contributors
+ * Copyright 2022, Etisalat Egypt and individual contributors
  * by the @authors tag.
  *
  * This program is free software: you can redistribute it and/or modify
@@ -17,20 +17,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-package com.rodan.lab.ss7.hlr.usecases.simulation.infogathering;
+package com.rodan.lab.ss7.hlr.usecases.simulation.mobility;
 
 import com.rodan.intruder.kernel.usecases.SignalingModule;
 import com.rodan.intruder.ss7.entities.event.model.mobility.IsdResponse;
 import com.rodan.intruder.ss7.entities.event.model.mobility.UlRequest;
+import com.rodan.intruder.ss7.entities.event.model.mobility.details.CancellationType;
 import com.rodan.intruder.ss7.entities.event.service.MapMobilityServiceListener;
-import com.rodan.intruder.ss7.entities.payload.callhandling.SriResponsePayload;
+import com.rodan.intruder.ss7.entities.payload.mobility.ClPayload;
 import com.rodan.intruder.ss7.entities.payload.mobility.IsdPayload;
-import com.rodan.intruder.ss7.entities.payload.mobility.UlPayload;
 import com.rodan.intruder.ss7.entities.payload.mobility.UlResponsePayload;
 import com.rodan.intruder.ss7.usecases.model.Ss7ModuleOptions;
-import com.rodan.intruder.ss7.usecases.model.dos.DosCallBarringOptions;
 import com.rodan.intruder.ss7.usecases.port.Ss7Gateway;
-import com.rodan.lab.ss7.hlr.usecases.model.infogathering.UlResponderSimOptions;
+import com.rodan.lab.ss7.hlr.usecases.model.mobility.UlResponderSimOptions;
 import com.rodan.lab.ss7.kernel.usecases.Ss7SimulatorConstants;
 import com.rodan.lab.ss7.kernel.usecases.Ss7SimulatorTemplate;
 import com.rodan.library.model.annotation.Module;
@@ -47,6 +46,7 @@ import org.apache.log4j.Logger;
 @Module(name = Ss7SimulatorConstants.UL_RESPONDER_NAME)
 public class UlResponderSimulator extends Ss7SimulatorTemplate implements SignalingModule, MapMobilityServiceListener {
     final static Logger logger = LogManager.getLogger(UlResponderSimulator.class);
+    private String targetImsi;
 
     @Builder
     public UlResponderSimulator(Ss7Gateway gateway, Ss7ModuleOptions moduleOptions) {
@@ -88,6 +88,7 @@ public class UlResponderSimulator extends Ss7SimulatorTemplate implements Signal
     public void onUpdateLocationRequest(UlRequest request) throws SystemException {
         try {
             var imsi = request.getImsi();
+            targetImsi = imsi;
             var msc = request.getMscGt();
             var vlr = request.getVlrGt();
             notify("Received UL request for IMSI: " + imsi + " from MSC/VLR: " + msc + "/" + vlr,
@@ -123,7 +124,9 @@ public class UlResponderSimulator extends Ss7SimulatorTemplate implements Signal
             logger.debug("##### Received ISD response!");
             logger.debug(response);
 
-            // TODO: Send CL to MSC. UL response should be sent after receiving CL response
+            var newMsc = response.getDialog().getRemoteAddress();
+            cancelOldServingNode(newMsc);
+
             var dialog = response.getDialog();
             var invokeId = response.getInvokeId();
             dialog.setUserObject(invokeId);
@@ -134,6 +137,27 @@ public class UlResponderSimulator extends Ss7SimulatorTemplate implements Signal
 
         } catch (SystemException e) {
             String msg = "Failed to parse TCAP-END for ISD response";
+            logger.error(msg, e);
+            notify(msg, NotificationType.FAILURE);
+            setExecutionError(true);
+        }
+    }
+
+    private void cancelOldServingNode(String newMsc) {
+        try {
+            var options = (UlResponderSimOptions) moduleOptions;
+            var vlr = options.getNodeConfig().getTargetNetwork().getVlrGt();
+            var localGt = options.getNodeConfig().getSs7Association().getLocalNode().getGlobalTitle();
+            var payload = ClPayload.builder()
+                    .localGt(localGt).imsi(targetImsi).targetVlrGt(vlr).cancellationType(CancellationType.updateProcedure)
+                    .newMscGt(newMsc).spoofHlr("No").mapVersion("3")
+                    .build();
+            var dialog = getGateway().generateMapDialog(payload);
+            getGateway().addToDialog(payload, dialog);
+            getGateway().send(dialog);
+
+        } catch (SystemException e) {
+            String msg = "Failed to send CL to serving node";
             logger.error(msg, e);
             notify(msg, NotificationType.FAILURE);
             setExecutionError(true);

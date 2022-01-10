@@ -92,8 +92,8 @@ public class SmsRoutingInfoSimulator extends Ss7SimulatorTemplate implements Sig
             dialog.setUserObject(invokeId);
 
             // Simulate SMS Home Routing E.214 bypass
-            var newPayload = request.getE214NumberingPlanDetected() ?
-                    generateRealPayload() : generatePseudoPayload();
+            var newPayload = request.getUseSmsHomeRouter() ?
+                    generatePseudoPayload() : generateRealPayload();
             var payload = (SriSmResponsePayload) newPayload;
             payload = payload.withInvokeId(invokeId);
 

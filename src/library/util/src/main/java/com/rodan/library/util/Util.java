@@ -327,6 +327,10 @@ public class Util {
 		return cc + ndc + msin;
 	}
 
+	public static int generateRandomNumber(int min, int max) {
+		return ThreadLocalRandom.current().nextInt(min, max);
+	}
+
 	public static String generateE214Address(String imsi, String mcc, String mnc, String cc, String ndc) throws ValidationException {
 		var msin = imsi;
 		if (msin.startsWith(mcc)) {

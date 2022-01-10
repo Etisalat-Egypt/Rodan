@@ -163,12 +163,15 @@ public class PayloadMapper {
         } else if (payload.getClass() == ClPayload.class) {
             var pl = (ClPayload) payload;
             var mainService = mapAdapter.getMobilityService();
+            var cancellationType = org.mobicents.protocols.ss7.map.api.service.mobility.locationManagement.
+                    CancellationType.getInstance(pl.getCancellationType().getCode());
             jSs7Payload = CLPayloadWrapper.builder()
                     .mapAdapter(mapAdapter).sccpAdapter(sccpAdapter).nodeConfig(nodeConfig)
                     .dialogGenerator(mainService::generateDialog)
                     .localGt(pl.getLocalGt()).localSsn(pl.getLocalSsn()).remoteSsn(pl.getRemoteSsn())
                     .imsi(pl.getImsi()).targetVlrGt(pl.getTargetVlrGt()).spoofHlr(pl.getSpoofHlr())
-                    .targetHlrGt(pl.getTargetHlrGt()).mapVersion(pl.getMapVersion())
+                    .targetHlrGt(pl.getTargetHlrGt()).cancellationType(cancellationType).newMscGt(pl.getNewMscGt())
+                    .mapVersion(pl.getMapVersion())
                     .build();
 
         } else if (payload.getClass() == DsdPayload.class) {

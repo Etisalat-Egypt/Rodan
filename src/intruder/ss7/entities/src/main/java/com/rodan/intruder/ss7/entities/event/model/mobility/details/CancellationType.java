@@ -1,6 +1,6 @@
 /*
  * Etisalat Egypt, Open Source
- * Copyright 2021, Etisalat Egypt and individual contributors
+ * Copyright 2022, Etisalat Egypt and individual contributors
  * by the @authors tag.
  *
  * This program is free software: you can redistribute it and/or modify
@@ -17,24 +17,36 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-package com.rodan.intruder.ss7.entities.event.model.sms;
-
-import com.rodan.intruder.ss7.entities.event.model.MapMessage;
-import lombok.Getter;
-import lombok.ToString;
+package com.rodan.intruder.ss7.entities.event.model.mobility.details;
 
 /**
  * @author Ayman ElSherif
  */
-@Getter @ToString
-public abstract class SriSmRequest implements MapMessage {
-    private String msisdn;
-    private String serviceCentreAddress;
-    private Boolean useSmsHomeRouter;
+public enum CancellationType {
+    updateProcedure(0),
+    subscriptionWithdraw(1),
+    initialAttachProcedure(2);
 
-    public SriSmRequest(String msisdn, String serviceCentreAddress, Boolean useSmsHomeRouter) {
-        this.msisdn = msisdn;
-        this.serviceCentreAddress = serviceCentreAddress;
-        this.useSmsHomeRouter = useSmsHomeRouter;
+    private int code;
+
+    private CancellationType(int code) {
+        this.code = code;
+    }
+
+    public int getCode() {
+        return this.code;
+    }
+
+    public static CancellationType getInstance(int code) {
+        switch(code) {
+            case 0:
+                return updateProcedure;
+            case 1:
+                return subscriptionWithdraw;
+            case 2:
+                return initialAttachProcedure;
+            default:
+                return null;
+        }
     }
 }

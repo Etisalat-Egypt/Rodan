@@ -25,6 +25,7 @@ package com.rodan.intruder.ss7.gateway.handler.model.mobility;
 
 import com.rodan.intruder.ss7.entities.dialog.Ss7MapDialog;
 import com.rodan.intruder.ss7.entities.event.model.mobility.ClRequest;
+import com.rodan.intruder.ss7.entities.event.model.mobility.details.CancellationType;
 import com.rodan.intruder.ss7.gateway.dialog.Ss7MapDialogImpl;
 import lombok.Builder;
 import lombok.Getter;
@@ -37,7 +38,9 @@ public class ClRequestImpl extends ClRequest {
     private long invokeId;
 
     @Builder
-    public ClRequestImpl(MAPDialog mapDialog, long invokeId) {
+    public ClRequestImpl(String imsi, CancellationType cancellationType, String newMscGt,
+                         MAPDialog mapDialog, long invokeId) {
+        super(imsi, cancellationType, newMscGt);
         this.ss7Dialog = Ss7MapDialogImpl.builder().jss7Dialog(mapDialog).build();
         this.invokeId = invokeId;
     }

@@ -27,6 +27,7 @@ import com.rodan.lab.ss7.kernel.usecases.Ss7SimulatorConstants;
 import com.rodan.lab.ss7.msc.usecases.simulation.location.LocationPslSimulator;
 import com.rodan.lab.ss7.vlr.usecases.model.Ss7SimulatorOptionsFactory;
 import com.rodan.lab.ss7.vlr.usecases.simulation.location.LocationPsiSimulator;
+import com.rodan.lab.ss7.vlr.usecases.simulation.mobility.ClResponderSimulator;
 import com.rodan.library.model.Constants;
 import com.rodan.library.model.annotation.Module;
 import com.rodan.library.model.config.node.config.LabNodeConfig;
@@ -105,6 +106,10 @@ public class Main {
                         .gateway(ss7Gateway)
                         .build();
                 case Ss7SimulatorConstants.LOCATION_PSL_SIM_NAME -> LocationPslSimulator.builder()
+                        .moduleOptions(moduleOps)
+                        .gateway(ss7Gateway)
+                        .build();
+                case Ss7SimulatorConstants.CL_RESPONDER_NAME -> ClResponderSimulator.builder()
                         .moduleOptions(moduleOps)
                         .gateway(ss7Gateway)
                         .build();

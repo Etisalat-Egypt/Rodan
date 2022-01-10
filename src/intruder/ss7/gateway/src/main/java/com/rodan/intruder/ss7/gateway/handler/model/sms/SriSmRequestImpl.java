@@ -36,9 +36,9 @@ public class SriSmRequestImpl extends SriSmRequest {
     private long invokeId;
 
     @Builder
-    public SriSmRequestImpl(String msisdn, String serviceCentreAddress, Boolean e214NumberingPlanDetected,
+    public SriSmRequestImpl(String msisdn, String serviceCentreAddress, Boolean useSmsHomeRouter,
                             MAPDialog mapDialog, long invokeId) {
-        super(msisdn, serviceCentreAddress, e214NumberingPlanDetected);
+        super(msisdn, serviceCentreAddress, useSmsHomeRouter);
         this.ss7Dialog = Ss7MapDialogImpl.builder().jss7Dialog(mapDialog).build();
         this.invokeId = invokeId;
     }

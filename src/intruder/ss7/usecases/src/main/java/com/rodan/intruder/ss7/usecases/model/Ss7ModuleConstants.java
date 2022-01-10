@@ -117,9 +117,9 @@ public interface Ss7ModuleConstants {
     String LOCATION_PSI_DESCRIPTION = "Disclose subscriber location (Cell ID, MCC, MNC, LAC) using MAP Provide-Subscriber-Info (PSI) message.\nIt requires knowledge of target IMSI and serving VLR, but is difficult to block using operator's legacy equipments.";
     String LOCATION_PSI_RANK = "good";
 
-    String LOCATION_PSL_NAME = LOCATION_TRACKING_CATEGORY + "/ss7/accurate";
+    String LOCATION_PSL_NAME = LOCATION_TRACKING_CATEGORY + "/ss7/precise";
     String LOCATION_PSL_DISPLAY_NAME = "Provide-Subscriber-Location (PSL) message";
-    String LOCATION_PSL_BRIEF = "Disclose subscriber's accurate location using IMSI and MSC address";
+    String LOCATION_PSL_BRIEF = "Disclose subscriber's precise location using IMSI and MSC address";
     String LOCATION_PSL_DESCRIPTION = "Disclose subscriber location (Cell ID, MCC, MNC, LAC) using MAP Provide-Subscriber-Location (PSL) message.\nIt can be used to track subscribers location using their MSISDNs or IMSIs. It gets the most precise location,\nbut requires the knowledge of serving MSC, may not be supported by target operator, and can be easily blocked\nusing operator's legacy equipments.";
     String LOCATION_PSL_RANK = "average";
 

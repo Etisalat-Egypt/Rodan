@@ -26,6 +26,7 @@ package com.rodan.intruder.ss7.gateway.handler;
 import com.rodan.intruder.ss7.entities.event.model.ErrorEvent;
 import com.rodan.intruder.ss7.entities.event.service.MapSmsServiceListener;
 import com.rodan.intruder.ss7.gateway.handler.model.sms.*;
+import com.rodan.library.model.Constants;
 import com.rodan.library.util.Util;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -187,13 +188,13 @@ public class MapSmsServiceHandler extends MapServiceHandler implements MAPServic
         try {
             logger.debug("[[[[[[[[[[    onSendRoutingInfoForSMRequest      ]]]]]]]]]]");
             logger.debug(request);
-            var e214NumberingPlanDetected = false;
+            var useSmsHomeRouter = true;
             var cdPa = request.getMAPDialog().getLocalAddress().getGlobalTitle();
             logger.debug("CdPA: " + cdPa);
             if (cdPa instanceof GlobalTitle0100 address) {
                 logger.debug("CdPA Numbering Plan: " + address.getNumberingPlan());
-                if (address.getNumberingPlan().equals(NumberingPlan.ISDN_MOBILE)) {
-                    e214NumberingPlanDetected = true;
+                if (address.getTranslationType() == Constants.TRANSLATION_TYPE_TRUSTED_NODE) {
+                    useSmsHomeRouter = false;
                 }
             }
             var msisdn = Util.getValueOrElse(request.getMsisdn(), ISDNAddressString::getAddress, "");
@@ -201,7 +202,7 @@ public class MapSmsServiceHandler extends MapServiceHandler implements MAPServic
             var content = SriSmRequestImpl.builder()
                     .invokeId(request.getInvokeId()).mapDialog(request.getMAPDialog())
                     .msisdn(msisdn).serviceCentreAddress(serviceCentreAddress)
-                    .e214NumberingPlanDetected(e214NumberingPlanDetected)
+                    .useSmsHomeRouter(useSmsHomeRouter)
                     .build();
             for (var listener : listeners) {
                 listener.onSendRoutingInfoForSMRequest(content);

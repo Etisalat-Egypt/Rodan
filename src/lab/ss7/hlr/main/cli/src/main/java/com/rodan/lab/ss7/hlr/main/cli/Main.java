@@ -25,7 +25,7 @@ import com.rodan.intruder.ss7.gateway.Ss7GatewayFactoryImpl;
 import com.rodan.intruder.ss7.usecases.port.Ss7GatewayFactory;
 import com.rodan.lab.ss7.hlr.usecases.simulation.infogathering.NewAuthVectorSimulator;
 import com.rodan.lab.ss7.hlr.usecases.simulation.infogathering.SmsRoutingInfoSimulator;
-import com.rodan.lab.ss7.hlr.usecases.simulation.infogathering.UlResponderSimulator;
+import com.rodan.lab.ss7.hlr.usecases.simulation.mobility.UlResponderSimulator;
 import com.rodan.lab.ss7.hlr.usecases.simulation.location.LocationAtiSimulator;
 import com.rodan.lab.ss7.kernel.usecases.Ss7SimulatorConstants;
 import com.rodan.lab.ss7.hlr.usecases.model.Ss7SimulatorOptionsFactory;

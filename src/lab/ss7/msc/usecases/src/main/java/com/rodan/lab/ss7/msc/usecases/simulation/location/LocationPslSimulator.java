@@ -25,13 +25,11 @@ import com.rodan.intruder.ss7.entities.event.model.error.details.ReturnErrorProb
 import com.rodan.intruder.ss7.entities.event.model.lcs.PslRequest;
 import com.rodan.intruder.ss7.entities.event.service.MapLcsServiceListener;
 import com.rodan.intruder.ss7.entities.payload.location.PslResponsePayload;
-import com.rodan.intruder.ss7.entities.payload.mobility.AtiResponsePayload;
-import com.rodan.intruder.ss7.entities.payload.mobility.PsiResponsePayload;
 import com.rodan.intruder.ss7.usecases.model.Ss7ModuleOptions;
 import com.rodan.intruder.ss7.usecases.port.Ss7Gateway;
 import com.rodan.lab.ss7.kernel.usecases.Ss7SimulatorConstants;
 import com.rodan.lab.ss7.kernel.usecases.Ss7SimulatorTemplate;
-import com.rodan.lab.ss7.msc.usecases.model.LocationPslSimOptions;
+import com.rodan.lab.ss7.msc.usecases.model.location.LocationPslSimOptions;
 import com.rodan.library.model.annotation.Module;
 import com.rodan.library.model.error.ApplicationException;
 import com.rodan.library.model.error.SystemException;
