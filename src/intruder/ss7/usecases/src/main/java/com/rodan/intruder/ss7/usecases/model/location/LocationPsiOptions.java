@@ -45,16 +45,20 @@ public class LocationPsiOptions extends Ss7ModuleOptions<IntruderNodeConfig> {
     @Option(name = "bypass_oct", description = "Bypass filtering using operational code tag abuse (yes/no)", mandatory = true)
     private String abuseOpcodeTag;
 
+    @Option(name = "bypass_dm", description = "Bypass filtering using double MAP component (yes/no)", mandatory = true)
+    private String doubleMap;
+
     @Option(name = "acv", description = "MAP app context version (3)", mandatory = true)
     private String mapVersion;
 
     @Builder
     public LocationPsiOptions(IntruderNodeConfig nodeConfig, String imsi, String targetVlrGt, String abuseOpcodeTag,
-                              String mapVersion) {
+                              String doubleMap, String mapVersion) {
         super(nodeConfig);
         this.imsi = Objects.requireNonNullElse(imsi, "");
         this.targetVlrGt = Objects.requireNonNullElse(targetVlrGt, "");
         this.abuseOpcodeTag = Objects.requireNonNullElse(abuseOpcodeTag, "No");
+        this.doubleMap = Objects.requireNonNullElse(doubleMap, "No");
         this.mapVersion = Objects.requireNonNullElse(mapVersion, "3");
     }
 
@@ -67,7 +71,8 @@ public class LocationPsiOptions extends Ss7ModuleOptions<IntruderNodeConfig> {
     public void validate() throws ValidationException {
         Validator.validateImsi(imsi);
         Validator.validateVlr(targetVlrGt);
-        Validator.validateToggleOption(abuseOpcodeTag, "abuseOpcodeTag");
+        Validator.validateToggleOption(abuseOpcodeTag, "bypass_oct");
+        Validator.validateToggleOption(doubleMap, "bypass_dm");
         Validator.validateMapVersion(mapVersion);
     }
 }

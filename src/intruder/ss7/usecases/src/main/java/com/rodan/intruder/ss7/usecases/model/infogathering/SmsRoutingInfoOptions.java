@@ -107,11 +107,11 @@ public class SmsRoutingInfoOptions extends Ss7ModuleOptions<IntruderNodeConfig> 
     @Override
     public void validate() throws ValidationException {
         Validator.validateMsisdn(msisdn);
-        Validator.validateToggleOption(detectSmsHomeRouting, "detectSmsHomeRouting");
-        Validator.validateToggleOption(bypassSmsHomeRouting, "bypassSmsHomeRouting");
-        Validator.validateToggleOption(abuseOpcodeTag, "abuseOpcodeTag");
+        Validator.validateToggleOption(detectSmsHomeRouting, "detect_hr");
+        Validator.validateToggleOption(bypassSmsHomeRouting, "bypass_nr");
+        Validator.validateToggleOption(abuseOpcodeTag, "bypass_oct");
         Validator.validateToggleOption(malformedAcn, "malformedAcn");
-        Validator.validateToggleOption(doubleMap, "doubleMap");
+        Validator.validateToggleOption(doubleMap, "bypass_dm");
         Validator.validateMapVersion(mapVersion);
 
         if (!targetHlrGt.isBlank())

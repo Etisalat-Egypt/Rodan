@@ -66,6 +66,18 @@ public class LocationPsiModule extends Ss7ModuleTemplate implements SignalingMod
                 .build();
         setMainPayload(payload);
         setCurrentPayload(getMainPayload());
+
+        // Double MAP component bypass
+        if ("Yes".equalsIgnoreCase(options.getDoubleMap())) {
+            var fakeSubscriberInfo = options.getNodeConfig().getFakeSubscriberInfo();
+            var bypass = PsiPayload.builder()
+                    .localGt(options.getNodeConfig().getSs7Association().getLocalNode().getGlobalTitle())
+                    .imsi(fakeSubscriberInfo.getImsi()).targetVlrGt(options.getTargetVlrGt())
+                    .abuseOpcodeTag("No")
+                    .mapVersion(options.getMapVersion())
+                    .build();
+            setBypassPayload(bypass);
+        }
         logger.debug("Payload: " + payload);
     }
 
