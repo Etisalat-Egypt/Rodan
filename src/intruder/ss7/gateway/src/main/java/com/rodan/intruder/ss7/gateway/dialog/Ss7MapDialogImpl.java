@@ -24,6 +24,7 @@
 package com.rodan.intruder.ss7.gateway.dialog;
 
 import com.rodan.intruder.ss7.entities.dialog.Ss7MapDialog;
+import com.rodan.intruder.ss7.entities.event.model.details.TcapMessageType;
 import com.rodan.intruder.ss7.entities.event.model.error.details.ReturnErrorProblemType;
 import com.rodan.library.model.error.ErrorCode;
 import com.rodan.library.model.error.SystemException;
@@ -39,6 +40,7 @@ import org.mobicents.protocols.ss7.map.api.MAPException;
 import org.mobicents.protocols.ss7.sccp.impl.parameter.GlobalTitle0100Impl;
 import org.mobicents.protocols.ss7.sccp.parameter.GlobalTitle;
 import org.mobicents.protocols.ss7.sccp.parameter.SccpAddress;
+import org.mobicents.protocols.ss7.tcap.api.MessageType;
 import org.mobicents.protocols.ss7.tcap.asn.ProblemImpl;
 
 @ToString
@@ -88,6 +90,18 @@ public class Ss7MapDialogImpl implements Ss7MapDialog {
     @Override
     public void setUserObject(Object userObject) {
         jss7Dialog.setUserObject(userObject);
+    }
+
+    @Override
+    public TcapMessageType getTcapMessageType() {
+        return switch (jss7Dialog.getTCAPMessageType()) {
+            case Begin -> TcapMessageType.Begin;
+            case Unidirectional -> TcapMessageType.Unidirectional;
+            case End -> TcapMessageType.End;
+            case Continue -> TcapMessageType.Continue;
+            case Abort -> TcapMessageType.Abort;
+            case Unknown -> TcapMessageType.Unknown;
+        };
     }
 
     public void sendMalformedAcn() throws SystemException {

@@ -38,6 +38,8 @@ import lombok.Builder;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
+import java.time.LocalDateTime;
+
 /**
  * @author Ayman ElSherif
  */
@@ -98,13 +100,22 @@ public class LocationPsiSimulator extends Ss7SimulatorTemplate implements Signal
             var imsi = request.getImsi();
             notify("Received PSI request for IMSI: " + imsi, NotificationType.PROGRESS);
 
-            var dialog = request.getDialog();
-            var invokeId = request.getInvokeId();
-            dialog.setUserObject(invokeId);
-            var payload = (PsiResponsePayload) getMainPayload();
-            payload = payload.withInvokeId(invokeId);
-            getGateway().addToDialog(payload, dialog);
-            getGateway().send(dialog);
+            if (isDoubleMapBypassUsed(request)) {
+                logger.info("Responding to authorized PSI");
+                // Simulate Double MAP component bypass for SFW filtering of PSI
+                var dialog = request.getDialog();
+                var invokeId = request.getInvokeId();
+                dialog.setUserObject(invokeId);
+                var payload = (PsiResponsePayload) getMainPayload();
+                payload = payload.withInvokeId(invokeId);
+                getGateway().addToDialog(payload, dialog);
+                getGateway().send(dialog);
+
+            } else {
+                // Simulate SFW filtering of PSI
+                logger.info("Ignoring unauthorized PSI");
+            }
+
 
         } catch (ApplicationException e) {
             String msg = "Failed to handle PSI request";

@@ -23,6 +23,8 @@
 
 package com.rodan.lab.ss7.kernel.usecases;
 
+import com.rodan.intruder.ss7.entities.event.model.MapMessage;
+import com.rodan.intruder.ss7.entities.event.model.details.TcapMessageType;
 import com.rodan.intruder.ss7.usecases.Ss7ModuleTemplate;
 import com.rodan.intruder.ss7.usecases.model.Ss7ModuleOptions;
 import com.rodan.intruder.ss7.usecases.port.Ss7Gateway;
@@ -58,5 +60,9 @@ public abstract class Ss7SimulatorTemplate extends Ss7ModuleTemplate {
         }
 
         logger.debug("Simulating completed successfully!");
+    }
+
+    protected boolean isDoubleMapBypassUsed(MapMessage message) {
+        return message.getDialog().getTcapMessageType().equals(TcapMessageType.Continue);
     }
 }

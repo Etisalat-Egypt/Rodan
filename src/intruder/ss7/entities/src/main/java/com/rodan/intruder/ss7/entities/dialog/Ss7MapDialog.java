@@ -23,10 +23,13 @@
 
 package com.rodan.intruder.ss7.entities.dialog;
 
+import com.rodan.intruder.ss7.entities.event.model.details.TcapMessageType;
+
 public interface Ss7MapDialog {
     void setAbuseOpcodeTag(boolean value);
     void setUserObject(Object userObject);
     String getRemoteAddress();
     Long getLocalDialogId();
     Long getRemoteDialogId();
+    TcapMessageType getTcapMessageType();
 }
