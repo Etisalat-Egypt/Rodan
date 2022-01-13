@@ -127,7 +127,7 @@ public class MmeIdrBruteforceModule extends DiameterBruteforceModuleTemplate imp
         logger.debug(msg);
 
         if (isPossibleValidNodeResultCode(resultCode) && !isUnknownUserResultCode(resultCode)) {
-            msg = "Received " + resultCode.getShortMessage() + " from " + resultCode.getOriginHost();
+            msg = "Received error: [" + resultCode.getShortMessage() + "] from: " + resultCode.getOriginHost();
             notify(msg, NotificationType.WARNING);
         }
     }

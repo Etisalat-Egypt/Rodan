@@ -13,7 +13,7 @@ ss7Association:
       address: intruder
       port: 1000
       pointCode: 11001
-      globalTitle: 8833010000010
+      globalTitle: 8833910000010
       supportedMapSsnList: [6, 7, 8, 145, 147, 150]
       supportedCapSsnList: [146]
     - nodeName: hlr

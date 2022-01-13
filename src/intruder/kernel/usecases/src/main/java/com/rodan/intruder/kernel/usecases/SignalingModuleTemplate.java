@@ -72,7 +72,7 @@ public abstract class SignalingModuleTemplate<MOD extends ModuleOptions, PL exte
         this.notificationListeners = new ArrayList<>();
         this.taskWaitTime = DEFAULT_TASK_WAIT_TIME;
         this.taskCheckInterval = DEFAULT_TASK_CHECK_INTERVAL; // TODO: read from a hidden module options
-        this.waitForResponseFailedMessage = "Failed to receive response from server.";
+        this.waitForResponseFailedMessage = "Request timeout!";
     }
 
     @Override

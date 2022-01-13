@@ -8,7 +8,7 @@ ss7Association: # Configuration of SS7 association
     address: intruder # Intruder's IP address or hostname
     port: 1000 # SCTP port number used for the SS7 association
     pointCode: 11001 # SPC assigned to Intruder
-    globalTitle: 8833010000010 # GT assigned to Intruder
+    globalTitle: 8833910000010 # GT assigned to Intruder
     supportedMapSsnList: [6, 7, 8, 145, 147, 150] # Supported MAP SSNs. Used for SST procedure with STP
     supportedCapSsnList: [146] # Supported CAP SSNs. Used for SST procedure with STP
   peerNode: # Peer node confiuration (STP)

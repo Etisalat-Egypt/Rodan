@@ -29,6 +29,7 @@ import com.rodan.intruder.ss7.entities.dialog.Ss7MapDialog;
 import com.rodan.intruder.ss7.entities.event.dialog.CapDialogEventListener;
 import com.rodan.intruder.ss7.entities.event.dialog.MapDialogEventListener;
 import com.rodan.intruder.ss7.entities.event.model.MapMessage;
+import com.rodan.intruder.ss7.entities.event.model.error.details.ErrorMessageType;
 import com.rodan.intruder.ss7.entities.event.model.error.details.ReturnErrorProblemType;
 import com.rodan.intruder.ss7.entities.event.service.MapMobilityServiceListener;
 import com.rodan.intruder.ss7.entities.payload.Ss7Payload;
@@ -201,6 +202,11 @@ public class Ss7GatewayImpl implements Ss7Gateway {
 	@Override
 	public void sendRejectComponent(Ss7MapDialog dialog, long invokeId, ReturnErrorProblemType type) throws SystemException {
 		((Ss7MapDialogImpl) dialog).sendRejectComponent(invokeId, type);
+	}
+
+	@Override
+	public void sendErrorComponent(Ss7MapDialog dialog, long invokeId, ErrorMessageType type) throws SystemException {
+		((Ss7MapDialogImpl) dialog).sendErrorComponent(invokeId, type);
 	}
 
 	@Override

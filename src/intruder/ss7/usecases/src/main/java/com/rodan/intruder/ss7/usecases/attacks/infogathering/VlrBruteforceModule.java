@@ -139,7 +139,7 @@ public class VlrBruteforceModule extends Ss7BruteforceModuleTemplate implements 
         String msg = String.format("errorComponent: [%s]", errorComponent);
         logger.debug(msg);
         if (isPossibleValidNodeResultCode(errorComponent) && !isUnknownUserResultCode(errorComponent)) {
-            msg = "Received " + errorComponent.getReadableError() + " from " + errorComponent.getRemoteAddress();
+            msg = "Received error: [" + errorComponent.getReadableError() + "] from: " + errorComponent.getRemoteAddress();
             notify(msg, NotificationType.WARNING);
         }
     }

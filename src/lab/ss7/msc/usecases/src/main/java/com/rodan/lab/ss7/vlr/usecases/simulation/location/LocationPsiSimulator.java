@@ -22,6 +22,8 @@ package com.rodan.lab.ss7.vlr.usecases.simulation.location;
 import com.rodan.intruder.kernel.usecases.SignalingModule;
 import com.rodan.intruder.ss7.entities.event.model.LocationInfo;
 import com.rodan.intruder.ss7.entities.event.model.SubscriberInfo;
+import com.rodan.intruder.ss7.entities.event.model.error.details.ErrorMessageType;
+import com.rodan.intruder.ss7.entities.event.model.error.details.ReturnErrorProblemType;
 import com.rodan.intruder.ss7.entities.event.model.mobility.PsiRequest;
 import com.rodan.intruder.ss7.entities.event.service.MapMobilityServiceListener;
 import com.rodan.intruder.ss7.entities.payload.mobility.PsiResponsePayload;
@@ -37,8 +39,6 @@ import com.rodan.library.model.notification.NotificationType;
 import lombok.Builder;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
-
-import java.time.LocalDateTime;
 
 /**
  * @author Ayman ElSherif
@@ -98,13 +98,14 @@ public class LocationPsiSimulator extends Ss7SimulatorTemplate implements Signal
     public void onProvideSubscriberInfoRequest(PsiRequest request) {
         try {
             var imsi = request.getImsi();
-            notify("Received PSI request for IMSI: " + imsi, NotificationType.PROGRESS);
+            notify("Received PSI request for IMSI: " + imsi + " from : " +
+                    request.getDialog().getRemoteAddress(), NotificationType.PROGRESS);
+            var dialog = request.getDialog();
+            var invokeId = request.getInvokeId();
 
             if (isDoubleMapBypassUsed(request)) {
                 logger.info("Responding to authorized PSI");
                 // Simulate Double MAP component bypass for SFW filtering of PSI
-                var dialog = request.getDialog();
-                var invokeId = request.getInvokeId();
                 dialog.setUserObject(invokeId);
                 var payload = (PsiResponsePayload) getMainPayload();
                 payload = payload.withInvokeId(invokeId);
@@ -113,9 +114,11 @@ public class LocationPsiSimulator extends Ss7SimulatorTemplate implements Signal
 
             } else {
                 // Simulate SFW filtering of PSI
-                logger.info("Ignoring unauthorized PSI");
+                // Return error or reject instead of ignoring to simulate VLR discovery
+                // TODO return Reject component better, and update VLR discovery modules to handle reject
+                logger.info("Rejecting unauthorized PSI");
+                getGateway().sendErrorComponent(dialog, invokeId, ErrorMessageType.SystemFailure);
             }
-
 
         } catch (ApplicationException e) {
             String msg = "Failed to handle PSI request";

@@ -159,6 +159,7 @@ public abstract class Ss7BruteforceModuleTemplate extends Ss7ModuleTemplate {
     }
 
     protected static boolean isPossibleValidNodeResultCode(ErrorComponent errorComponent) {
+        logger.debug("errorComponent: " + errorComponent);
         return errorComponent != null && (errorComponent.isEmUnknownSubscriber() || errorComponent.isEmSystemFailure());
     }
 

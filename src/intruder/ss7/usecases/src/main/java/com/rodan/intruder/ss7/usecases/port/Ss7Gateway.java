@@ -28,6 +28,7 @@ import com.rodan.intruder.ss7.entities.dialog.Ss7MapDialog;
 import com.rodan.intruder.ss7.entities.event.dialog.CapDialogEventListener;
 import com.rodan.intruder.ss7.entities.event.dialog.MapDialogEventListener;
 import com.rodan.intruder.ss7.entities.event.model.MapMessage;
+import com.rodan.intruder.ss7.entities.event.model.error.details.ErrorMessageType;
 import com.rodan.intruder.ss7.entities.event.model.error.details.ReturnErrorProblemType;
 import com.rodan.intruder.ss7.entities.event.service.MapMobilityServiceListener;
 import com.rodan.intruder.ss7.entities.payload.Ss7Payload;
@@ -48,6 +49,7 @@ public interface Ss7Gateway {
     void send(Ss7MapDialog dialog) throws SystemException;
     void sendMalformedAcn(Ss7MapDialog dialog) throws SystemException;
     void sendRejectComponent(Ss7MapDialog dialog, long invokeId, ReturnErrorProblemType type) throws SystemException;
+    void sendErrorComponent(Ss7MapDialog dialog, long invokeId, ErrorMessageType type) throws SystemException;
     void close(Ss7MapDialog dialog) throws SystemException; // TODO SS7: check if (boolean prearrangedEnd) is required
     void send(Ss7CapDialog dialog) throws SystemException;
 
