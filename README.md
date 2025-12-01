@@ -1,8 +1,12 @@
 
+![Deprecated](https://img.shields.io/badge/status-deprecated-red)
 # Rodan Telecom Signaling Exploitation Framework
 
 ### Disclaimer
 Rodan is provided for security testing and educational use on systems you own or are authorised to assess. Any misuse is your sole responsibility. Illegal use may lead to criminal charges. The authors and Etisalat Egypt accept no liability for actions performed with this framework.
+
+
+> **⚠️** This project is no longer actively maintained. Active development continues at [AymanElSherif/Rodan][fork_url].
 
 ## Authors
 * [Ayman ElSherif][ayman]
@@ -108,4 +112,5 @@ $ ./start-standalone.sh
 [docker-compose]: https://docs.docker.com/compose/install/
 [docker-non-root]: https://docs.docker.com/engine/install/linux-postinstall/#manage-docker-as-a-non-root-user
 [docker-compose-yml]:https://github.com/Etisalat-Egypt/Rodan/blob/main/build/docker/docker-compose.yml
+[fork_url]:https://github.com/AymanElSherif/Rodan
 [ayman]: https://github.com/AymanElSherif
